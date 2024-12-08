@@ -1,0 +1,11 @@
+---
+title: ""
+listing:
+  contents: posts
+  categories: true
+  feed: false
+  sort-ui: [title, date]
+  filter-ui: [title, date]
+  page-size: 25
+  fields: [image, date, title, subtitle, description, author, reading-time]
+---
