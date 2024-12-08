@@ -1,0 +1,57 @@
+project:
+  type: website
+  output-dir: docs/
+
+website:
+  title: "Home"
+  open-graph: true # Enables open graph metadata for better social sharing
+  page-footer: |
+    <div style="text-align: center;">
+      © 2024 Christian L. Goueguel. All rights reserved, unless otherwise specified.
+    </div>
+  navbar:
+    title: Christian L. Goueguel
+    background: "#2c2c2c" # Charcoal background for the navbar
+    color: "white"        # White text for contrast
+    left:
+      - text: BIO
+        href: bio.qmd
+      - text: RESEARCH
+        href: research.qmd
+      - text: PUBLICATIONS
+        href: publications.qmd
+      - text: TALKS
+        href: talks.qmd
+      - text: PROJECTS
+        href: projects/index.qmd
+      - text: PHOTOGRAPHY
+        href: photography.qmd
+      - text: BLOG
+        href: blog/index.qmd
+      # - text: CV
+      #   href: cv.qmd
+    tools:
+      - icon: github
+        href: https://github.com/ChristianGoueguel
+        target: "_blank"
+      - icon: linkedin
+        href: https://www.linkedin.com/in/christiangoueguel
+        target: "_blank"
+      - icon: google scholar
+        href: https://scholar.google.ca/citations?user=RTSTmL0AAAAJ&hl=en
+        target: "_blank"
+      - icon: r-square
+        href: https://www.researchgate.net/profile/Christian-Goueguel
+        target: "_blank"
+      - icon: medium
+        href: https://medium.com/@christian.goueguel
+        target: "_blank"
+      - icon: envelope-at
+        aria-label: email
+        href: "mailto:christian.goueguel@gmail.com"
+
+format:
+  html:
+    theme: [cosmo, styles.scss]
+    toc: false # Enables a table of contents for better navigation
+    css: styles.scss # Custom styles

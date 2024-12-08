@@ -1,0 +1,74 @@
+---
+title: " "
+---
+
+```{=html}
+<style>
+  .portfolio-section {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+  .portfolio-section h1 {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  .portfolio-section img {
+    display: block;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 2px 2px 15px rgba(0, 0, 0, 1);
+    max-width: 100%;
+    height: auto;
+  }
+  .portfolio-section a {
+    text-decoration: none;
+    color: #0078d4;
+    font-weight: bold;
+  }
+  .styled-heading {
+      background-color: ffffff;
+      display: inline-block;
+      padding: auto;
+      font-size: 2em;
+      border-radius: 5px;
+      box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  }
+</style>
+```
+
+::: portfolio-section
+<!-- <h1 class="styled-heading">Landscape</h1> -->
+<p>
+  <a href="https://www.flickr.com/photos/101817117@N08/albums/72177720322387852" target="_blank">Landscape Photography</a>
+  </p>
+
+<a 
+  data-flickr-embed="true" data-footer="true" href="https://www.flickr.com/photos/101817117@N08/albums/72177720322387437" title="Landscape"><img src="https://live.staticflickr.com/65535/52995125050_3fbf0a1120_h.jpg" alt="Landscape" width="1200" height="1600"/> </a>
+:::
+
+```{=html}
+<script 
+  async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">
+  </script>
+```
+
+<hr>
+
+::: portfolio-section
+<!-- <h1 class="styled-heading">City</h1> -->
+<p>
+  <a href="https://www.flickr.com/photos/101817117@N08/albums/72177720322387852" target="_blank">City Photography</a>
+  </p>
+
+<a 
+  data-flickr-embed="true" data-footer="true" href="https://www.flickr.com/photos/101817117@N08/albums/72177720322387852" title="City"> <img src="https://live.staticflickr.com/65535/51060695942_fa2eedfdcd_b.jpg" alt="City" width="1200" height="1600"/> </a>
+:::
+
+```{=html}
+<script 
+  async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">
+  </script>
+```
+
+<hr>

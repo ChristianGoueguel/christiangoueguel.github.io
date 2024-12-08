@@ -1,0 +1,48 @@
+---
+title: " "
+format: html
+---
+
+::: justified
+![Photo by Christian L. Goueguel.](images/IMG_4742.png){fig-align="center" width="750"}Welcome to an overview of my research journey, from current initiatives to notable past projects in laser spectroscopy (LIBS) and analytical instrumentation. Feel free to reach out if you’d like to collaborate or learn more about my work.
+
+## **Current Research**
+
+**Soil Analysis Using LIBS**\
+Leading cutting-edge research to enhance quantitative analysis of agricultural soils, with a focus on mitigating matrix interference through LIBS combined with advanced chemometric modeling. This work aims to support sustainable agricultural practices.
+
+## **Past Research**
+
+**Development of a High-Throughput LIBS System**\
+Developed a fiber-optic LIBS system integrated with chemometrics for online and real-time monitoring of electrolyte solutes in clinical and point-of-care (POC) settings.
+
+------------------------------------------------------------------------
+
+**Predicting Soil Texture**\
+Developed a LIBS-based benchtop instrument for the quantitative analysis of agricultural soils, leveraging machine learning and chemometrics to interpret complex spectral data. This research was highlighted in the *Journal of Analytical Atomic Spectrometry* on the back cover of Volume 34, Issue 8 (2019), for its contributions to soil texture prediction.
+
+![PCA biplot of spectral data. Sandy soils (grey) and clayey soils (blue) clusters.](images/clipboard-2835089060.png){fig-align="center"}
+
+------------------------------------------------------------------------
+
+**Groundwater Monitoring for Carbon Capture and Storage (CCS)**\
+Developed a compact, robust LIBS sensor for in-situ monitoring of CCS activities in extreme environments (high temperature, pressure, and salinity). Featured on the front cover of the *Journal of Analytical Atomic Spectrometry*, Volume 31, Issue 7 (2016), for underwater LIBS applications in carbonate mineral dissolution studies under rising CO~2~ pressure.
+
+![LIBS for CCS: Signal-to-noise ratio for key emission lines.](images/clipboard-3093143834.png){fig-align="center"}
+
+------------------------------------------------------------------------
+
+**Wavelength-Selective Excitation Approaches in LIBS**\
+During my PhD research in partnership with the NRC, I focused on improving the limit of detection (LOD) for trace impurities in metallic alloys using advanced selective wavelength techniques in LIBS.
+
+Key Contributions:
+
+-   Explored LIBS-LIF, RELIBS, and RLIBS for enhanced LODs in impurity analysis.
+-   Proposed efficient excitation-fluorescence schemes for targeted element detection.
+-   Our RELIBS research was featured on the inside front cover of the *Journal of Analytical Atomic Spectrometry*, Volume 25, Issue 5 (2010).
+
+![Confocal microscopy of RELIBS damage.](images/clipboard-1254990358.png){fig-align="center" width="663"}
+
+![OCT and SEM images of ablation craters in RLA-LIF.](images/clipboard-3452894844.png){fig-align="center" width="649"}
+
+:::

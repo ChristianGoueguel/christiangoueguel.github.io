@@ -1,0 +1,46 @@
+---
+title: "Christian L. Goueguel"
+image: profile.png
+
+about: # https://quarto.org/docs/websites/website-about.html
+  template: jolla
+  image-shape: round
+  links:
+    - icon: github
+      text: Github
+      href: https://github.com/ChristianGoueguel
+      target: "_blank"
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/christiangoueguel
+      target: "_blank"
+    - icon: mortarboard-fill
+      text: Google Scholar
+      href: https://scholar.google.ca/citations?user=RTSTmL0AAAAJ&hl=en
+      target: "_blank"
+    - icon: r-square-fill
+      text: ResearchGate
+      href: https://www.researchgate.net/profile/Christian-Goueguel
+      target: "_blank"
+    - icon: ubuntu
+      text: Clarivate
+      href: https://www.webofscience.com/wos/author/record/J-9316-2015
+      target: "_blank"
+    - icon: medium
+      text: Medium
+      href: https://medium.com/@christian.goueguel
+      target: "_blank"
+    - icon: envelope-at-fill
+      text: Email
+      href: "mailto:christian.goueguel@gmail.com"
+---
+
+<hr>
+
+::: justified
+Dr. Christian L. Goueguel is a research scientist specializing in laser spectroscopy and chemometrics. His work spans industries such as environmental monitoring, agriculture, medical devices, and dairy production. He has authored 20+ peer-reviewed articles and presented his research at numerous international conferences.
+
+Throughout his career, Christian has consistently pushed the boundaries of analytical chemistry, delivering innovative, high-impact solutions that bridge research and practical applications.
+
+He actively contributes to the academic and research community by serving as a referee for several scientific journals including *J. Anal. At. Spectrom*., *ChemComm*, *Appl. Opt*., *Photonics Research*, *Opt. Lett*., and *Opt. Express*. In this role, he evaluates and reviews submitted manuscripts, providing constructive feedback to ensure the quality, rigor, and integrity of the published research.
+:::
