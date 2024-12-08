@@ -3,7 +3,7 @@ project:
   output-dir: docs/
 
 website:
-  title: "Home"
+  title: "Christian L. Goueguel"
   open-graph: true # Enables open graph metadata for better social sharing
   page-footer: |
     <div style="text-align: center;">

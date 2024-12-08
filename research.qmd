@@ -16,6 +16,8 @@ Leading research to enhance quantitative analysis of agricultural soils, with a 
 **Development of a High-Throughput LIBS System**\
 Developed a fiber-optic LIBS system integrated with chemometrics for online and real-time monitoring of electrolyte solutes in clinical and point-of-care (POC) settings.
 
+![](images/clipboard-678293408.png){fig-align="center" width="600"}
+
 ------------------------------------------------------------------------
 
 **Predicting Soil Texture**\
@@ -37,7 +39,7 @@ Developed a compact, robust LIBS sensor for in-situ monitoring of CCS activities
 ------------------------------------------------------------------------
 
 **Wavelength-Selective Excitation Approaches in Laser-produced plasma**\
-Research focused on improving the limit of detection (LOD) for trace impurities in metallic alloys using advanced selective wavelength techniques in laser-produced plasma. Explored LA-LIF, resonance-enhance LIBS, and RLA-LIBS approaches for enhanced LODs in impurity analysis. Proposed efficient excitation-fluorescence schemes for targeted element detection in RLA-LIF. Our research on the investigation of resonance-enhance LIBS was featured on the inside front cover of the *Journal of Analytical Atomic Spectrometry*, Volume 25, Issue 5 (2010).
+Research focused on improving the limit of detection (LOD) for trace impurities in metallic alloys using selective wavelength approaches in laser-produced plasma. Explored LA-LIF, resonance-enhance LIBS, and RLA-LIF approaches for enhanced LODs in impurity analysis. Proposed efficient excitation-fluorescence schemes for targeted element detection in RLA-LIF. Our research on the investigation of resonance-enhance LIBS was featured on the inside front cover of the *Journal of Analytical Atomic Spectrometry*, Volume 25, Issue 5 (2010).
 
 ![LA-LIF and resonance-enhance LIBS experimental setup. A first Nd:YAG pulse generates low-density vapor, followed by a second tunable pulse targeting a resonant transition of an analyte (LA-LIF), or of a matrix element (resonance-enhance LIBS).](images/clipboard-3126440000.png){fig-align="center"}
 
