@@ -21,6 +21,8 @@ Developed a fiber-optic LIBS system integrated with chemometrics for online and 
 **Predicting Soil Texture**\
 Developed a LIBS-based benchtop instrument for the quantitative analysis of agricultural soils, leveraging machine learning and chemometrics to interpret complex spectral data. This research was highlighted in the *Journal of Analytical Atomic Spectrometry* on the back cover of Volume 34, Issue 8 (2019), for its contributions to soil texture prediction.
 
+![An example of LIBS spectra recorded from three soil types: sandy, silty, and clayey.](images/clipboard-3369296146.png){fig-align="center" width="600"}
+
 ![Principal component analysis (PCA) biplot of spectral data. Sandy soils (grey) and clayey soils (blue) clusters.](images/clipboard-2835089060.png){fig-align="center"}
 
 ------------------------------------------------------------------------
@@ -34,12 +36,14 @@ Developed a compact, robust LIBS sensor for in-situ monitoring of CCS activities
 
 ------------------------------------------------------------------------
 
-**Wavelength-Selective Excitation Approaches in LIBS**\
-Research focused on improving the limit of detection (LOD) for trace impurities in metallic alloys using advanced selective wavelength techniques in laser-produced plasmas. Explored LA-LIF, resonance-enhance LIBS, and RLA-LIBS approaches for enhanced LODs in impurity analysis. Proposed efficient excitation-fluorescence schemes for targeted element detection in RLA-LIF. Our research on the investigation of resonance-enhance LIBS was featured on the inside front cover of the *Journal of Analytical Atomic Spectrometry*, Volume 25, Issue 5 (2010).
+**Wavelength-Selective Excitation Approaches in Laser-produced plasma**\
+Research focused on improving the limit of detection (LOD) for trace impurities in metallic alloys using advanced selective wavelength techniques in laser-produced plasma. Explored LA-LIF, resonance-enhance LIBS, and RLA-LIBS approaches for enhanced LODs in impurity analysis. Proposed efficient excitation-fluorescence schemes for targeted element detection in RLA-LIF. Our research on the investigation of resonance-enhance LIBS was featured on the inside front cover of the *Journal of Analytical Atomic Spectrometry*, Volume 25, Issue 5 (2010).
 
 ![LA-LIF and resonance-enhance LIBS experimental setup. A first Nd:YAG pulse generates low-density vapor, followed by a second tunable pulse targeting a resonant transition of an analyte (LA-LIF), or of a matrix element (resonance-enhance LIBS).](images/clipboard-3126440000.png){fig-align="center"}
 
 ![(upper panel) Confocal microscopy images of resonance-enhance LIBS sample damage at three ablation laser fluences. (lower panel) Resonance-enhance LIBS is especially advantageous when minimal surface damage is critical, as it ablates approximately 10 times less material per shot than standard LIBS.](images/clipboard-1254990358.png){fig-align="center" width="663"}
+
+![Partial Grotrian diagram illustrating the excitation and fluorescence emission processes of lead, as used in LA-LIF and RLA-LIF experiments.](images/clipboard-270348954.png){fig-align="center" width="400"}
 
 ![(left panel) RLA-LIF improves detection sensitivity by approximately 1 order of magnitude at a significantly lower laser fluence compared to standard LIBS. (right panel) Optical coherence tomography (OCT)-based 3D plots and scanning electron microscope (SEM) images of sample ablation craters in RLA-LIF.](images/clipboard-3452894844.png){fig-align="center" width="649"}
 :::
