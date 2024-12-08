@@ -1,5 +1,5 @@
 ---
-title: " "
+title: ""
 format: html
 ---
 
@@ -44,5 +44,4 @@ Key Contributions:
 ![Confocal microscopy of RELIBS damage.](images/clipboard-1254990358.png){fig-align="center" width="663"}
 
 ![OCT and SEM images of ablation craters in RLA-LIF.](images/clipboard-3452894844.png){fig-align="center" width="649"}
-
 :::
