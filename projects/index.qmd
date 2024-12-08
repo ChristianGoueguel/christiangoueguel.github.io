@@ -1,0 +1,7 @@
+---
+title: R Packages
+listing:
+  contents: projects.yml
+  type: grid
+  max-description-length: 250
+---

@@ -1,0 +1,49 @@
+- title: Hotelling’s T-Squared Statistic and Ellipse
+  path: https://christiangoueguel.github.io/HotellingEllipse/
+  image: images/HotellingEllipse.png
+  description: >
+    The HotellingEllipse package facilitates the comparison 
+    of multivariate datasets based on their PCA or PLS scores by computing the 
+    Hotelling's T-squared statistic. The package also provides the semi-minor and 
+    semi-major axes for drawing Hotelling's T-squared ellipses at the commonly used 
+    95% and 99% confidence levels. Additionally, it allows users to obtain the x-y 
+    coordinates at user-defined confidence levels, enabling the construction of 
+    ellipses with customized confidence levels.
+  categories: [R, Machine Learning, Chemometrics, Exploratory Data Analysis]
+  date: 2021-05-18
+
+- title: Computation of 2D and 3D Elliptical Joint Confidence Regions
+  path: https://christiangoueguel.github.io/ConfidenceEllipse/
+  image: images/ConfidenceEllipse.png
+  description: >
+    The ConfidenceEllipse package calculates the coordinates of elliptical joint 
+    regions at a specified confidence level. It provides the flexibility to estimate 
+    classical or robust confidence regions, which can be visualized as 2D or 3D plots.
+    Additionally, the functions allow users to group the dataset based 
+    on categorical variables and estimate separate confidence regions for each group.
+  categories: [R, Machine Learning, Chemometrics, Clustering]
+  date: 2024-04-22
+
+- title: Preprocessing Tools for Spectroscopy Data Analysis
+  path: https://christiangoueguel.github.io/specProc/
+  image: images/specProc.png
+  description: >
+    The specProc package performs a wide range of preprocessing tasks essential 
+    for spectroscopic data analysis. Spectral preprocessing is essential in ensuring 
+    accurate and reliable results by minimizing the impact of various distortions 
+    and artifacts that can arise during data acquisition or due to inherent 
+    characteristics of the sample or instrument.
+  categories: [R, Visualization, Chemometrics, Preprocessing, Exploratory Data Analysis]
+  date: 2024-11-01
+
+- title: CRAN Package Usage App
+  path: https://christian-goueguel.shinyapps.io/CRAN-Package-Usage/
+  image: images/CRAN_packages_usage.png
+  description: >
+    Shiny app that provides an interactive way to explore CRAN package usage.
+    It enables users to display detailed download trends and compare up to 20 
+    packages simultaneously.
+  categories: [R, Visualization, App]
+  date: 2024-12-01
+  
+  
