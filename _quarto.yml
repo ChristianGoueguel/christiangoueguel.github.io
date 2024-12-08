@@ -53,5 +53,5 @@ website:
 format:
   html:
     theme: [cosmo, styles.scss]
-    toc: false # Enables a table of contents for better navigation
+    toc: true # Enables a table of contents for better navigation
     css: styles.scss # Custom styles
