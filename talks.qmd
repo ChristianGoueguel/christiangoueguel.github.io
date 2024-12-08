@@ -9,7 +9,7 @@ editor:
 Yin](https://unsplash.com/photos/books-on-brown-wooden-shelf-2JIvboGLeho?utm_content=creditShareLink&utm_medium=referral&utm_source=unsplash).](images/books.png){fig-align="center"}
 
 ::: justified
-## Oral/Poster Presentations
+## Oral Presentations
 
 1.  C. L. Goueguel, Direct determination of soil texture using
     laser-induced breakdown spectroscopy and multivariate linear
@@ -44,74 +44,76 @@ Yin](https://unsplash.com/photos/books-on-brown-wooden-shelf-2JIvboGLeho?utm_con
     carbonated brine solutions. 2014 PITTCON Conference & Expo, 2014
     (Chicago, IL, USA)
 
-7.  C. L. Goueguel, D. L. McIntyre, J. C. Jain, J. P. Singh, A. K.
-    Karamalidis, Analysis of calcium in CO~2~-laden brine (NaCl-CaCl~2~)
-    by Laser-induced breakdown spectroscopy (LIBS). Annual meetings of
-    the North American Society for Laser-Induced Breakdown Spectroscopy
-    (NASLIBS) hosted by FACSS SciX Conference 2013 (Milwaukee, WI, USA)
-
-8.  J. P. Singh, C L. Goueguel, D. L. McIntyre, J. C. Jain, A. K.
+7.  J. P. Singh, C L. Goueguel, D. L. McIntyre, J. C. Jain, A. K.
     Karamalidis, Laser-induced breakdown spectroscopy for elemental
     analysis of brines. 7^th^ International Conference on Laser-Induced
     Breakdown Spectroscopy, 2012 (Luxor, Egypt)
 
-9.  C. Goueguel, Laser Induced Breakdown Spectroscopy (LIBS): From Mars
+8.  C. Goueguel, Laser Induced Breakdown Spectroscopy (LIBS): From Mars
     exploration to GCS monitoring. Postdoctoral Seminar at the
     Department of Civil and Environmental Engineering, Carnegie Mellon
     University, 2012 (Pittsburgh, PA, USA)
 
-10. C. Goueguel, S. Laville, F. Vidal, M. Sabsabi, M. Chaker,
-    Investigation of resonance-enhanced laser-induced breakdown
-    spectroscopy (RELIBS) for the analysis of aluminum alloys. 6^th^
-    International Conference on Laser- Induced Breakdown Spectroscopy,
-    2010 (Memphis, TN, USA)
-
-11. C. Goueguel, S. Laville, F. Vidal, M. Sabsabi, Chaker, Investigation
+9.  C. Goueguel, S. Laville, F. Vidal, M. Sabsabi, Chaker, Investigation
     of resonance-enhanced laser-induced breakdown spectroscopy (RELIBS)
     for the analysis of aluminum alloys, PITTCON Conference & Expo, 2010
     (Orlando, FL, USA)
 
-12. C. Goueguel, S. Laville, H. Loudyi, F. Vidal, M. Sabsabi, M. Chaker,
+10. C. Goueguel, S. Laville, H. Loudyi, F. Vidal, M. Sabsabi, M. Chaker,
     Investigation of resonance-enhanced laser-induced breakdown
     spectroscopy for the analysis of aluminum alloys. 2^nd^ North
     American Symposium on Laser-Induced Breakdown Spectroscopy, 2009
     (New Orleans, LA, USA)
 
-13. C. Goueguel, H. Loudyi, S. Laville, M. Chaker, M. Sabsabi, F. Vidal,
+11. C. Goueguel, H. Loudyi, S. Laville, M. Chaker, M. Sabsabi, F. Vidal,
     Excitation spectrale sélective d’un plasma d’aluminium par une
     seconde impulsion laser: Optimisation des paramètres expérimentaux.
     Colloque Plasma- Québec, 2009 (Montreal, QC, Canada)
 
-14. S. Laville, K. Rifai, H. Loudyi, M. Chaker, M. Sabsabi, F. Vidal, C.
+12. S. Laville, K. Rifai, H. Loudyi, M. Chaker, M. Sabsabi, F. Vidal, C.
     Goueguel, Analysis of trace elements in liquids using LIBS combined
     with laser-induced fluorescence. 5^th^ International Conference on
     Laser-Induced Breakdown Spectroscopy, 2008 (Berlin, Germany)
 
-15. F. Vidal, M. Chaker, C. Goueguel, S. Laville, H. Loudyi, K.
+13. F. Vidal, M. Chaker, C. Goueguel, S. Laville, H. Loudyi, K.
     Rifai, M. Sabsabi, Enhanced laser-induced breakdown spectroscopy by
     second pulse selective wavelength excitation. Laser and plasma
     applications in materials science: 1^st^ International Conference on
     Laser Plasma Applications in Materials Science, LAPAMS, 2008 (Alger,
     Algeria)
 
-16. C. Goueguel, S. Laville, H. Loudyi, M. Chaker, M. Sabsabi, F. Vidal.
+14. C. Goueguel, S. Laville, H. Loudyi, M. Chaker, M. Sabsabi, F. Vidal.
     Detection of lead in brass by Laser-Induced Breakdown Spectroscopy
     combined with Laser-Induced Fluorescence. Photonics North, 2008
     (Montreal, QC, Canada)
 
-17. H. Loudyi, C. Goueguel, K. Rifai, S. Laville, M. Sabsabi, M.
+15. H. Loudyi, C. Goueguel, K. Rifai, S. Laville, M. Sabsabi, M.
     Chaker, F. Vidal, Enhancing the sensitivity of the laser-Induced
     Breakdown Spectroscopy technique: spectrally selective excitation of
     specific elements in laser produced plasma. Canadian Association of
     Physicists Congress, 2008 (Laval, QC, Canada)
 
-18. C. Goueguel, H. Loudyi, S. Laville, M. Chaker, M. Sabsabi, F. Vidal,
+16. C. Goueguel, H. Loudyi, S. Laville, M. Chaker, M. Sabsabi, F. Vidal,
     Analyse des matériaux solides par LIBS: Effet d’une deuxième
     impulsion laser basée sur une excitation spectrale sélective.
     Colloque Plasma-Québec, 2008 (Montreal, QC, Canada)
 
-19. F. Vidal, S. Laville, C. Goueguel, H. Loudyi, M. Chaker, M. Sabsabi,
+17. F. Vidal, S. Laville, C. Goueguel, H. Loudyi, M. Chaker, M. Sabsabi,
     Investigation of laser-induced breakdown spectroscopy combined with
     laser- induced fluorescence. 4^th^ Euro-Mediterranean Symposium on
     Laser-Induced Breakdown Spectroscopy, 2007 (Paris, France)
+
+## Poster Presentations
+
+1.  C. L. Goueguel, D. L. McIntyre, J. C. Jain, J. P. Singh, A. K.
+    Karamalidis, Analysis of calcium in CO~2~-laden brine (NaCl-CaCl~2~)
+    by Laser-induced breakdown spectroscopy (LIBS). Annual meetings of
+    the North American Society for Laser-Induced Breakdown Spectroscopy
+    (NASLIBS) hosted by FACSS SciX Conference 2013 (Milwaukee, WI, USA)
+
+2.  C. Goueguel, S. Laville, F. Vidal, M. Sabsabi, M. Chaker,
+    Investigation of resonance-enhanced laser-induced breakdown
+    spectroscopy (RELIBS) for the analysis of aluminum alloys. 6^th^
+    International Conference on Laser- Induced Breakdown Spectroscopy,
+    2010 (Memphis, TN, USA)
 :::
