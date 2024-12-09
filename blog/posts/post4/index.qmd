@@ -1,0 +1,19 @@
+---
+title: "A Comparative Exploration of Orthogonal Signal Correction Methods"
+description: "Orthogonal signal correction (OSC) is a powerful preprocessing technique frequently used to remove variation in spectral data that is orthogonal to the property of interest. Over the years, several implementations of OSC have emerged, with the most notable being those by Wold et al., Sjöblom et al., and Fearn. This post compares these three methods, exploring their algorithmic approaches and practical implications."
+author: "Christian L. Goueguel"
+date: "5/25/2023"
+image: "cover.png"
+categories:
+  - R
+  - Preprocessing
+  - Chemometrics
+  - Machine Learning
+  - Spectroscopy
+---
+
+::: justified
+![Photo by [Marek Piwnicki](https://unsplash.com/photos/a-mountain-range-with-snow-covered-mountains-in-the-background-sG74zCidO58?utm_content=creditShareLink&utm_medium=referral&utm_source=unsplash).](cover.png){fig-align="center"}
+
+Wold's method was the first formal OSC algorithm. It operates iteratively to identify orthogonal components unrelated to the dependent variable $Y$. The method leverages a combination of principal component analysis (PCA) and partial least squares (PLS). Sjöblom's approach builds on Wold's by introducing a direct orthogonalization step. The algorithm emphasizes calibration transfer, making it especially useful for standardizing spectral datasets across instruments or conditions. Whereas, Fearn proposed a mathematically elegant version of OSC, simplifying the computation by leveraging matrix operations. The method directly orthogonalizes $X$ using a singular value decomposition (SVD) of a residual matrix.
+:::
