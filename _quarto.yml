@@ -14,7 +14,7 @@ website:
     background: "#2c2c2c" # Charcoal background for the navbar
     color: "white"        # White text for contrast
     left:
-      - text: BIO
+      - text: ABOUT
         href: bio.qmd
       - text: RESEARCH
         href: research.qmd
