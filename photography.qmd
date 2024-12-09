@@ -37,11 +37,13 @@ title: " "
 </style>
 ```
 
+> **“*To me, photography is an art of observation. It’s about finding something interesting in an ordinary place… I’ve found it has little to do with the things you see and everything to do with the way you see them*.”**\
+> – Elliott Erwitt
+
 ::: portfolio-section
 <!-- <h1 class="styled-heading">Landscape</h1> -->
-<p>
-  <a href="https://www.flickr.com/photos/101817117@N08/albums/72177720322387852" target="_blank">Landscape Photography</a>
-  </p>
+
+<p><a href="https://www.flickr.com/photos/101817117@N08/albums/72177720322387852" target="_blank">Landscape Photography</a></p>
 
 <a 
   data-flickr-embed="true" data-footer="true" href="https://www.flickr.com/photos/101817117@N08/albums/72177720322387437" title="Landscape"><img src="https://live.staticflickr.com/65535/52995125050_3fbf0a1120_h.jpg" alt="Landscape" width="1200" height="1600"/> </a>
@@ -57,9 +59,8 @@ title: " "
 
 ::: portfolio-section
 <!-- <h1 class="styled-heading">City</h1> -->
-<p>
-  <a href="https://www.flickr.com/photos/101817117@N08/albums/72177720322387852" target="_blank">City Photography</a>
-  </p>
+
+<p><a href="https://www.flickr.com/photos/101817117@N08/albums/72177720322387852" target="_blank">City Photography</a></p>
 
 <a 
   data-flickr-embed="true" data-footer="true" href="https://www.flickr.com/photos/101817117@N08/albums/72177720322387852" title="City"> <img src="https://live.staticflickr.com/65535/51060695942_fa2eedfdcd_b.jpg" alt="City" width="1200" height="1600"/> </a>
