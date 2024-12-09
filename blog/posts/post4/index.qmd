@@ -16,4 +16,79 @@ categories:
 ![Photo by [Jonatan Pie](https://unsplash.com/photos/a-body-of-water-surrounded-by-mountains-and-clouds-_b2hvhIXGI8?utm_content=creditShareLink&utm_medium=referral&utm_source=unsplash).](cover.png){fig-align="center"}
 
 Wold's method was the first formal OSC algorithm. It operates iteratively to identify orthogonal components unrelated to the dependent variable $Y$. The method leverages a combination of principal component analysis (PCA) and partial least squares (PLS). Sjöblom's approach builds on Wold's by introducing a direct orthogonalization step. The algorithm emphasizes calibration transfer, making it especially useful for standardizing spectral datasets across instruments or conditions. Whereas, Fearn proposed a mathematically elegant version of OSC, simplifying the computation by leveraging matrix operations. The method directly orthogonalizes $X$ using a singular value decomposition (SVD) of a residual matrix.
+
+## Wold's OSC Algorithm
+
+The Wold algorithm is like a precise sculptor of spectroscopic data. It uses Partial Least Squares (PLS) regression to systematically remove spectral variations that are unrelated to the target variable. The key steps involve:
+
+-   Iteratively identifying orthogonal components
+-   Projecting out signals that don't correlate with the target
+-   Refining the correction through multiple computational passes
+
+Think of it as a meticulous data cleaning process that carefully separates meaningful signal from background noise.
+
+### Framework:
+
+Wold's OSC identifies components in $X$ orthogonal to $Y$ through iterative deflation. The primary steps are:
+
+-   Project $X$ onto $Y$ to identify the $Y$-relevant information.
+-   Extract the orthogonal scores $t$ from $X$, ensuring they are independent of $Y$.
+-   Subtract the contribution of these orthogonal components from $X$.
+-   Repeat for multiple components until a predefined number of orthogonal components ($n_{\text{comp}}$) is reached.
+
+### Mathematical Steps:
+
+Initialize $t$, the first score vector (e.g., using PCA on $X$).
+
+1.  Deflate $t$ using $Y$: $t_{\text{new}} = t - Y(Y^\top Y)^{-1}Y^\top t$
+2.  Calculate a loading vector $p$ from $t_{\text{new}}$ to model $X$: $p = \frac{X^\top t_{\text{new}}}{t_{\text{new}}^\top t_{\text{new}}}$
+3.  Deflate $X$: $X_{\text{new}} = X - t_{\text{new}} p^\top$
+4.  Repeat until $n_{\text{comp}}$.
+
+## Sjöblom's OSC Algorithm
+
+jöblom's approach is the pragmatic cousin of the Wold method. It:
+
+-   Uses a more direct weight calculation technique
+-   Focuses on quickly identifying and removing orthogonal variations
+-   Requires fewer computational iterations
+-   Provides a computationally efficient alternative to more complex methods
+
+It's like a quick, no-nonsense cleaning process for spectroscopic data.
+
+### Framework:
+
+-   Sjöblom's OSC refines Wold's approach by emphasizing a more direct projection of $X$ orthogonal to $Y$.
+-   It uses similar steps but simplifies certain iterative aspects, focusing on the orthogonal direction more explicitly.
+
+### Mathematical Steps:
+
+1.  Identify a direction vector $w$ from $X$ and $t$, the orthogonal scores $w = \frac{X^\top t}{t^\top t}$​
+2.  Normalize $w$: $w = \frac{w}{\|w\|}$​
+3.  Deflate $t$ from $Y$ as in Wold's method.
+4.  Remove the orthogonal variation from $X$: $X_{\text{new}} = X - t p^\top$
+5.  Iterate for each component.
+
+## Fearn's OSC Algorithm
+
+Fearn's method stands out by using Singular Value Decomposition (SVD) as its foundation. Its unique characteristics include:
+
+-   Preprocessing data through matrix decomposition
+-   Creating orthogonal components using eigenvalue analysis
+-   Handling complex spectral structures more robustly
+-   Particularly effective with datasets having clear orthogonal patterns
+
+Imagine it as a mathematical lens that reshapes your data's underlying structure.
+
+### Framework:
+
+-   Fearn’s OSC is conceptually different, relying on Singular Value Decomposition (SVD) for a more robust decomposition of the orthogonal signal.
+-   Instead of iterative refinement, Fearn's method isolates orthogonal components through SVD of the residual matrix $Z = X - P_Y X$, where $P_Y$ projects $X$ onto $Y$.
+
+### Mathematical Steps:
+
+1.  Compute the residual matrix $Z$: $Z = X - Y (Y^\top Y)^{-1} Y^\top X$
+2.  Perform SVD on $Z$: $Z = U S V^\top$
+3.  Extract the first $n_{\text{comp}}$ components from $V$ and reconstruct the orthogonal scores $t$ and loadings $p$: $t = Z V_{:, i}, \quad p = \frac{X^\top t}{t^\top t}$
+4.  Deflate $X$: $X_{\text{new}} = X - t p^\top$
 :::

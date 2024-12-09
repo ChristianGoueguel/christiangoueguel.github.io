@@ -226,6 +226,91 @@ window.Quarto = {
 </figure>
 </div>
 <p>Wold’s method was the first formal OSC algorithm. It operates iteratively to identify orthogonal components unrelated to the dependent variable <span class="math inline">\(Y\)</span>. The method leverages a combination of principal component analysis (PCA) and partial least squares (PLS). Sjöblom’s approach builds on Wold’s by introducing a direct orthogonalization step. The algorithm emphasizes calibration transfer, making it especially useful for standardizing spectral datasets across instruments or conditions. Whereas, Fearn proposed a mathematically elegant version of OSC, simplifying the computation by leveraging matrix operations. The method directly orthogonalizes <span class="math inline">\(X\)</span> using a singular value decomposition (SVD) of a residual matrix.</p>
+<section id="wolds-osc-algorithm" class="level2">
+<h2 class="anchored" data-anchor-id="wolds-osc-algorithm">Wold’s OSC Algorithm</h2>
+<p>The Wold algorithm is like a precise sculptor of spectroscopic data. It uses Partial Least Squares (PLS) regression to systematically remove spectral variations that are unrelated to the target variable. The key steps involve:</p>
+<ul>
+<li>Iteratively identifying orthogonal components</li>
+<li>Projecting out signals that don’t correlate with the target</li>
+<li>Refining the correction through multiple computational passes</li>
+</ul>
+<p>Think of it as a meticulous data cleaning process that carefully separates meaningful signal from background noise.</p>
+<section id="framework" class="level3">
+<h3 class="anchored" data-anchor-id="framework">Framework:</h3>
+<p>Wold’s OSC identifies components in <span class="math inline">\(X\)</span> orthogonal to <span class="math inline">\(Y\)</span> through iterative deflation. The primary steps are:</p>
+<ul>
+<li>Project <span class="math inline">\(X\)</span> onto <span class="math inline">\(Y\)</span> to identify the <span class="math inline">\(Y\)</span>-relevant information.</li>
+<li>Extract the orthogonal scores <span class="math inline">\(t\)</span> from <span class="math inline">\(X\)</span>, ensuring they are independent of <span class="math inline">\(Y\)</span>.</li>
+<li>Subtract the contribution of these orthogonal components from <span class="math inline">\(X\)</span>.</li>
+<li>Repeat for multiple components until a predefined number of orthogonal components (<span class="math inline">\(n_{\text{comp}}\)</span>) is reached.</li>
+</ul>
+</section>
+<section id="mathematical-steps" class="level3">
+<h3 class="anchored" data-anchor-id="mathematical-steps">Mathematical Steps:</h3>
+<p>Initialize <span class="math inline">\(t\)</span>, the first score vector (e.g., using PCA on <span class="math inline">\(X\)</span>).</p>
+<ol type="1">
+<li>Deflate <span class="math inline">\(t\)</span> using <span class="math inline">\(Y\)</span>: <span class="math inline">\(t_{\text{new}} = t - Y(Y^\top Y)^{-1}Y^\top t\)</span></li>
+<li>Calculate a loading vector <span class="math inline">\(p\)</span> from <span class="math inline">\(t_{\text{new}}\)</span> to model <span class="math inline">\(X\)</span>: <span class="math inline">\(p = \frac{X^\top t_{\text{new}}}{t_{\text{new}}^\top t_{\text{new}}}\)</span></li>
+<li>Deflate <span class="math inline">\(X\)</span>: <span class="math inline">\(X_{\text{new}} = X - t_{\text{new}} p^\top\)</span></li>
+<li>Repeat until <span class="math inline">\(n_{\text{comp}}\)</span>.</li>
+</ol>
+</section>
+</section>
+<section id="sjöbloms-osc-algorithm" class="level2">
+<h2 class="anchored" data-anchor-id="sjöbloms-osc-algorithm">Sjöblom’s OSC Algorithm</h2>
+<p>jöblom’s approach is the pragmatic cousin of the Wold method. It:</p>
+<ul>
+<li>Uses a more direct weight calculation technique</li>
+<li>Focuses on quickly identifying and removing orthogonal variations</li>
+<li>Requires fewer computational iterations</li>
+<li>Provides a computationally efficient alternative to more complex methods</li>
+</ul>
+<p>It’s like a quick, no-nonsense cleaning process for spectroscopic data.</p>
+<section id="framework-1" class="level3">
+<h3 class="anchored" data-anchor-id="framework-1">Framework:</h3>
+<ul>
+<li>Sjöblom’s OSC refines Wold’s approach by emphasizing a more direct projection of <span class="math inline">\(X\)</span> orthogonal to <span class="math inline">\(Y\)</span>.</li>
+<li>It uses similar steps but simplifies certain iterative aspects, focusing on the orthogonal direction more explicitly.</li>
+</ul>
+</section>
+<section id="mathematical-steps-1" class="level3">
+<h3 class="anchored" data-anchor-id="mathematical-steps-1">Mathematical Steps:</h3>
+<ol type="1">
+<li>Identify a direction vector <span class="math inline">\(w\)</span> from <span class="math inline">\(X\)</span> and <span class="math inline">\(t\)</span>, the orthogonal scores <span class="math inline">\(w = \frac{X^\top t}{t^\top t}\)</span>​</li>
+<li>Normalize <span class="math inline">\(w\)</span>: <span class="math inline">\(w = \frac{w}{\|w\|}\)</span>​</li>
+<li>Deflate <span class="math inline">\(t\)</span> from <span class="math inline">\(Y\)</span> as in Wold’s method.</li>
+<li>Remove the orthogonal variation from <span class="math inline">\(X\)</span>: <span class="math inline">\(X_{\text{new}} = X - t p^\top\)</span></li>
+<li>Iterate for each component.</li>
+</ol>
+</section>
+</section>
+<section id="fearns-osc-algorithm" class="level2">
+<h2 class="anchored" data-anchor-id="fearns-osc-algorithm">Fearn’s OSC Algorithm</h2>
+<p>Fearn’s method stands out by using Singular Value Decomposition (SVD) as its foundation. Its unique characteristics include:</p>
+<ul>
+<li>Preprocessing data through matrix decomposition</li>
+<li>Creating orthogonal components using eigenvalue analysis</li>
+<li>Handling complex spectral structures more robustly</li>
+<li>Particularly effective with datasets having clear orthogonal patterns</li>
+</ul>
+<p>Imagine it as a mathematical lens that reshapes your data’s underlying structure.</p>
+<section id="framework-2" class="level3">
+<h3 class="anchored" data-anchor-id="framework-2">Framework:</h3>
+<ul>
+<li>Fearn’s OSC is conceptually different, relying on Singular Value Decomposition (SVD) for a more robust decomposition of the orthogonal signal.</li>
+<li>Instead of iterative refinement, Fearn’s method isolates orthogonal components through SVD of the residual matrix <span class="math inline">\(Z = X - P_Y X\)</span>, where <span class="math inline">\(P_Y\)</span> projects <span class="math inline">\(X\)</span> onto <span class="math inline">\(Y\)</span>.</li>
+</ul>
+</section>
+<section id="mathematical-steps-2" class="level3">
+<h3 class="anchored" data-anchor-id="mathematical-steps-2">Mathematical Steps:</h3>
+<ol type="1">
+<li>Compute the residual matrix <span class="math inline">\(Z\)</span>: <span class="math inline">\(Z = X - Y (Y^\top Y)^{-1} Y^\top X\)</span></li>
+<li>Perform SVD on <span class="math inline">\(Z\)</span>: <span class="math inline">\(Z = U S V^\top\)</span></li>
+<li>Extract the first <span class="math inline">\(n_{\text{comp}}\)</span> components from <span class="math inline">\(V\)</span> and reconstruct the orthogonal scores <span class="math inline">\(t\)</span> and loadings <span class="math inline">\(p\)</span>: <span class="math inline">\(t = Z V_{:, i}, \quad p = \frac{X^\top t}{t^\top t}\)</span></li>
+<li>Deflate <span class="math inline">\(X\)</span>: <span class="math inline">\(X_{\text{new}} = X - t p^\top\)</span></li>
+</ol>
+</section>
+</section>
 </div>
 
 
