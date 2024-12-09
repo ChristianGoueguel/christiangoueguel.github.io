@@ -45,6 +45,54 @@ Initialize $t$, the first score vector (e.g., using PCA on $X$).
 3.  Deflate $X$: $X_{\text{new}} = X - t_{\text{new}} p^\top$
 4.  Repeat until $n_{\text{comp}}$.
 
+```{r}
+wold_osc <- function(x, y, ncomp, tol, max.iter) {
+  x_original <- x
+  ps <- ws<- ts <- vector("list", ncomp)
+  for (i in seq_len(ncomp)) {
+    pc <- stats::prcomp(x, center = FALSE)
+    t <- pc$x[, 1]
+    dif <- 1
+    iter <- 0
+    while (dif > tol && iter < max.iter) {
+      iter <- iter + 1
+      t_new <- t - y %*% MASS::ginv(crossprod(y, y)) %*% crossprod(y, t)
+      plsFit <- pls::simpls.fit(x, t_new, ncomp, center = FALSE)
+      w <- plsFit$coefficients[ , , ncomp]
+      w <- w / sqrt(sum(w^2))
+      t_new <- x %*% w
+      dif <- sqrt(sum((t_new - t)^2) / sum(t_new^2))
+      t <- t_new
+    }
+    p <- crossprod(t, x) %*% MASS::ginv(crossprod(t, t_new))
+    x <- x - tcrossprod(t, p)
+    ws[[i]] <- w
+    ps[[i]] <- p
+    ts[[i]] <- t
+  }
+  w_ortho <- do.call(cbind, ws)
+  p_ortho <- do.call(cbind, ps)
+  t_ortho <- do.call(cbind, ts)
+  x_osc <- x_original - x_original %*% tcrossprod(w_ortho, p_ortho)
+
+  R2 <- sum(x_osc^2) / sum(x_original^2) * 100
+  angle <- crossprod(t_ortho, y)
+  norm <- MASS::ginv(sqrt(apply(t_ortho^2, 2, sum) * sum(y^2)))
+  angle <- t(angle) %*% t(norm)
+  angle <- mean(acos(angle) * 180 / pi)
+
+  res <- list(
+    "correction" = tibble::as_tibble(x_osc),
+    "weights" = tibble::as_tibble(w_ortho),
+    "scores" = tibble::as_tibble(t_ortho),
+    "loadings" = tibble::as_tibble(p_ortho),
+    "angle" = angle,
+    "R2" = R2
+  )
+  return(res)
+}
+```
+
 ## Sjöblom's OSC Algorithm
 
 jöblom's approach is the pragmatic cousin of the Wold method. It:
@@ -69,6 +117,57 @@ It's like a quick, no-nonsense cleaning process for spectroscopic data.
 4.  Remove the orthogonal variation from $X$: $X_{\text{new}} = X - t p^\top$
 5.  Iterate for each component.
 
+```{r}
+sjoblom_osc <- function(x, y, ncomp, tol, max.iter) {
+  x_original <- x
+  ps <- ws <- ts <- vector("list", ncomp)
+  for (i in seq_len(ncomp)) {
+    pc <- stats::prcomp(x, center = FALSE)
+    t <- pc$x[, 1]
+    dif <- 1
+    iter <- 0
+    while (dif > tol && iter < max.iter) {
+      iter <- iter + 1
+      t_new <- t - y %*% MASS::ginv(crossprod(y, y)) %*% crossprod(y, t)
+      w <- crossprod(x, t_new) %*% MASS::ginv(crossprod(t_new, t_new))
+      w <- w / sqrt(sum(w^2))
+      t_new <- x %*% w
+      dif <- sqrt(sum((t_new - t)^2) / sum(t_new^2))
+      t <- t_new
+    }
+    plsFit <- pls::simpls.fit(x, t, ncomp)
+    w <- plsFit$coefficients[ , , ncomp]
+    t <- x %*% w
+    t <- t - y %*% MASS::ginv(crossprod(y, y)) %*% crossprod(y, t)
+    p <- crossprod(x, t) %*% MASS::ginv(crossprod(t, t))
+    x <- x - tcrossprod(t, p)
+    ws[[i]] <- w
+    ps[[i]] <- p
+    ts[[i]] <- t
+  }
+  w_ortho <- do.call(cbind, ws)
+  p_ortho <- do.call(cbind, ps)
+  t_ortho <- do.call(cbind, ts)
+  x_osc <- x_original - x_original %*% tcrossprod(w_ortho, p_ortho)
+
+  R2 <- sum(x_osc^2) / sum(x_original^2) * 100
+  angle <- crossprod(t_ortho, y)
+  norm <- MASS::ginv(sqrt(apply(t_ortho^2, 2, sum) * sum(y^2)))
+  angle <- t(angle) %*% t(norm)
+  angle <- mean(acos(angle) * 180 / pi)
+
+  res <- list(
+    "correction" = tibble::as_tibble(x_osc),
+    "weights" = tibble::as_tibble(w_ortho),
+    "scores" = tibble::as_tibble(t_ortho),
+    "loadings" = tibble::as_tibble(p_ortho),
+    "angle" = angle,
+    "R2" = R2
+  )
+  return(res)
+}
+```
+
 ## Fearn's OSC Algorithm
 
 Fearn's method stands out by using Singular Value Decomposition (SVD) as its foundation. Its unique characteristics include:
@@ -91,4 +190,57 @@ Imagine it as a mathematical lens that reshapes your data's underlying structure
 2.  Perform SVD on $Z$: $Z = U S V^\top$
 3.  Extract the first $n_{\text{comp}}$ components from $V$ and reconstruct the orthogonal scores $t$ and loadings $p$: $t = Z V_{:, i}, \quad p = \frac{X^\top t}{t^\top t}$
 4.  Deflate $X$: $X_{\text{new}} = X - t p^\top$
+
+```{r}
+fearn_osc <- function(x, y, ncomp, tol, max.iter) {
+  x_original <- x
+  ps <- ws <- ts <- vector("list", ncomp)
+  m <- diag(row(x)) - crossprod(x, y) %*% MASS::ginv(crossprod(y, x) %*% crossprod(x, y)) %*% crossprod(y, x)
+  z <- x %*% m
+  decomp <- svd(t(z))
+  u <- decomp$u
+  s <- decomp$d
+  v <- decomp$v
+  g <- diag(s[1:ncomp])
+  c <- v[, 1:ncomp, drop = FALSE]
+
+  for (i in seq_len(ncomp)) {
+    w_old <- rep(0, ncol(x))
+    w_new <- rep(1, ncol(x))
+    dif <- 1
+    iter <- 0
+    while (dif > tol && iter < max.iter) {
+      iter <- iter + 1
+      w_old <- w_new
+      t_new <- c[, i] %*% g[i, i]
+      p_new <- tcrossprod(x, t_new) / tcrossprod(t_new, t_new)
+      w_new <- m %*% tcrossprod(x, p_new)
+      dif <- sqrt(sum((w_new - w_old)^2) / sum(w_new^2))
+    }
+    ws[[i]] <- w_new
+    ts[[i]] <- c[, i] %*% g[i, i]
+    ps[[i]] <- tcrossprod(x, t[[i]]) / tcrossprod(t[[i]], t[[i]])
+  }
+  w_ortho <- do.call(cbind, ws)
+  t_ortho <- do.call(cbind, ts)
+  p_ortho <- do.call(cbind, ps)
+  x_osc <- x - tcrossprod(t_ortho, p_ortho)
+
+  R2 <- sum(x_osc^2) / sum(x_original^2) * 100
+  angle <- crossprod(t_ortho, y)
+  norm <- MASS::ginv(sqrt(apply(t_ortho^2, 2, sum) * sum(y^2)))
+  angle <- t(angle) %*% t(norm)
+  angle <- mean(acos(angle) * 180 / pi)
+
+  res <- list(
+    "correction" = tibble::as_tibble(x_osc),
+    "weights" = tibble::as_tibble(w_ortho),
+    "scores" = tibble::as_tibble(t_ortho),
+    "loadings" = tibble::as_tibble(p_ortho),
+    "angle" = angle,
+    "R2" = R2
+  )
+  return(res)
+}
+```
 :::
