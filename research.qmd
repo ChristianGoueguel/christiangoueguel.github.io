@@ -6,21 +6,24 @@ format: html
 ::: justified
 ![Photo by Christian L. Goueguel.](images/IMG_4742.png){fig-align="center" width="750"}Welcome to an overview of my research projects, from current initiatives to notable past projects in laser spectroscopy (LIBS) and analytical instrumentation. Feel free to reach out if you’d like to collaborate or learn more about my work.
 
-## **Current Research**
+## Current Research
 
-**Soil Analysis Using LIBS**\
+### Soil Analysis Using LIBS
+
 Leading research to enhance quantitative analysis of agricultural soils, with a focus on mitigating matrix interference through LIBS combined with advanced chemometric modeling. This work aims to support sustainable agricultural practices.
 
-## **Past Research**
+## Past Research
 
-**Development of a High-Throughput LIBS System**\
+### Development of a High-Throughput LIBS System
+
 Developed a fiber-optic LIBS system integrated with chemometrics for online and real-time monitoring of electrolyte solutes in clinical and point-of-care (POC) settings.
 
 ![](images/clipboard-678293408.png){fig-align="center" width="600"}
 
 ------------------------------------------------------------------------
 
-**Predicting Soil Texture**\
+### Predicting Soil Texture
+
 Developed a LIBS-based benchtop instrument for the quantitative analysis of agricultural soils, leveraging machine learning and chemometrics to interpret complex spectral data. This research was highlighted in the *Journal of Analytical Atomic Spectrometry* on the back cover of Volume 34, Issue 8 (2019), for its contributions to soil texture prediction.
 
 ![An example of LIBS spectra recorded from three soil types: sandy, silty, and clayey.](images/clipboard-3369296146.png){fig-align="center" width="600"}
@@ -29,7 +32,8 @@ Developed a LIBS-based benchtop instrument for the quantitative analysis of agri
 
 ------------------------------------------------------------------------
 
-**Groundwater Monitoring for Carbon Capture and Storage (CCS)**\
+### Groundwater Monitoring for Carbon Capture and Storage (CCS)
+
 Developed a compact, robust LIBS sensor for in-situ monitoring of CCS activities in extreme environments (high temperature, pressure, and salinity). One of our research projects earned the prestigious distinction of being featured on the front cover of the *Journal of Analytical Atomic Spectrometry* (Volume 31, Issue 7, 2016). This study explored the application of underwater LIBS for real-time, in situ monitoring of carbonate mineral dissolution under rising CO~2~ pressure.
 
 ![Underwater LIBS experimental setup. Measurements were taken in a controlled, high-pressure environment, replicating up to 400 bar (≈ 6,000 psi) conditions in carbonated brine environments. Quantitative analysis of key elements (Mg, Ca, K, Ba, Mn, Sr, etc.) in brine.](images/clipboard-1558275829.png){fig-align="center"}
@@ -38,7 +42,8 @@ Developed a compact, robust LIBS sensor for in-situ monitoring of CCS activities
 
 ------------------------------------------------------------------------
 
-**Wavelength-Selective Excitation Approaches in Laser-produced plasma**\
+### Wavelength-Selective Excitation Approaches in Laser-produced plasma
+
 Research focused on improving the limit of detection (LOD) for trace impurities in metallic alloys using selective wavelength approaches in laser-produced plasma. Explored LA-LIF, resonance-enhance LIBS, and RLA-LIF approaches for enhanced LODs in impurity analysis. Proposed efficient excitation-fluorescence schemes for targeted element detection in RLA-LIF. Our research on the investigation of resonance-enhance LIBS was featured on the inside front cover of the *Journal of Analytical Atomic Spectrometry*, Volume 25, Issue 5 (2010).
 
 ![LA-LIF and resonance-enhance LIBS experimental setup. A first Nd:YAG pulse generates low-density vapor, followed by a second tunable pulse targeting a resonant transition of an analyte (LA-LIF), or of a matrix element (resonance-enhance LIBS).](images/clipboard-3126440000.png){fig-align="center"}

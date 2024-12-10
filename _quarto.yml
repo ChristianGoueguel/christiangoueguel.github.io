@@ -53,5 +53,7 @@ website:
 format:
   html:
     theme: [cosmo, styles.scss]
-    toc: true # Enables a table of contents for better navigation
-    css: styles.scss # Custom styles
+    toc: true
+    toc-location: right
+    toc-depth: 3     
+    css: styles.scss
