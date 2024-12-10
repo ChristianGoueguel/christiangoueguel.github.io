@@ -205,7 +205,7 @@ fearn_osc <- function(x, y, ncomp, tol, max.iter) {
 
 We begin by implementing these algorithms, creating functions named `wold_osc`, `sjoblom_osc`, and `fearn_osc`. Each function takes five key parameters. The first parameter, `x`, represents the input data matrix, which typically contains spectral or chemical measurements. The second parameter, `y`, corresponds to the target variable or response vector. The `ncomp` parameter specifies the number of orthogonal components to extract, while `tol` sets the tolerance level for convergence, determining the stopping criterion for iterations. Finally, `max.iter` establishes the maximum number of iterations allowed during the optimization process. The function definitions for these algorithms follow this structure:
 
-``` R
+``` r
 wold_osc <- function(x, y, ncomp, tol, max.iter)
 sjoblom_osc <- function(x, y, ncomp, tol, max.iter)
 fearn_osc <- function(x, y, ncomp, tol, max.iter)
@@ -213,7 +213,7 @@ fearn_osc <- function(x, y, ncomp, tol, max.iter)
 
 To begin, the original data matrix `x` is stored, and empty lists are initialized to hold the extracted principal components, weights, and scores for each component. This step ensures that the algorithm's outputs are organized for further processing or analysis:
 
-``` R
+``` r
 x_original <- x
 ps <- ws <- ts <- vector("list", ncomp)
 ```
@@ -222,7 +222,7 @@ The algorithm proceeds with a loop to extract the specified number of orthogonal
 
 Within the loop, the orthogonalization process begins. Variation correlated with the response variable `y` is iteratively removed from the score vector `t`, refining its orthogonality. Weights, representing the relationship between the input matrix `x` and the score vector, are calculated and normalized to unit length. A new score vector is then computed, and the convergence check compares the difference between successive score vectors (`.diff`) to the tolerance level (`tol`). The loop continues until the difference falls below the specified tolerance or the maximum number of iterations is reached.
 
-``` R
+``` r
 while (.diff > tol && .iter < max.iter) {
   .iter <- .iter + 1
   t_new <- t - y %*% MASS::ginv(crossprod(y, y)) %*% crossprod(y, t)
@@ -238,7 +238,7 @@ After achieving convergence, a Partial Least Squares (PLS) model is fitted to th
 
 The extracted weights, loadings, and scores for each orthogonal component are stored in their respective lists:
 
-``` R
+``` r
 ws[[i]] <- w
 ps[[i]] <- p
 ts[[i]] <- t
@@ -246,7 +246,7 @@ ts[[i]] <- t
 
 Once all components are extracted, the results are combined to construct the orthogonal components matrix. The orthogonally corrected matrix `x_osc` is then computed by removing the contributions of the orthogonal components from the original data matrix:
 
-``` R
+``` r
 x_osc <- x_original - x_original %*% tcrossprod(w_ortho, p_ortho)
 ```
 
@@ -254,7 +254,7 @@ Finally, to evaluate the algorithm's performance, two metrics are computed. The 
 
 ## Exemple
 
-We will use the `beer` dataset introduced in our previous post, building upon the insights and analysis we explored earlier. Next, we will perform standard PCA and PLS regression on the Near-Infrared Spectroscopy (NIRS) spectra of the beer dataset to uncover patterns and relationships within the data.
+We will use the `beer` dataset introduced in our previous post. The dataset consists of Near-Infrared Spectroscopy (NIRS) spectra collected from 80 beer samples, `x_matrix`. The target variable of interest is the Original Gravity (OG), also known as the original extract, `y_target`. This parameter measures the concentration of dissolved solids in the wort before fermentation begins, providing a crucial indicator of the brewing process. Next, we will perform standard PCA and PLS regression on the Near-Infrared Spectroscopy (NIRS) spectra of the beer dataset to uncover patterns and relationships within the data.
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
 library(tidyverse)
@@ -265,24 +265,25 @@ library(HotellingEllipse)
 
 ```{r echo=FALSE}
 beer <- read_csv("beer.csv", show_col_types = FALSE)
+beer <- beer %>% rename(extract = originalGravity)
 ```
 
 ```{r}
-X <- beer %>% select(-originalGravity) %>% as.matrix() # NIRS spectra
-y <- beer %>% pull(originalGravity) # Target variable or Extract
+x_matrix <- beer %>% select(-extract) %>% as.matrix()
+y_target <- beer %>% pull(extract)
 ```
 
-```{r echo=FALSE, fig.height=7, fig.width=6}
+```{r echo=FALSE}
 set.seed(123)
 
-n_samples <- nrow(X)
+n_samples <- nrow(x_matrix)
 
 # Perform PCA on the NIRS spectra
-pca_result <- prcomp(X, center = TRUE, scale. = FALSE)
+pca_result <- prcomp(x_matrix, center = TRUE, scale. = FALSE)
 pca_scores <- pca_result$x
 
 # Perform PLS on the NIRS spectra
-pls_result <- plsr(y ~ X, ncomp = 10, validation = "none")
+pls_result <- plsr(y_target ~ x_matrix, ncomp = 10, validation = "none")
 pls_scores <- scores(pls_result)[, 1:10]
 
 pca_ellipse <- ellipseParam(pca_scores, k = 2, pcx = 1, pcy = 2)
@@ -293,7 +294,7 @@ pca_df <- data.frame(
   PC1 = pca_scores[, 1],
   PC2 = pca_scores[, 2],
   PC3 = pca_scores[, 3],
-  target = y,
+  extract = y_target,
   Sample = factor(1:n_samples)
 )
 
@@ -302,7 +303,7 @@ pls_df <- data.frame(
   Comp1 = pls_scores[, 1],
   Comp2 = pls_scores[, 2],
   Comp3 = pls_scores[, 3],
-  target = y,
+  extract = y_target,
   Sample = factor(1:n_samples)
 )
 
@@ -317,12 +318,23 @@ pca_plot <- pca_df %>%
       b = pluck(pca_ellipse, "Ellipse", "b.95pct"),
       angle = 0), 
     linewidth = .5, linetype = "solid", fill = "white") +
-  aes(x = PC1, y = PC2, fill = target) +
-  geom_point(size = 5L, shape = "square filled", colour = "#112446") +
+  aes(x = PC1, y = PC2, fill = extract) +
+  geom_point(size = 5L, shape = 21, colour = "#112446") +
   scale_fill_viridis_c(option = "cividis", direction = 1) +
-  labs(title = "PCA X-Scores", x = "PC1", y = "PC2", fill = "Extract") +
+  labs(
+    title = "Standard PCA", 
+    x = "Component 1", 
+    y = "Component 2", 
+    fill = "Beer's\nextract") +
   theme_grey() +
-  theme(panel.grid = ggplot2::element_blank())
+  theme(
+    aspect.ratio = .8,
+    panel.grid = element_blank(),
+    panel.background = element_rect(
+    colour = "black",
+    linewidth = .3
+    )
+  )
 
 # Plot PLS scores
 pls_plot <- pls_df %>%
@@ -335,25 +347,37 @@ pls_plot <- pls_df %>%
       b = pluck(pls_ellipse, "Ellipse", "b.95pct"),
       angle = 0), 
     linewidth = .5, linetype = "solid", fill = "white") +
-  aes(x = Comp1, y = Comp2, fill = target) +
-  geom_point(size = 5L, shape = "square filled", colour = "#112446") +
+  aes(x = Comp1, y = Comp2, fill = extract) +
+  geom_point(size = 5L, shape = 21, colour = "#112446") +
   scale_fill_viridis_c(option = "cividis", direction = 1) +
-  labs(title = "PLS X-Scores", x = "LV1", y = "LV2", fill = "Extract") +
+  labs(
+    title = "Standard PLS", 
+    x = "Component 1", 
+    y = "Component 2", 
+    fill = "Beer's\nextract") +
   theme_grey() +
-  theme(panel.grid = ggplot2::element_blank())
+  theme(
+    aspect.ratio = .8,
+    panel.grid = element_blank(),
+    panel.background = element_rect(
+    colour = "black",
+    linewidth = .3
+    )
+  )
+```
 
-
-pca_plot + pls_plot + plot_layout(ncol = 1, guides = 'collect')
+```{r echo=FALSE, fig.height=5, fig.width=12}
+pca_plot + pls_plot + plot_layout(ncol = 2, guides = 'collect')
 ```
 
 Now, we can apply Orthogonal Signal Correction (OSC) filtering to the dataset and evaluate its impact by comparing the results with the original PCA and PLS scores. By incorporating OSC-filtered data, we can visualize the changes in the X-scores for PCA and PLS to assess how the orthogonal correction modifies the data structure. Specifically, we'll examine how the OSC filtering affects the distribution of samples in the reduced-dimensionality space and whether the variation captured aligns better with the response variable.
 
 ```{r warning=FALSE, message=FALSE}
-osc_filter <- sjoblom_osc(x = X, y = y, ncomp = 10, tol = 1e5, max.iter = ) 
-osc_scores <- osc_filter[["scores"]] %>% mutate(target = y)
+osc_filter <- sjoblom_osc(x_matrix, y_target, ncomp = 10, tol = 1e5, max.iter = 10)
+osc_scores <- osc_filter %>% pluck("scores") %>% mutate(extract = y_target)
 ```
 
-```{r echo=FALSE, fig.height=4, fig.width=6}
+```{r echo=FALSE, fig.height=4, fig.width=7}
 osc_ellipse <- ellipseParam(osc_scores, k = 2, pcx = 1, pcy = 2)
 osc_scores %>%
   ggplot() +
@@ -365,11 +389,86 @@ osc_scores %>%
       b = pluck(osc_ellipse, "Ellipse", "b.95pct"),
       angle = 0), 
     linewidth = .5, linetype = "solid", fill = "white") +
-  aes(x = V1, y = V2, fill = target) +
-  geom_point(size = 5L, shape = "square filled", colour = "#112446") +
+  aes(x = V1, y = V2, fill = extract) +
+  geom_point(size = 5L, shape = 21, colour = "#112446") +
   scale_fill_viridis_c(option = "cividis", direction = 1) +
-  labs(title = "OSC X-Scores", subtitle = "Sjöblom's OSC Algorithm", x = "PC1", y = "PC2", fill = "Extract") +
+  labs(
+    title = "Sjöblom's OSC Algorithm", 
+    subtitle = "Scores of the Filtered Spectra", 
+    x = "Component 1", 
+    y = "Component 2", 
+    fill = "Beer's\nextract") +
   theme_grey() +
-  theme(panel.grid = ggplot2::element_blank())
+  theme(
+    aspect.ratio = .6,
+    panel.grid = element_blank(),
+    panel.background = element_rect(
+    colour = "black",
+    linewidth = .3
+    )
+  )
+```
+
+The following plot compares the results of OSC, PCA, and PLS modeling by overlaying their respective loadings on a single graph. By presenting their loadings together, we can clearly observe the differences in how each method captures and prioritizes spectral features and filter noise, highlighting their unique contributions and areas of overlap.
+
+```{r echo=FALSE}
+pca_loadings <- pca_result %>% 
+  pluck("rotation") %>%
+  as_tibble() %>%
+  mutate(wavelength = rep(seq(1100, 2250, 2), times = 1))
+
+pls_loadings <- loadings(pls_result)[, 1:10] %>%
+  as_tibble() %>%
+  janitor::clean_names() %>%
+  mutate(wavelength = rep(seq(1100, 2250, 2), times = 1))
+  
+osc_loadings <- osc_filter %>% 
+  pluck("loadings") %>%
+  mutate(wavelength = rep(seq(1100, 2250, 2), times = 1))
+```
+
+```{r echo=FALSE}
+p1 <- beer %>% mutate(spectra_id = paste0("s", 1:80)) %>%
+  pivot_longer(
+  cols = -c(extract, spectra_id),
+  names_to = "wavelength",
+  values_to = "intensity"
+  ) %>%
+  mutate(wavelength = rep(seq(1100, 2250, 2), times = 80)) %>%
+  ggplot() +
+  aes(x = wavelength, y = intensity, colour = extract, group = spectra_id) +
+  geom_line() +
+  scale_color_viridis_c(option = "inferno", direction = 1) +
+  labs(
+    x = "Wavelength [nm]", 
+    y = "Absorbance [arb. units]", 
+    title = "NIRS Spectra and Loadings of Beer Samples", 
+    subtitle = "Contains 80 samples, measured from 1100 to 2250 nm", 
+    color = "Beer's\nextract") +
+  theme_light() +
+  coord_cartesian(xlim = c(1100, 2250))
+
+p2 <- ggplot() +
+    geom_line(data = osc_loadings, aes(x = wavelength, y = V1, color = "OSC")) +
+    geom_line(data = pca_loadings, aes(x = wavelength, y = PC1, color = "PCA")) +
+    geom_line(data = pls_loadings, aes(x = wavelength, y = comp_1, color = "PLS")) +
+    scale_color_manual(
+        name = "Algorithm", 
+        values = c("OSC" = "#112446", "PCA" = "#E01919", "PLS" = "#016137")
+    ) +
+    labs(x = "Wavelength [nm]", y = "Loadings") +
+    theme_light() +
+    coord_cartesian(xlim = c(1100, 2250))
+```
+
+```{r echo=FALSE, fig.height=6, fig.width=9}
+(
+  p1 + theme(
+    legend.position = "right",
+    plot.margin = margin(b = 0), 
+    axis.title.x = element_blank(),
+    axis.text.x = element_blank())
+  ) / 
+  (p2 + theme(legend.position = "right", plot.margin = margin(t = 0)))
 ```
 :::

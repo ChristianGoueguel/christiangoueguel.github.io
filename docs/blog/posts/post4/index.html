@@ -141,7 +141,7 @@ window.Quarto = {
 <meta property="og:site_name" content="Christian L. Goueguel">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -203,9 +203,7 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
-    </div>
+    
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -326,30 +324,40 @@ window.Quarto = {
 </section>
 <section id="exemple" class="level2">
 <h2 class="anchored" data-anchor-id="exemple">Exemple</h2>
-<p>We will use the <code>beer</code> dataset introduced in our previous post, building upon the insights and analysis we explored earlier. Next, we will perform standard PCA and PLS regression on the Near-Infrared Spectroscopy (NIRS) spectra of the beer dataset to uncover patterns and relationships within the data.</p>
+<p>We will use the <code>beer</code> dataset introduced in our previous post. The dataset consists of Near-Infrared Spectroscopy (NIRS) spectra collected from 80 beer samples, <code>x_matrix</code>. The target variable of interest is the Original Gravity (OG), also known as the original extract, <code>y_target</code>. This parameter measures the concentration of dissolved solids in the wort before fermentation begins, providing a crucial indicator of the brewing process. Next, we will perform standard PCA and PLS regression on the Near-Infrared Spectroscopy (NIRS) spectra of the beer dataset to uncover patterns and relationships within the data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> beer <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>originalGravity) <span class="sc">%&gt;%</span> <span class="fu">as.matrix</span>() <span class="co"># NIRS spectra</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> beer <span class="sc">%&gt;%</span> <span class="fu">pull</span>(originalGravity) <span class="co"># Target variable or Extract</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>x_matrix <span class="ot">&lt;-</span> beer <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>extract) <span class="sc">%&gt;%</span> <span class="fu">as.matrix</span>()</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>y_target <span class="ot">&lt;-</span> beer <span class="sc">%&gt;%</span> <span class="fu">pull</span>(extract)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="1152"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Now, we can apply Orthogonal Signal Correction (OSC) filtering to the dataset and evaluate its impact by comparing the results with the original PCA and PLS scores. By incorporating OSC-filtered data, we can visualize the changes in the X-scores for PCA and PLS to assess how the orthogonal correction modifies the data structure. Specifically, we’ll examine how the OSC filtering affects the distribution of samples in the reduced-dimensionality space and whether the variation captured aligns better with the response variable.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>osc_filter <span class="ot">&lt;-</span> <span class="fu">sjoblom_osc</span>(<span class="at">x =</span> X, <span class="at">y =</span> y, <span class="at">ncomp =</span> <span class="dv">10</span>, <span class="at">tol =</span> <span class="fl">1e5</span>, <span class="at">max.iter =</span> ) </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>osc_scores <span class="ot">&lt;-</span> osc_filter[[<span class="st">"scores"</span>]] <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">target =</span> y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>osc_filter <span class="ot">&lt;-</span> <span class="fu">sjoblom_osc</span>(x_matrix, y_target, <span class="at">ncomp =</span> <span class="dv">10</span>, <span class="at">tol =</span> <span class="fl">1e5</span>, <span class="at">max.iter =</span> <span class="dv">10</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>osc_scores <span class="ot">&lt;-</span> osc_filter <span class="sc">%&gt;%</span> <span class="fu">pluck</span>(<span class="st">"scores"</span>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">extract =</span> y_target)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The following plot compares the results of OSC, PCA, and PLS modeling by overlaying their respective loadings on a single graph. By presenting their loadings together, we can clearly observe the differences in how each method captures and prioritizes spectral features and filter noise, highlighting their unique contributions and areas of overlap.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="864"></p>
 </figure>
 </div>
 </div>

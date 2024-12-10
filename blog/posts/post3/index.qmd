@@ -17,7 +17,7 @@ categories:
 :::
 
 ::: justified
-For this tutorial, we use the `beer` dataset, publicly available and commonly used for spectroscopy-based regression problems. This dataset contains near-infrared spectroscopy (NIRS) data of beer samples alongside measurements of the [original gravity](https://en.wikipedia.org/wiki/Gravity_(alcoholic_beverage)) (alcoholic beverage), which serves as the target variable. The tutorial emphasizes practical implementation and clear visualizations to empower users in deploying advanced regression models for spectroscopy datasets.
+For this tutorial, we use the `beer` dataset, publicly available and commonly used for spectroscopy-based regression problems. This dataset contains near-infrared spectroscopy (NIRS) data of beer samples alongside measurements of the [original gravity](https://en.wikipedia.org/wiki/Gravity_(alcoholic_beverage)) (alcoholic beverage), which serves as the target variable. Original gravity (OG) is one of the primary metrics used by brewers to estimate the potential alcohol content of the beer, as it reflects the fermentable sugar content available for yeast metabolism. By analyzing OG alongside the NIRS spectra, we can explore how the spectral data correlates with this fundamental brewing property, offering insights into the chemical composition and quality of the beer samples.
 
 ### Setup
 
@@ -93,7 +93,6 @@ p <- beer_data %>% mutate(spectra_id = paste0("s", 1:80)) %>%
   values_to = "intensity"
   ) %>%
   mutate(wavelength = rep(seq(1100, 2250, 2), times = 80)) %>%
-  mutate(wavelength = as.numeric(wavelength)) %>%
   ggplot() +
   aes(x = wavelength, y = intensity, colour = originalGravity, group = spectra_id) +
   geom_line() +
