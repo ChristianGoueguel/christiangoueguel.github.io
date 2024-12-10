@@ -53,7 +53,7 @@ website:
 format:
   html:
     theme: [cosmo, styles.scss]
-    toc: true
+    toc: false
     toc-location: right
     toc-depth: 3     
     css: styles.scss
