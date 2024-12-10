@@ -1,6 +1,8 @@
 ---
-title: ""
-format: html
+title: " "
+ditor: 
+  markdown: 
+    wrap: 72
 ---
 
 ::: justified
