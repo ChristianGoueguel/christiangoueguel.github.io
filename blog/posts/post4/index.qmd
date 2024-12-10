@@ -15,28 +15,13 @@ categories:
 ::: justified
 ![Photo by [Jonatan Pie](https://unsplash.com/photos/a-body-of-water-surrounded-by-mountains-and-clouds-_b2hvhIXGI8?utm_content=creditShareLink&utm_medium=referral&utm_source=unsplash).](cover.png){fig-align="center"}
 
+## Introduction
+
 Wold's method was the first formal OSC algorithm. It operates iteratively to identify orthogonal components unrelated to the dependent variable $Y$. The method leverages a combination of principal component analysis (PCA) and partial least squares (PLS). Sjöblom's approach builds on Wold's by introducing a direct orthogonalization step. The algorithm emphasizes calibration transfer, making it especially useful for standardizing spectral datasets across instruments or conditions. Whereas, Fearn proposed a mathematically elegant version of OSC, simplifying the computation by leveraging matrix operations. The method directly orthogonalizes $X$ using a singular value decomposition (SVD) of a residual matrix.
 
-## Wold's OSC Algorithm
+### Wold's OSC Algorithm
 
 The Wold algorithm is like a precise sculptor of spectroscopic data. It uses Partial Least Squares (PLS) regression to systematically remove spectral variations that are unrelated to the target variable. The key steps involve:
-
--   Iteratively identifying orthogonal components
--   Projecting out signals that don't correlate with the target
--   Refining the correction through multiple computational passes
-
-Think of it as a meticulous data cleaning process that carefully separates meaningful signal from background noise.
-
-### Framework:
-
-Wold's OSC identifies components in $X$ orthogonal to $Y$ through iterative deflation. The primary steps are:
-
--   Project $X$ onto $Y$ to identify the $Y$-relevant information.
--   Extract the orthogonal scores $t$ from $X$, ensuring they are independent of $Y$.
--   Subtract the contribution of these orthogonal components from $X$.
--   Repeat for multiple components until a predefined number of orthogonal components ($n_{\text{comp}}$) is reached.
-
-### Mathematical Steps:
 
 Initialize $t$, the first score vector (e.g., using PCA on $X$).
 
@@ -45,7 +30,7 @@ Initialize $t$, the first score vector (e.g., using PCA on $X$).
 3.  Deflate $X$: $X_{\text{new}} = X - t_{\text{new}} p^\top$
 4.  Repeat until $n_{\text{comp}}$.
 
-```{r}
+```{r echo=FALSE}
 wold_osc <- function(x, y, ncomp, tol, max.iter) {
   x_original <- x
   ps <- ws<- ts <- vector("list", ncomp)
@@ -93,23 +78,9 @@ wold_osc <- function(x, y, ncomp, tol, max.iter) {
 }
 ```
 
-## Sjöblom's OSC Algorithm
+### Sjöblom's OSC Algorithm
 
-jöblom's approach is the pragmatic cousin of the Wold method. It:
-
--   Uses a more direct weight calculation technique
--   Focuses on quickly identifying and removing orthogonal variations
--   Requires fewer computational iterations
--   Provides a computationally efficient alternative to more complex methods
-
-It's like a quick, no-nonsense cleaning process for spectroscopic data.
-
-### Framework:
-
--   Sjöblom's OSC refines Wold's approach by emphasizing a more direct projection of $X$ orthogonal to $Y$.
--   It uses similar steps but simplifies certain iterative aspects, focusing on the orthogonal direction more explicitly.
-
-### Mathematical Steps:
+Sjöblom's approach is the pragmatic cousin of the Wold method. It uses similar steps but simplifies certain iterative aspects, focusing on the orthogonal direction more explicitly.
 
 1.  Identify a direction vector $w$ from $X$ and $t$, the orthogonal scores $w = \frac{X^\top t}{t^\top t}$​
 2.  Normalize $w$: $w = \frac{w}{\|w\|}$​
@@ -117,7 +88,7 @@ It's like a quick, no-nonsense cleaning process for spectroscopic data.
 4.  Remove the orthogonal variation from $X$: $X_{\text{new}} = X - t p^\top$
 5.  Iterate for each component.
 
-```{r}
+```{r echo=FALSE}
 sjoblom_osc <- function(x, y, ncomp, tol, max.iter) {
   x_original <- x
   ps <- ws <- ts <- vector("list", ncomp)
@@ -168,30 +139,16 @@ sjoblom_osc <- function(x, y, ncomp, tol, max.iter) {
 }
 ```
 
-## Fearn's OSC Algorithm
+### Fearn's OSC Algorithm
 
-Fearn's method stands out by using Singular Value Decomposition (SVD) as its foundation. Its unique characteristics include:
-
--   Preprocessing data through matrix decomposition
--   Creating orthogonal components using eigenvalue analysis
--   Handling complex spectral structures more robustly
--   Particularly effective with datasets having clear orthogonal patterns
-
-Imagine it as a mathematical lens that reshapes your data's underlying structure.
-
-### Framework:
-
--   Fearn’s OSC is conceptually different, relying on Singular Value Decomposition (SVD) for a more robust decomposition of the orthogonal signal.
--   Instead of iterative refinement, Fearn's method isolates orthogonal components through SVD of the residual matrix $Z = X - P_Y X$, where $P_Y$ projects $X$ onto $Y$.
-
-### Mathematical Steps:
+Fearn's method stands out by using Singular Value Decomposition (SVD) as its foundation. Its characteristics include:
 
 1.  Compute the residual matrix $Z$: $Z = X - Y (Y^\top Y)^{-1} Y^\top X$
 2.  Perform SVD on $Z$: $Z = U S V^\top$
 3.  Extract the first $n_{\text{comp}}$ components from $V$ and reconstruct the orthogonal scores $t$ and loadings $p$: $t = Z V_{:, i}, \quad p = \frac{X^\top t}{t^\top t}$
 4.  Deflate $X$: $X_{\text{new}} = X - t p^\top$
 
-```{r}
+```{r echo=FALSE}
 fearn_osc <- function(x, y, ncomp, tol, max.iter) {
   x_original <- x
   ps <- ws <- ts <- vector("list", ncomp)
@@ -242,5 +199,177 @@ fearn_osc <- function(x, y, ncomp, tol, max.iter) {
   )
   return(res)
 }
+```
+
+## Implementation
+
+We begin by implementing these algorithms, creating functions named `wold_osc`, `sjoblom_osc`, and `fearn_osc`. Each function takes five key parameters. The first parameter, `x`, represents the input data matrix, which typically contains spectral or chemical measurements. The second parameter, `y`, corresponds to the target variable or response vector. The `ncomp` parameter specifies the number of orthogonal components to extract, while `tol` sets the tolerance level for convergence, determining the stopping criterion for iterations. Finally, `max.iter` establishes the maximum number of iterations allowed during the optimization process. The function definitions for these algorithms follow this structure:
+
+``` R
+wold_osc <- function(x, y, ncomp, tol, max.iter)
+sjoblom_osc <- function(x, y, ncomp, tol, max.iter)
+fearn_osc <- function(x, y, ncomp, tol, max.iter)
+```
+
+To begin, the original data matrix `x` is stored, and empty lists are initialized to hold the extracted principal components, weights, and scores for each component. This step ensures that the algorithm's outputs are organized for further processing or analysis:
+
+``` R
+x_original <- x
+ps <- ws <- ts <- vector("list", ncomp)
+```
+
+The algorithm proceeds with a loop to extract the specified number of orthogonal components. For each iteration, Principal Component Analysis (PCA) is performed on the current `x` matrix without centering, using the `stats::prcomp` function. The initial score vector `t` is derived from the first principal component. Variables `.iter` and `.diff` are initialized to track the number of iterations and the difference between successive score vectors, which serves as the convergence criterion.
+
+Within the loop, the orthogonalization process begins. Variation correlated with the response variable `y` is iteratively removed from the score vector `t`, refining its orthogonality. Weights, representing the relationship between the input matrix `x` and the score vector, are calculated and normalized to unit length. A new score vector is then computed, and the convergence check compares the difference between successive score vectors (`.diff`) to the tolerance level (`tol`). The loop continues until the difference falls below the specified tolerance or the maximum number of iterations is reached.
+
+``` R
+while (.diff > tol && .iter < max.iter) {
+  .iter <- .iter + 1
+  t_new <- t - y %*% MASS::ginv(crossprod(y, y)) %*% crossprod(y, t)
+  w <- crossprod(x, t_new) %*% MASS::ginv(crossprod(t_new, t_new))
+  w <- w / sqrt(sum(w^2))
+  t_new <- x %*% w
+  .diff <- sqrt(sum((t_new - t)^2) / sum(t_new^2))
+  t <- t_new
+}
+```
+
+After achieving convergence, a Partial Least Squares (PLS) model is fitted to the data using the extracted scores. The weights and scores are updated, and the loadings are computed. At this stage, `y`-correlated variation is removed, and the input matrix `x` is deflated by subtracting the modeled variation. This step prepares the matrix for the next orthogonal component extraction.
+
+The extracted weights, loadings, and scores for each orthogonal component are stored in their respective lists:
+
+``` R
+ws[[i]] <- w
+ps[[i]] <- p
+ts[[i]] <- t
+```
+
+Once all components are extracted, the results are combined to construct the orthogonal components matrix. The orthogonally corrected matrix `x_osc` is then computed by removing the contributions of the orthogonal components from the original data matrix:
+
+``` R
+x_osc <- x_original - x_original %*% tcrossprod(w_ortho, p_ortho)
+```
+
+Finally, to evaluate the algorithm's performance, two metrics are computed. The percentage of variation removed `R2` quantifies how effectively the algorithm deflates the input matrix, while the angle between the orthogonal scores and the target variable `y` provides insight into the degree of orthogonality achieved. These metrics allow us to assess the quality and effectiveness of the orthogonal signal correction methods.
+
+## Exemple
+
+We will use the `beer` dataset introduced in our previous post, building upon the insights and analysis we explored earlier. Next, we will perform standard PCA and PLS regression on the Near-Infrared Spectroscopy (NIRS) spectra of the beer dataset to uncover patterns and relationships within the data.
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(pls)
+library(patchwork)
+library(HotellingEllipse)
+```
+
+```{r echo=FALSE}
+beer <- read_csv("beer.csv", show_col_types = FALSE)
+```
+
+```{r}
+X <- beer %>% select(-originalGravity) %>% as.matrix() # NIRS spectra
+y <- beer %>% pull(originalGravity) # Target variable or Extract
+```
+
+```{r echo=FALSE, fig.height=7, fig.width=6}
+set.seed(123)
+
+n_samples <- nrow(X)
+
+# Perform PCA on the NIRS spectra
+pca_result <- prcomp(X, center = TRUE, scale. = FALSE)
+pca_scores <- pca_result$x
+
+# Perform PLS on the NIRS spectra
+pls_result <- plsr(y ~ X, ncomp = 10, validation = "none")
+pls_scores <- scores(pls_result)[, 1:10]
+
+pca_ellipse <- ellipseParam(pca_scores, k = 2, pcx = 1, pcy = 2)
+pls_ellipse <- ellipseParam(pls_scores, k = 2, pcx = 1, pcy = 2)
+
+# Create a data frame for plotting PCA scores
+pca_df <- data.frame(
+  PC1 = pca_scores[, 1],
+  PC2 = pca_scores[, 2],
+  PC3 = pca_scores[, 3],
+  target = y,
+  Sample = factor(1:n_samples)
+)
+
+# Create a data frame for plotting PLS scores
+pls_df <- data.frame(
+  Comp1 = pls_scores[, 1],
+  Comp2 = pls_scores[, 2],
+  Comp3 = pls_scores[, 3],
+  target = y,
+  Sample = factor(1:n_samples)
+)
+
+# Plot PCA scores
+pca_plot <- pca_df %>%
+  ggplot() +
+  ggforce::geom_ellipse(
+    aes(
+      x0 = 0, 
+      y0 = 0, 
+      a = pluck(pca_ellipse, "Ellipse", "a.95pct"), 
+      b = pluck(pca_ellipse, "Ellipse", "b.95pct"),
+      angle = 0), 
+    linewidth = .5, linetype = "solid", fill = "white") +
+  aes(x = PC1, y = PC2, fill = target) +
+  geom_point(size = 5L, shape = "square filled", colour = "#112446") +
+  scale_fill_viridis_c(option = "cividis", direction = 1) +
+  labs(title = "PCA X-Scores", x = "PC1", y = "PC2", fill = "Extract") +
+  theme_grey() +
+  theme(panel.grid = ggplot2::element_blank())
+
+# Plot PLS scores
+pls_plot <- pls_df %>%
+  ggplot() +
+  ggforce::geom_ellipse(
+    aes(
+      x0 = 0, 
+      y0 = 0, 
+      a = pluck(pls_ellipse, "Ellipse", "a.95pct"), 
+      b = pluck(pls_ellipse, "Ellipse", "b.95pct"),
+      angle = 0), 
+    linewidth = .5, linetype = "solid", fill = "white") +
+  aes(x = Comp1, y = Comp2, fill = target) +
+  geom_point(size = 5L, shape = "square filled", colour = "#112446") +
+  scale_fill_viridis_c(option = "cividis", direction = 1) +
+  labs(title = "PLS X-Scores", x = "LV1", y = "LV2", fill = "Extract") +
+  theme_grey() +
+  theme(panel.grid = ggplot2::element_blank())
+
+
+pca_plot + pls_plot + plot_layout(ncol = 1, guides = 'collect')
+```
+
+Now, we can apply Orthogonal Signal Correction (OSC) filtering to the dataset and evaluate its impact by comparing the results with the original PCA and PLS scores. By incorporating OSC-filtered data, we can visualize the changes in the X-scores for PCA and PLS to assess how the orthogonal correction modifies the data structure. Specifically, we'll examine how the OSC filtering affects the distribution of samples in the reduced-dimensionality space and whether the variation captured aligns better with the response variable.
+
+```{r warning=FALSE, message=FALSE}
+osc_filter <- sjoblom_osc(x = X, y = y, ncomp = 10, tol = 1e5, max.iter = ) 
+osc_scores <- osc_filter[["scores"]] %>% mutate(target = y)
+```
+
+```{r echo=FALSE, fig.height=4, fig.width=6}
+osc_ellipse <- ellipseParam(osc_scores, k = 2, pcx = 1, pcy = 2)
+osc_scores %>%
+  ggplot() +
+  ggforce::geom_ellipse(
+    aes(
+      x0 = 0, 
+      y0 = 0, 
+      a = pluck(osc_ellipse, "Ellipse", "a.95pct"), 
+      b = pluck(osc_ellipse, "Ellipse", "b.95pct"),
+      angle = 0), 
+    linewidth = .5, linetype = "solid", fill = "white") +
+  aes(x = V1, y = V2, fill = target) +
+  geom_point(size = 5L, shape = "square filled", colour = "#112446") +
+  scale_fill_viridis_c(option = "cividis", direction = 1) +
+  labs(title = "OSC X-Scores", subtitle = "Sjöblom's OSC Algorithm", x = "PC1", y = "PC2", fill = "Extract") +
+  theme_grey() +
+  theme(panel.grid = ggplot2::element_blank())
 ```
 :::

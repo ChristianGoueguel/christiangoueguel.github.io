@@ -259,28 +259,12 @@ window.Quarto = {
 <figcaption>Photo by <a href="https://unsplash.com/photos/a-body-of-water-surrounded-by-mountains-and-clouds-_b2hvhIXGI8?utm_content=creditShareLink&amp;utm_medium=referral&amp;utm_source=unsplash">Jonatan Pie</a>.</figcaption>
 </figure>
 </div>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>Wold’s method was the first formal OSC algorithm. It operates iteratively to identify orthogonal components unrelated to the dependent variable <span class="math inline">\(Y\)</span>. The method leverages a combination of principal component analysis (PCA) and partial least squares (PLS). Sjöblom’s approach builds on Wold’s by introducing a direct orthogonalization step. The algorithm emphasizes calibration transfer, making it especially useful for standardizing spectral datasets across instruments or conditions. Whereas, Fearn proposed a mathematically elegant version of OSC, simplifying the computation by leveraging matrix operations. The method directly orthogonalizes <span class="math inline">\(X\)</span> using a singular value decomposition (SVD) of a residual matrix.</p>
-<section id="wolds-osc-algorithm" class="level2">
-<h2 class="anchored" data-anchor-id="wolds-osc-algorithm">Wold’s OSC Algorithm</h2>
+<section id="wolds-osc-algorithm" class="level3">
+<h3 class="anchored" data-anchor-id="wolds-osc-algorithm">Wold’s OSC Algorithm</h3>
 <p>The Wold algorithm is like a precise sculptor of spectroscopic data. It uses Partial Least Squares (PLS) regression to systematically remove spectral variations that are unrelated to the target variable. The key steps involve:</p>
-<ul>
-<li>Iteratively identifying orthogonal components</li>
-<li>Projecting out signals that don’t correlate with the target</li>
-<li>Refining the correction through multiple computational passes</li>
-</ul>
-<p>Think of it as a meticulous data cleaning process that carefully separates meaningful signal from background noise.</p>
-<section id="framework" class="level3">
-<h3 class="anchored" data-anchor-id="framework">Framework:</h3>
-<p>Wold’s OSC identifies components in <span class="math inline">\(X\)</span> orthogonal to <span class="math inline">\(Y\)</span> through iterative deflation. The primary steps are:</p>
-<ul>
-<li>Project <span class="math inline">\(X\)</span> onto <span class="math inline">\(Y\)</span> to identify the <span class="math inline">\(Y\)</span>-relevant information.</li>
-<li>Extract the orthogonal scores <span class="math inline">\(t\)</span> from <span class="math inline">\(X\)</span>, ensuring they are independent of <span class="math inline">\(Y\)</span>.</li>
-<li>Subtract the contribution of these orthogonal components from <span class="math inline">\(X\)</span>.</li>
-<li>Repeat for multiple components until a predefined number of orthogonal components (<span class="math inline">\(n_{\text{comp}}\)</span>) is reached.</li>
-</ul>
-</section>
-<section id="mathematical-steps" class="level3">
-<h3 class="anchored" data-anchor-id="mathematical-steps">Mathematical Steps:</h3>
 <p>Initialize <span class="math inline">\(t\)</span>, the first score vector (e.g., using PCA on <span class="math inline">\(X\)</span>).</p>
 <ol type="1">
 <li>Deflate <span class="math inline">\(t\)</span> using <span class="math inline">\(Y\)</span>: <span class="math inline">\(t_{\text{new}} = t - Y(Y^\top Y)^{-1}Y^\top t\)</span></li>
@@ -288,74 +272,10 @@ window.Quarto = {
 <li>Deflate <span class="math inline">\(X\)</span>: <span class="math inline">\(X_{\text{new}} = X - t_{\text{new}} p^\top\)</span></li>
 <li>Repeat until <span class="math inline">\(n_{\text{comp}}\)</span>.</li>
 </ol>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>wold_osc <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, ncomp, tol, max.iter) {</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  x_original <span class="ot">&lt;-</span> x</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  ps <span class="ot">&lt;-</span> ws<span class="ot">&lt;-</span> ts <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">"list"</span>, ncomp)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(ncomp)) {</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    pc <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">prcomp</span>(x, <span class="at">center =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    t <span class="ot">&lt;-</span> pc<span class="sc">$</span>x[, <span class="dv">1</span>]</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    dif <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    iter <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> (dif <span class="sc">&gt;</span> tol <span class="sc">&amp;&amp;</span> iter <span class="sc">&lt;</span> max.iter) {</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>      iter <span class="ot">&lt;-</span> iter <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      t_new <span class="ot">&lt;-</span> t <span class="sc">-</span> y <span class="sc">%*%</span> MASS<span class="sc">::</span><span class="fu">ginv</span>(<span class="fu">crossprod</span>(y, y)) <span class="sc">%*%</span> <span class="fu">crossprod</span>(y, t)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>      plsFit <span class="ot">&lt;-</span> pls<span class="sc">::</span><span class="fu">simpls.fit</span>(x, t_new, ncomp, <span class="at">center =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>      w <span class="ot">&lt;-</span> plsFit<span class="sc">$</span>coefficients[ , , ncomp]</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>      w <span class="ot">&lt;-</span> w <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>(w<span class="sc">^</span><span class="dv">2</span>))</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>      t_new <span class="ot">&lt;-</span> x <span class="sc">%*%</span> w</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>      dif <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>((t_new <span class="sc">-</span> t)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> <span class="fu">sum</span>(t_new<span class="sc">^</span><span class="dv">2</span>))</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>      t <span class="ot">&lt;-</span> t_new</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> <span class="fu">crossprod</span>(t, x) <span class="sc">%*%</span> MASS<span class="sc">::</span><span class="fu">ginv</span>(<span class="fu">crossprod</span>(t, t_new))</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    x <span class="ot">&lt;-</span> x <span class="sc">-</span> <span class="fu">tcrossprod</span>(t, p)</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    ws[[i]] <span class="ot">&lt;-</span> w</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    ps[[i]] <span class="ot">&lt;-</span> p</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    ts[[i]] <span class="ot">&lt;-</span> t</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  w_ortho <span class="ot">&lt;-</span> <span class="fu">do.call</span>(cbind, ws)</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  p_ortho <span class="ot">&lt;-</span> <span class="fu">do.call</span>(cbind, ps)</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  t_ortho <span class="ot">&lt;-</span> <span class="fu">do.call</span>(cbind, ts)</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  x_osc <span class="ot">&lt;-</span> x_original <span class="sc">-</span> x_original <span class="sc">%*%</span> <span class="fu">tcrossprod</span>(w_ortho, p_ortho)</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  R2 <span class="ot">&lt;-</span> <span class="fu">sum</span>(x_osc<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> <span class="fu">sum</span>(x_original<span class="sc">^</span><span class="dv">2</span>) <span class="sc">*</span> <span class="dv">100</span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  angle <span class="ot">&lt;-</span> <span class="fu">crossprod</span>(t_ortho, y)</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  norm <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">ginv</span>(<span class="fu">sqrt</span>(<span class="fu">apply</span>(t_ortho<span class="sc">^</span><span class="dv">2</span>, <span class="dv">2</span>, sum) <span class="sc">*</span> <span class="fu">sum</span>(y<span class="sc">^</span><span class="dv">2</span>)))</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  angle <span class="ot">&lt;-</span> <span class="fu">t</span>(angle) <span class="sc">%*%</span> <span class="fu">t</span>(norm)</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  angle <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">acos</span>(angle) <span class="sc">*</span> <span class="dv">180</span> <span class="sc">/</span> pi)</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">"correction"</span> <span class="ot">=</span> tibble<span class="sc">::</span><span class="fu">as_tibble</span>(x_osc),</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    <span class="st">"weights"</span> <span class="ot">=</span> tibble<span class="sc">::</span><span class="fu">as_tibble</span>(w_ortho),</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    <span class="st">"scores"</span> <span class="ot">=</span> tibble<span class="sc">::</span><span class="fu">as_tibble</span>(t_ortho),</span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"loadings"</span> <span class="ot">=</span> tibble<span class="sc">::</span><span class="fu">as_tibble</span>(p_ortho),</span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    <span class="st">"angle"</span> <span class="ot">=</span> angle,</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    <span class="st">"R2"</span> <span class="ot">=</span> R2</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(res)</span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 </section>
-</section>
-<section id="sjöbloms-osc-algorithm" class="level2">
-<h2 class="anchored" data-anchor-id="sjöbloms-osc-algorithm">Sjöblom’s OSC Algorithm</h2>
-<p>jöblom’s approach is the pragmatic cousin of the Wold method. It:</p>
-<ul>
-<li>Uses a more direct weight calculation technique</li>
-<li>Focuses on quickly identifying and removing orthogonal variations</li>
-<li>Requires fewer computational iterations</li>
-<li>Provides a computationally efficient alternative to more complex methods</li>
-</ul>
-<p>It’s like a quick, no-nonsense cleaning process for spectroscopic data.</p>
-<section id="framework-1" class="level3">
-<h3 class="anchored" data-anchor-id="framework-1">Framework:</h3>
-<ul>
-<li>Sjöblom’s OSC refines Wold’s approach by emphasizing a more direct projection of <span class="math inline">\(X\)</span> orthogonal to <span class="math inline">\(Y\)</span>.</li>
-<li>It uses similar steps but simplifies certain iterative aspects, focusing on the orthogonal direction more explicitly.</li>
-</ul>
-</section>
-<section id="mathematical-steps-1" class="level3">
-<h3 class="anchored" data-anchor-id="mathematical-steps-1">Mathematical Steps:</h3>
+<section id="sjöbloms-osc-algorithm" class="level3">
+<h3 class="anchored" data-anchor-id="sjöbloms-osc-algorithm">Sjöblom’s OSC Algorithm</h3>
+<p>Sjöblom’s approach is the pragmatic cousin of the Wold method. It uses similar steps but simplifies certain iterative aspects, focusing on the orthogonal direction more explicitly.</p>
 <ol type="1">
 <li>Identify a direction vector <span class="math inline">\(w\)</span> from <span class="math inline">\(X\)</span> and <span class="math inline">\(t\)</span>, the orthogonal scores <span class="math inline">\(w = \frac{X^\top t}{t^\top t}\)</span>​</li>
 <li>Normalize <span class="math inline">\(w\)</span>: <span class="math inline">\(w = \frac{w}{\|w\|}\)</span>​</li>
@@ -363,136 +283,77 @@ window.Quarto = {
 <li>Remove the orthogonal variation from <span class="math inline">\(X\)</span>: <span class="math inline">\(X_{\text{new}} = X - t p^\top\)</span></li>
 <li>Iterate for each component.</li>
 </ol>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>sjoblom_osc <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, ncomp, tol, max.iter) {</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  x_original <span class="ot">&lt;-</span> x</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  ps <span class="ot">&lt;-</span> ws <span class="ot">&lt;-</span> ts <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">"list"</span>, ncomp)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(ncomp)) {</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    pc <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">prcomp</span>(x, <span class="at">center =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    t <span class="ot">&lt;-</span> pc<span class="sc">$</span>x[, <span class="dv">1</span>]</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    dif <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    iter <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> (dif <span class="sc">&gt;</span> tol <span class="sc">&amp;&amp;</span> iter <span class="sc">&lt;</span> max.iter) {</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>      iter <span class="ot">&lt;-</span> iter <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>      t_new <span class="ot">&lt;-</span> t <span class="sc">-</span> y <span class="sc">%*%</span> MASS<span class="sc">::</span><span class="fu">ginv</span>(<span class="fu">crossprod</span>(y, y)) <span class="sc">%*%</span> <span class="fu">crossprod</span>(y, t)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>      w <span class="ot">&lt;-</span> <span class="fu">crossprod</span>(x, t_new) <span class="sc">%*%</span> MASS<span class="sc">::</span><span class="fu">ginv</span>(<span class="fu">crossprod</span>(t_new, t_new))</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>      w <span class="ot">&lt;-</span> w <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>(w<span class="sc">^</span><span class="dv">2</span>))</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>      t_new <span class="ot">&lt;-</span> x <span class="sc">%*%</span> w</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>      dif <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>((t_new <span class="sc">-</span> t)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> <span class="fu">sum</span>(t_new<span class="sc">^</span><span class="dv">2</span>))</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>      t <span class="ot">&lt;-</span> t_new</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    plsFit <span class="ot">&lt;-</span> pls<span class="sc">::</span><span class="fu">simpls.fit</span>(x, t, ncomp)</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    w <span class="ot">&lt;-</span> plsFit<span class="sc">$</span>coefficients[ , , ncomp]</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    t <span class="ot">&lt;-</span> x <span class="sc">%*%</span> w</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    t <span class="ot">&lt;-</span> t <span class="sc">-</span> y <span class="sc">%*%</span> MASS<span class="sc">::</span><span class="fu">ginv</span>(<span class="fu">crossprod</span>(y, y)) <span class="sc">%*%</span> <span class="fu">crossprod</span>(y, t)</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> <span class="fu">crossprod</span>(x, t) <span class="sc">%*%</span> MASS<span class="sc">::</span><span class="fu">ginv</span>(<span class="fu">crossprod</span>(t, t))</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    x <span class="ot">&lt;-</span> x <span class="sc">-</span> <span class="fu">tcrossprod</span>(t, p)</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    ws[[i]] <span class="ot">&lt;-</span> w</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    ps[[i]] <span class="ot">&lt;-</span> p</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    ts[[i]] <span class="ot">&lt;-</span> t</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  w_ortho <span class="ot">&lt;-</span> <span class="fu">do.call</span>(cbind, ws)</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  p_ortho <span class="ot">&lt;-</span> <span class="fu">do.call</span>(cbind, ps)</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  t_ortho <span class="ot">&lt;-</span> <span class="fu">do.call</span>(cbind, ts)</span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  x_osc <span class="ot">&lt;-</span> x_original <span class="sc">-</span> x_original <span class="sc">%*%</span> <span class="fu">tcrossprod</span>(w_ortho, p_ortho)</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  R2 <span class="ot">&lt;-</span> <span class="fu">sum</span>(x_osc<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> <span class="fu">sum</span>(x_original<span class="sc">^</span><span class="dv">2</span>) <span class="sc">*</span> <span class="dv">100</span></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  angle <span class="ot">&lt;-</span> <span class="fu">crossprod</span>(t_ortho, y)</span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  norm <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">ginv</span>(<span class="fu">sqrt</span>(<span class="fu">apply</span>(t_ortho<span class="sc">^</span><span class="dv">2</span>, <span class="dv">2</span>, sum) <span class="sc">*</span> <span class="fu">sum</span>(y<span class="sc">^</span><span class="dv">2</span>)))</span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  angle <span class="ot">&lt;-</span> <span class="fu">t</span>(angle) <span class="sc">%*%</span> <span class="fu">t</span>(norm)</span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>  angle <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">acos</span>(angle) <span class="sc">*</span> <span class="dv">180</span> <span class="sc">/</span> pi)</span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"correction"</span> <span class="ot">=</span> tibble<span class="sc">::</span><span class="fu">as_tibble</span>(x_osc),</span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>    <span class="st">"weights"</span> <span class="ot">=</span> tibble<span class="sc">::</span><span class="fu">as_tibble</span>(w_ortho),</span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>    <span class="st">"scores"</span> <span class="ot">=</span> tibble<span class="sc">::</span><span class="fu">as_tibble</span>(t_ortho),</span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    <span class="st">"loadings"</span> <span class="ot">=</span> tibble<span class="sc">::</span><span class="fu">as_tibble</span>(p_ortho),</span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>    <span class="st">"angle"</span> <span class="ot">=</span> angle,</span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    <span class="st">"R2"</span> <span class="ot">=</span> R2</span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(res)</span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 </section>
-</section>
-<section id="fearns-osc-algorithm" class="level2">
-<h2 class="anchored" data-anchor-id="fearns-osc-algorithm">Fearn’s OSC Algorithm</h2>
-<p>Fearn’s method stands out by using Singular Value Decomposition (SVD) as its foundation. Its unique characteristics include:</p>
-<ul>
-<li>Preprocessing data through matrix decomposition</li>
-<li>Creating orthogonal components using eigenvalue analysis</li>
-<li>Handling complex spectral structures more robustly</li>
-<li>Particularly effective with datasets having clear orthogonal patterns</li>
-</ul>
-<p>Imagine it as a mathematical lens that reshapes your data’s underlying structure.</p>
-<section id="framework-2" class="level3">
-<h3 class="anchored" data-anchor-id="framework-2">Framework:</h3>
-<ul>
-<li>Fearn’s OSC is conceptually different, relying on Singular Value Decomposition (SVD) for a more robust decomposition of the orthogonal signal.</li>
-<li>Instead of iterative refinement, Fearn’s method isolates orthogonal components through SVD of the residual matrix <span class="math inline">\(Z = X - P_Y X\)</span>, where <span class="math inline">\(P_Y\)</span> projects <span class="math inline">\(X\)</span> onto <span class="math inline">\(Y\)</span>.</li>
-</ul>
-</section>
-<section id="mathematical-steps-2" class="level3">
-<h3 class="anchored" data-anchor-id="mathematical-steps-2">Mathematical Steps:</h3>
+<section id="fearns-osc-algorithm" class="level3">
+<h3 class="anchored" data-anchor-id="fearns-osc-algorithm">Fearn’s OSC Algorithm</h3>
+<p>Fearn’s method stands out by using Singular Value Decomposition (SVD) as its foundation. Its characteristics include:</p>
 <ol type="1">
 <li>Compute the residual matrix <span class="math inline">\(Z\)</span>: <span class="math inline">\(Z = X - Y (Y^\top Y)^{-1} Y^\top X\)</span></li>
 <li>Perform SVD on <span class="math inline">\(Z\)</span>: <span class="math inline">\(Z = U S V^\top\)</span></li>
 <li>Extract the first <span class="math inline">\(n_{\text{comp}}\)</span> components from <span class="math inline">\(V\)</span> and reconstruct the orthogonal scores <span class="math inline">\(t\)</span> and loadings <span class="math inline">\(p\)</span>: <span class="math inline">\(t = Z V_{:, i}, \quad p = \frac{X^\top t}{t^\top t}\)</span></li>
 <li>Deflate <span class="math inline">\(X\)</span>: <span class="math inline">\(X_{\text{new}} = X - t p^\top\)</span></li>
 </ol>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fearn_osc <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, ncomp, tol, max.iter) {</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  x_original <span class="ot">&lt;-</span> x</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  ps <span class="ot">&lt;-</span> ws <span class="ot">&lt;-</span> ts <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">"list"</span>, ncomp)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="fu">row</span>(x)) <span class="sc">-</span> <span class="fu">crossprod</span>(x, y) <span class="sc">%*%</span> MASS<span class="sc">::</span><span class="fu">ginv</span>(<span class="fu">crossprod</span>(y, x) <span class="sc">%*%</span> <span class="fu">crossprod</span>(x, y)) <span class="sc">%*%</span> <span class="fu">crossprod</span>(y, x)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  z <span class="ot">&lt;-</span> x <span class="sc">%*%</span> m</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  decomp <span class="ot">&lt;-</span> <span class="fu">svd</span>(<span class="fu">t</span>(z))</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  u <span class="ot">&lt;-</span> decomp<span class="sc">$</span>u</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  s <span class="ot">&lt;-</span> decomp<span class="sc">$</span>d</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  v <span class="ot">&lt;-</span> decomp<span class="sc">$</span>v</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  g <span class="ot">&lt;-</span> <span class="fu">diag</span>(s[<span class="dv">1</span><span class="sc">:</span>ncomp])</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  c <span class="ot">&lt;-</span> v[, <span class="dv">1</span><span class="sc">:</span>ncomp, drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(ncomp)) {</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    w_old <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">ncol</span>(x))</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    w_new <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span>, <span class="fu">ncol</span>(x))</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    dif <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    iter <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> (dif <span class="sc">&gt;</span> tol <span class="sc">&amp;&amp;</span> iter <span class="sc">&lt;</span> max.iter) {</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>      iter <span class="ot">&lt;-</span> iter <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>      w_old <span class="ot">&lt;-</span> w_new</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>      t_new <span class="ot">&lt;-</span> c[, i] <span class="sc">%*%</span> g[i, i]</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>      p_new <span class="ot">&lt;-</span> <span class="fu">tcrossprod</span>(x, t_new) <span class="sc">/</span> <span class="fu">tcrossprod</span>(t_new, t_new)</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>      w_new <span class="ot">&lt;-</span> m <span class="sc">%*%</span> <span class="fu">tcrossprod</span>(x, p_new)</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>      dif <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>((w_new <span class="sc">-</span> w_old)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> <span class="fu">sum</span>(w_new<span class="sc">^</span><span class="dv">2</span>))</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    ws[[i]] <span class="ot">&lt;-</span> w_new</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    ts[[i]] <span class="ot">&lt;-</span> c[, i] <span class="sc">%*%</span> g[i, i]</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    ps[[i]] <span class="ot">&lt;-</span> <span class="fu">tcrossprod</span>(x, t[[i]]) <span class="sc">/</span> <span class="fu">tcrossprod</span>(t[[i]], t[[i]])</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>  w_ortho <span class="ot">&lt;-</span> <span class="fu">do.call</span>(cbind, ws)</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>  t_ortho <span class="ot">&lt;-</span> <span class="fu">do.call</span>(cbind, ts)</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>  p_ortho <span class="ot">&lt;-</span> <span class="fu">do.call</span>(cbind, ps)</span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>  x_osc <span class="ot">&lt;-</span> x <span class="sc">-</span> <span class="fu">tcrossprod</span>(t_ortho, p_ortho)</span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  R2 <span class="ot">&lt;-</span> <span class="fu">sum</span>(x_osc<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> <span class="fu">sum</span>(x_original<span class="sc">^</span><span class="dv">2</span>) <span class="sc">*</span> <span class="dv">100</span></span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>  angle <span class="ot">&lt;-</span> <span class="fu">crossprod</span>(t_ortho, y)</span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>  norm <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">ginv</span>(<span class="fu">sqrt</span>(<span class="fu">apply</span>(t_ortho<span class="sc">^</span><span class="dv">2</span>, <span class="dv">2</span>, sum) <span class="sc">*</span> <span class="fu">sum</span>(y<span class="sc">^</span><span class="dv">2</span>)))</span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>  angle <span class="ot">&lt;-</span> <span class="fu">t</span>(angle) <span class="sc">%*%</span> <span class="fu">t</span>(norm)</span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>  angle <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">acos</span>(angle) <span class="sc">*</span> <span class="dv">180</span> <span class="sc">/</span> pi)</span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    <span class="st">"correction"</span> <span class="ot">=</span> tibble<span class="sc">::</span><span class="fu">as_tibble</span>(x_osc),</span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>    <span class="st">"weights"</span> <span class="ot">=</span> tibble<span class="sc">::</span><span class="fu">as_tibble</span>(w_ortho),</span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>    <span class="st">"scores"</span> <span class="ot">=</span> tibble<span class="sc">::</span><span class="fu">as_tibble</span>(t_ortho),</span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    <span class="st">"loadings"</span> <span class="ot">=</span> tibble<span class="sc">::</span><span class="fu">as_tibble</span>(p_ortho),</span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>    <span class="st">"angle"</span> <span class="ot">=</span> angle,</span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>    <span class="st">"R2"</span> <span class="ot">=</span> R2</span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(res)</span>
-<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 </section>
+</section>
+<section id="implementation" class="level2">
+<h2 class="anchored" data-anchor-id="implementation">Implementation</h2>
+<p>We begin by implementing these algorithms, creating functions named <code>wold_osc</code>, <code>sjoblom_osc</code>, and <code>fearn_osc</code>. Each function takes five key parameters. The first parameter, <code>x</code>, represents the input data matrix, which typically contains spectral or chemical measurements. The second parameter, <code>y</code>, corresponds to the target variable or response vector. The <code>ncomp</code> parameter specifies the number of orthogonal components to extract, while <code>tol</code> sets the tolerance level for convergence, determining the stopping criterion for iterations. Finally, <code>max.iter</code> establishes the maximum number of iterations allowed during the optimization process. The function definitions for these algorithms follow this structure:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>wold_osc <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, ncomp, tol, max.iter)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>sjoblom_osc <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, ncomp, tol, max.iter)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>fearn_osc <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, ncomp, tol, max.iter)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>To begin, the original data matrix <code>x</code> is stored, and empty lists are initialized to hold the extracted principal components, weights, and scores for each component. This step ensures that the algorithm’s outputs are organized for further processing or analysis:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x_original <span class="ot">&lt;-</span> x</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>ps <span class="ot">&lt;-</span> ws <span class="ot">&lt;-</span> ts <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">"list"</span>, ncomp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The algorithm proceeds with a loop to extract the specified number of orthogonal components. For each iteration, Principal Component Analysis (PCA) is performed on the current <code>x</code> matrix without centering, using the <code>stats::prcomp</code> function. The initial score vector <code>t</code> is derived from the first principal component. Variables <code>.iter</code> and <code>.diff</code> are initialized to track the number of iterations and the difference between successive score vectors, which serves as the convergence criterion.</p>
+<p>Within the loop, the orthogonalization process begins. Variation correlated with the response variable <code>y</code> is iteratively removed from the score vector <code>t</code>, refining its orthogonality. Weights, representing the relationship between the input matrix <code>x</code> and the score vector, are calculated and normalized to unit length. A new score vector is then computed, and the convergence check compares the difference between successive score vectors (<code>.diff</code>) to the tolerance level (<code>tol</code>). The loop continues until the difference falls below the specified tolerance or the maximum number of iterations is reached.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> (.diff <span class="sc">&gt;</span> tol <span class="sc">&amp;&amp;</span> .iter <span class="sc">&lt;</span> max.iter) {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  .iter <span class="ot">&lt;-</span> .iter <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  t_new <span class="ot">&lt;-</span> t <span class="sc">-</span> y <span class="sc">%*%</span> MASS<span class="sc">::</span><span class="fu">ginv</span>(<span class="fu">crossprod</span>(y, y)) <span class="sc">%*%</span> <span class="fu">crossprod</span>(y, t)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  w <span class="ot">&lt;-</span> <span class="fu">crossprod</span>(x, t_new) <span class="sc">%*%</span> MASS<span class="sc">::</span><span class="fu">ginv</span>(<span class="fu">crossprod</span>(t_new, t_new))</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  w <span class="ot">&lt;-</span> w <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>(w<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  t_new <span class="ot">&lt;-</span> x <span class="sc">%*%</span> w</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  .diff <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>((t_new <span class="sc">-</span> t)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> <span class="fu">sum</span>(t_new<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  t <span class="ot">&lt;-</span> t_new</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>After achieving convergence, a Partial Least Squares (PLS) model is fitted to the data using the extracted scores. The weights and scores are updated, and the loadings are computed. At this stage, <code>y</code>-correlated variation is removed, and the input matrix <code>x</code> is deflated by subtracting the modeled variation. This step prepares the matrix for the next orthogonal component extraction.</p>
+<p>The extracted weights, loadings, and scores for each orthogonal component are stored in their respective lists:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ws[[i]] <span class="ot">&lt;-</span> w</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>ps[[i]] <span class="ot">&lt;-</span> p</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>ts[[i]] <span class="ot">&lt;-</span> t</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Once all components are extracted, the results are combined to construct the orthogonal components matrix. The orthogonally corrected matrix <code>x_osc</code> is then computed by removing the contributions of the orthogonal components from the original data matrix:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>x_osc <span class="ot">&lt;-</span> x_original <span class="sc">-</span> x_original <span class="sc">%*%</span> <span class="fu">tcrossprod</span>(w_ortho, p_ortho)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Finally, to evaluate the algorithm’s performance, two metrics are computed. The percentage of variation removed <code>R2</code> quantifies how effectively the algorithm deflates the input matrix, while the angle between the orthogonal scores and the target variable <code>y</code> provides insight into the degree of orthogonality achieved. These metrics allow us to assess the quality and effectiveness of the orthogonal signal correction methods.</p>
+</section>
+<section id="exemple" class="level2">
+<h2 class="anchored" data-anchor-id="exemple">Exemple</h2>
+<p>We will use the <code>beer</code> dataset introduced in our previous post, building upon the insights and analysis we explored earlier. Next, we will perform standard PCA and PLS regression on the Near-Infrared Spectroscopy (NIRS) spectra of the beer dataset to uncover patterns and relationships within the data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> beer <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>originalGravity) <span class="sc">%&gt;%</span> <span class="fu">as.matrix</span>() <span class="co"># NIRS spectra</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> beer <span class="sc">%&gt;%</span> <span class="fu">pull</span>(originalGravity) <span class="co"># Target variable or Extract</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now, we can apply Orthogonal Signal Correction (OSC) filtering to the dataset and evaluate its impact by comparing the results with the original PCA and PLS scores. By incorporating OSC-filtered data, we can visualize the changes in the X-scores for PCA and PLS to assess how the orthogonal correction modifies the data structure. Specifically, we’ll examine how the OSC filtering affects the distribution of samples in the reduced-dimensionality space and whether the variation captured aligns better with the response variable.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>osc_filter <span class="ot">&lt;-</span> <span class="fu">sjoblom_osc</span>(<span class="at">x =</span> X, <span class="at">y =</span> y, <span class="at">ncomp =</span> <span class="dv">10</span>, <span class="at">tol =</span> <span class="fl">1e5</span>, <span class="at">max.iter =</span> ) </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>osc_scores <span class="ot">&lt;-</span> osc_filter[[<span class="st">"scores"</span>]] <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">target =</span> y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 </div>
 
