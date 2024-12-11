@@ -31,50 +31,80 @@ Initialize $t$, the first score vector (e.g., using PCA on $X$).
 4.  Repeat until $n_{\text{comp}}$.
 
 ```{r echo=FALSE}
-wold_osc <- function(x, y, ncomp, tol, max.iter) {
-  x_original <- x
-  ps <- ws<- ts <- vector("list", ncomp)
-  for (i in seq_len(ncomp)) {
-    pc <- stats::prcomp(x, center = FALSE)
-    t <- pc$x[, 1]
-    dif <- 1
+wold_osc <- function(X, Y, ncomp = 1, tol = 1e-6, max.iter = 100) {
+  # Ensure X and Y are matrices
+  X <- as.matrix(X)
+  Y <- as.matrix(Y)
+
+  # Store the original X matrix
+  X_original <- X
+
+  # Initialize lists to store components
+  scores <- list()
+  loadings <- list()
+  weights <- list()
+
+  for (comp in seq_len(ncomp)) {
+    # Step 1: Initial PCA on X to get the first principal component score vector (t)
+    t <- svd(X, nu = 1, nv = 0)$u * svd(X, nu = 1, nv = 0)$d[1]
+
+    # Step 2: Orthogonalize t with respect to Y to obtain t*
+    t_star <- t - Y %*% MASS::ginv(crossprod(Y, Y)) %*% crossprod(Y, t)
+
     iter <- 0
-    while (dif > tol && iter < max.iter) {
+    diff <- tol + 1
+
+    while (diff > tol && iter < max.iter) {
       iter <- iter + 1
-      t_new <- t - y %*% MASS::ginv(crossprod(y, y)) %*% crossprod(y, t)
-      plsFit <- pls::simpls.fit(x, t_new, ncomp, center = FALSE)
-      w <- plsFit$coefficients[ , , ncomp]
-      w <- w / sqrt(sum(w^2))
-      t_new <- x %*% w
-      dif <- sqrt(sum((t_new - t)^2) / sum(t_new^2))
-      t <- t_new
+
+      # Step 3: Compute weights (w) to make Xw as close as possible to t*
+      w <- crossprod(X, t_star) / sum(t_star^2)
+      w <- w / sqrt(sum(w^2))  # Normalize the weights
+
+      # Step 4: Update t as Xw
+      t_new <- X %*% w
+
+      # Step 5: Orthogonalize t_new with respect to Y
+      t_star <- t_new - Y %*% MASS::ginv(crossprod(Y, Y)) %*% crossprod(Y, t_new)
+
+      # Compute convergence criterion
+      diff <- sqrt(sum((t_star - t)^2)) / sqrt(sum(t_star^2))
+
+      # Update t for the next iteration
+      t <- t_star
     }
-    p <- crossprod(t, x) %*% MASS::ginv(crossprod(t, t_new))
-    x <- x - tcrossprod(t, p)
-    ws[[i]] <- w
-    ps[[i]] <- p
-    ts[[i]] <- t
+
+    if (iter == max.iter) {
+      warning("Iteration limit reached without convergence.")
+    }
+
+    # Step 6: Compute the loading vector (p)
+    p <- crossprod(X, t_star) / sum(t_star^2)
+
+    # Step 7: Deflate X
+    X <- X - t_star %*% t(p)
+
+    # Store results
+    scores[[comp]] <- t_star
+    loadings[[comp]] <- p
+    weights[[comp]] <- w
   }
-  w_ortho <- do.call(cbind, ws)
-  p_ortho <- do.call(cbind, ps)
-  t_ortho <- do.call(cbind, ts)
-  x_osc <- x_original - x_original %*% tcrossprod(w_ortho, p_ortho)
 
-  R2 <- sum(x_osc^2) / sum(x_original^2) * 100
-  angle <- crossprod(t_ortho, y)
-  norm <- MASS::ginv(sqrt(apply(t_ortho^2, 2, sum) * sum(y^2)))
-  angle <- t(angle) %*% t(norm)
-  angle <- mean(acos(angle) * 180 / pi)
+  # Combine components into matrices
+  T_star <- do.call(cbind, scores)
+  P <- do.call(cbind, loadings)
+  W <- do.call(cbind, weights)
 
-  res <- list(
-    "correction" = tibble::as_tibble(x_osc),
-    "weights" = tibble::as_tibble(w_ortho),
-    "scores" = tibble::as_tibble(t_ortho),
-    "loadings" = tibble::as_tibble(p_ortho),
-    "angle" = angle,
-    "R2" = R2
-  )
-  return(res)
+  # Calculate the filtered X matrix
+  X_filtered <- X_original - T_star %*% t(P)
+
+  # Return results as a list
+  return(list(
+    scores = T_star,
+    loadings = P,
+    weights = W,
+    X_filtered = X_filtered
+  ))
 }
 ```
 
@@ -381,9 +411,16 @@ osc_filter <- sjoblom_osc(scale(x_matrix, scale = FALSE), y_target, ncomp = 10, 
 osc_scores <- osc_filter %>% pluck("scores") %>% mutate(extract = y_target)
 ```
 
-```{r echo=FALSE, fig.height=4, fig.width=7, fig.align='center'}
+```{r warning=FALSE, message=FALSE}
+#| code-fold: true
+#| code-summary: "Show the code"
+wold_osc_filter <- wold_osc(scale(x_matrix, scale = FALSE), y_target, ncomp = 10, tol = 1e5, max.iter = 10)
+wold_osc_scores <- wold_osc_filter %>% pluck("scores") %>% as_tibble() %>% mutate(extract = y_target)
+```
+
+```{r echo=FALSE, fig.height=5, fig.width=12, fig.align='center'}
 osc_ellipse <- ellipseParam(osc_scores, k = 2, pcx = 1, pcy = 2)
-osc_scores %>%
+p1 <- osc_scores %>%
   ggplot() +
   ggforce::geom_ellipse(
     aes(
@@ -411,6 +448,37 @@ osc_scores %>%
     linewidth = .3
     )
   )
+wold_osc_ellipse <- ellipseParam(wold_osc_scores, k = 2, pcx = 1, pcy = 2)
+p2 <- wold_osc_scores %>%
+  ggplot() +
+  ggforce::geom_ellipse(
+    aes(
+      x0 = 0, 
+      y0 = 0, 
+      a = pluck(wold_osc_ellipse, "Ellipse", "a.95pct"), 
+      b = pluck(wold_osc_ellipse, "Ellipse", "b.95pct"),
+      angle = 0), 
+    linewidth = .5, linetype = "solid", fill = "white") +
+  aes(x = V1, y = V2, fill = extract) +
+  geom_point(size = 5L, shape = 21, colour = "#112446") +
+  scale_fill_viridis_c(option = "cividis", direction = 1) +
+  labs(
+    title = "Wold's OSC Algorithm", 
+    subtitle = "Scores of the Filtered Spectra", 
+    x = "Component 1", 
+    y = "Component 2", 
+    fill = "Beer's\nextract") +
+  theme_grey() +
+  theme(
+    aspect.ratio = .8,
+    panel.grid = element_blank(),
+    panel.background = element_rect(
+    colour = "black",
+    linewidth = .3
+    )
+  )
+
+p1 + p2 + plot_layout(ncol = 2, guides = 'collect')
 ```
 
 The following plot compares the results of OSC, PCA, and PLS modeling by overlaying their respective loadings on a single graph. By presenting their loadings together, we can clearly observe the differences in how each method captures and prioritizes spectral features and filter noise, highlighting their unique contributions and areas of overlap.
@@ -429,10 +497,15 @@ pls_loadings <- loadings(pls_result)[, 1:10] %>%
 osc_loadings <- osc_filter %>% 
   pluck("loadings") %>%
   mutate(wavelength = rep(seq(1100, 2250, 2), times = 1))
+
+wold_osc_loadings <- wold_osc_filter %>% 
+  pluck("loadings") %>%
+  as_tibble() %>%
+  mutate(wavelength = rep(seq(1100, 2250, 2), times = 1))
 ```
 
 ```{r echo=FALSE}
-p1 <- beer %>% mutate(spectra_id = paste0("s", 1:80)) %>%
+p3 <- beer %>% mutate(spectra_id = paste0("s", 1:80)) %>%
   pivot_longer(
   cols = -c(extract, spectra_id),
   names_to = "wavelength",
@@ -453,13 +526,14 @@ p1 <- beer %>% mutate(spectra_id = paste0("s", 1:80)) %>%
   theme_bw() +
   theme(panel.grid = element_blank())
 
-p2 <- ggplot() +
-  geom_line(data = osc_loadings, aes(x = wavelength, y = V1, color = "OSC")) +
+p4 <- ggplot() +
+  geom_line(data = wold_osc_loadings, aes(x = wavelength, y = V1, color = "Wold's OSC"), linewidth = 0.8) +
+  geom_line(data = osc_loadings, aes(x = wavelength, y = V1, color = "Sjöblom's OSC")) +
   geom_line(data = pca_loadings, aes(x = wavelength, y = PC1, color = "PCA")) +
   geom_line(data = pls_loadings, aes(x = wavelength, y = comp_1, color = "PLS")) +
   scale_color_manual(
     name = "Algorithm", 
-    values = c("OSC" = "blue", "PCA" = "red", "PLS" = "darkgreen")) +
+    values = c("Wold's OSC" = "gold", "Sjöblom's OSC" = "blue", "PCA" = "red", "PLS" = "darkgreen")) +
   scale_x_continuous(limits = c(1100, 2250), breaks = c(seq(1100, 2250, by = 100))) +
   labs(x = "Wavelength [nm]", y = "Loadings") +
   theme_bw() +
@@ -468,13 +542,13 @@ p2 <- ggplot() +
 
 ```{r echo=FALSE, fig.height=6, fig.width=9}
 (
-  p1 + theme(
+  p3 + theme(
     legend.position = "right",
     plot.margin = margin(b = 0), 
     axis.title.x = element_blank(),
     axis.text.x = element_blank())
   ) / 
-  (p2 + theme(legend.position = "right", plot.margin = margin(t = 0)))
+  (p4 + theme(legend.position = "right", plot.margin = margin(t = 0)))
 ```
 
 Unlike PCA (in red) and PLS (in dark green), which show substantial variability, particularly in the region above 1350 nm, OSC (in blue) effectively filters the noise, reducing it to near-zero levels. This smoothing demonstrates OSC's ability to isolate and preserve only the information strongly correlated with the target variable while systematically discarding irrelevant or orthogonal components. However, its aggressive filtering comes at the expense of potentially reducing some useful signal.

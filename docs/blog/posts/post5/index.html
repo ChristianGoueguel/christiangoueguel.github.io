@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Christian L. Goueguel">
-<meta name="dcterms.date" content="2023-05-25">
-<meta name="description" content="Orthogonal signal correction (OSC) is a powerful preprocessing technique frequently used to remove variation in spectral data that is orthogonal to the property of interest. Over the years, several implementations of OSC have emerged, with the most notable being those by Wold et al., Sjöblom et al., and Fearn. This post compares these three methods, exploring their algorithmic approaches and practical implications.">
+<meta name="dcterms.date" content="2022-09-07">
+<meta name="description" content="Cascade (or avalanche) ionization and multiphoton ionization are the two primary mechanisms responsible for laser-induced plasma (LIP) formation in water. These absorption processes are influenced by the intensity of the laser pulse and the physical and chemical properties of the water itself. While a comprehensive characterization of LIP in water involves understanding a complex interplay of interrelated phenomena, this post will focus on providing a concise overview of these key mechanisms.">
 
-<title>A Comparative Exploration of Orthogonal Signal Correction Methods – Christian L. Goueguel</title>
+<title>Optical Breakdown Threshold in Water – Christian L. Goueguel</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,40 +22,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -135,8 +101,8 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../../../styles.scss">
-<meta property="og:title" content="A Comparative Exploration of Orthogonal Signal Correction Methods – Christian L. Goueguel">
-<meta property="og:description" content="Orthogonal signal correction (OSC) is a powerful preprocessing technique frequently used to remove variation in spectral data that is orthogonal to the property of interest. Over the years, several implementations of OSC have emerged, with the most notable being those by Wold et al., Sjöblom et al., and Fearn. This post compares these three methods, exploring their algorithmic approaches and practical implications.">
+<meta property="og:title" content="Optical Breakdown Threshold in Water – Christian L. Goueguel">
+<meta property="og:description" content="Cascade (or avalanche) ionization and multiphoton ionization are the two primary mechanisms responsible for laser-induced plasma (LIP) formation in water. These absorption processes are influenced by the intensity of the laser pulse and the physical and chemical properties of the water itself. While a comprehensive characterization of LIP in water involves understanding a complex interplay of interrelated phenomena, this post will focus on providing a concise overview of these key mechanisms.">
 <meta property="og:image" content="cover.png">
 <meta property="og:site_name" content="Christian L. Goueguel">
 </head>
@@ -209,19 +175,17 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">A Comparative Exploration of Orthogonal Signal Correction Methods</h1>
+<h1 class="title">Optical Breakdown Threshold in Water</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">R</div>
-    <div class="quarto-category">Preprocessing</div>
-    <div class="quarto-category">Chemometrics</div>
-    <div class="quarto-category">Machine Learning</div>
+    <div class="quarto-category">Science</div>
+    <div class="quarto-category">Laser</div>
     <div class="quarto-category">Spectroscopy</div>
   </div>
   </div>
 
 <div>
   <div class="description">
-    Orthogonal signal correction (OSC) is a powerful preprocessing technique frequently used to remove variation in spectral data that is orthogonal to the property of interest. Over the years, several implementations of OSC have emerged, with the most notable being those by Wold et al., Sjöblom et al., and Fearn. This post compares these three methods, exploring their algorithmic approaches and practical implications.
+    Cascade (or avalanche) ionization and multiphoton ionization are the two primary mechanisms responsible for laser-induced plasma (LIP) formation in water. These absorption processes are influenced by the intensity of the laser pulse and the physical and chemical properties of the water itself. While a comprehensive characterization of LIP in water involves understanding a complex interplay of interrelated phenomena, this post will focus on providing a concise overview of these key mechanisms.
   </div>
 </div>
 
@@ -238,7 +202,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 25, 2023</p>
+      <p class="date">September 7, 2022</p>
     </div>
   </div>
   
@@ -254,129 +218,81 @@ window.Quarto = {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="cover.png" class="img-fluid figure-img"></p>
-<figcaption>Photo by <a href="https://unsplash.com/photos/a-body-of-water-surrounded-by-mountains-and-clouds-_b2hvhIXGI8?utm_content=creditShareLink&amp;utm_medium=referral&amp;utm_source=unsplash">Jonatan Pie</a>.</figcaption>
+<figcaption>Photo by <a href="https://unsplash.com/photos/a-group-of-bubbles-floating-on-top-of-a-black-surface-gY0gQJYA84I?utm_content=creditShareLink&amp;utm_medium=referral&amp;utm_source=unsplash">Vinicius Amano</a>.</figcaption>
 </figure>
 </div>
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>Wold’s method was the first formal OSC algorithm. It operates iteratively to identify orthogonal components unrelated to the dependent variable <span class="math inline">\(Y\)</span>. The method leverages a combination of principal component analysis (PCA) and partial least squares (PLS). Sjöblom’s approach builds on Wold’s by introducing a direct orthogonalization step. The algorithm emphasizes calibration transfer, making it especially useful for standardizing spectral datasets across instruments or conditions. Whereas, Fearn proposed a mathematically elegant version of OSC, simplifying the computation by leveraging matrix operations. The method directly orthogonalizes <span class="math inline">\(X\)</span> using a singular value decomposition (SVD) of a residual matrix.</p>
-<section id="wolds-osc-algorithm" class="level3">
-<h3 class="anchored" data-anchor-id="wolds-osc-algorithm">Wold’s OSC Algorithm</h3>
-<p>The Wold algorithm is like a precise sculptor of spectroscopic data. It uses Partial Least Squares (PLS) regression to systematically remove spectral variations that are unrelated to the target variable. The key steps involve:</p>
-<p>Initialize <span class="math inline">\(t\)</span>, the first score vector (e.g., using PCA on <span class="math inline">\(X\)</span>).</p>
-<ol type="1">
-<li>Deflate <span class="math inline">\(t\)</span> using <span class="math inline">\(Y\)</span>: <span class="math inline">\(t_{\text{new}} = t - Y(Y^\top Y)^{-1}Y^\top t\)</span></li>
-<li>Calculate a loading vector <span class="math inline">\(p\)</span> from <span class="math inline">\(t_{\text{new}}\)</span> to model <span class="math inline">\(X\)</span>: <span class="math inline">\(p = \frac{X^\top t_{\text{new}}}{t_{\text{new}}^\top t_{\text{new}}}\)</span></li>
-<li>Deflate <span class="math inline">\(X\)</span>: <span class="math inline">\(X_{\text{new}} = X - t_{\text{new}} p^\top\)</span></li>
-<li>Repeat until <span class="math inline">\(n_{\text{comp}}\)</span>.</li>
-</ol>
+<section id="absorption-mechanisms" class="level2">
+<h2 class="anchored" data-anchor-id="absorption-mechanisms">Absorption Mechanisms</h2>
+<section id="multiphoton-ionization" class="level3">
+<h3 class="anchored" data-anchor-id="multiphoton-ionization">Multiphoton Ionization</h3>
+<p>Multiphoton ionization (MPI) is a key first step in laser-induced plasma (LIP) [1-4]. This process occurs when a valence electron absorbs multiple photons simultaneously, leading to ionization. The probability of ionization via MPI is proportional to <span class="math inline">\(I^{k}\)</span> (where <span class="math inline">\(I\)</span> is the laser intensity while <span class="math inline">\(k\)</span> is the minimum number of photons required whose total energy meets or exceeds the ionization energy of the valence electron. For example, consider the MPI process for sodium (Na). The first ionization energy <span class="math inline">\((\text{E}_{ion})\)</span> of Na is ~ 5.14 eV. To ionize a valence electron from the ground state <span class="math inline">\((\text{E}_{0})\)</span> to the free state, the simultaneous absorption of five photons from a 1064-nm laser pulse is necessary.</p>
+<p>MPI is a nonlinear optical process that becomes prominent at extremely high laser intensities, resulting in a higher breakdown threshold compared to the cascade ionization (CI) mechanism. Additionally, MPI dominates in the femtosecond regime, where the ultra-short laser pulse duration is insufficient to sustain the cascading free electron generation necessary for CI. Consequently, MPI is the primary absorption mechanism under such conditions.</p>
 </section>
-<section id="sjöbloms-osc-algorithm" class="level3">
-<h3 class="anchored" data-anchor-id="sjöbloms-osc-algorithm">Sjöblom’s OSC Algorithm</h3>
-<p>Sjöblom’s approach is the pragmatic cousin of the Wold method. It uses similar steps but simplifies certain iterative aspects, focusing on the orthogonal direction more explicitly.</p>
-<ol type="1">
-<li>Identify a direction vector <span class="math inline">\(w\)</span> from <span class="math inline">\(X\)</span> and <span class="math inline">\(t\)</span>, the orthogonal scores <span class="math inline">\(w = \frac{X^\top t}{t^\top t}\)</span>​</li>
-<li>Normalize <span class="math inline">\(w\)</span>: <span class="math inline">\(w = \frac{w}{\|w\|}\)</span>​</li>
-<li>Deflate <span class="math inline">\(t\)</span> from <span class="math inline">\(Y\)</span> as in Wold’s method.</li>
-<li>Remove the orthogonal variation from <span class="math inline">\(X\)</span>: <span class="math inline">\(X_{\text{new}} = X - t p^\top\)</span></li>
-<li>Iterate for each component.</li>
-</ol>
-</section>
-<section id="fearns-osc-algorithm" class="level3">
-<h3 class="anchored" data-anchor-id="fearns-osc-algorithm">Fearn’s OSC Algorithm</h3>
-<p>Fearn’s method stands out by using Singular Value Decomposition (SVD) as its foundation. Its characteristics include:</p>
-<ol type="1">
-<li>Compute the residual matrix <span class="math inline">\(Z\)</span>: <span class="math inline">\(Z = X - Y (Y^\top Y)^{-1} Y^\top X\)</span></li>
-<li>Perform SVD on <span class="math inline">\(Z\)</span>: <span class="math inline">\(Z = U S V^\top\)</span></li>
-<li>Extract the first <span class="math inline">\(n_{\text{comp}}\)</span> components from <span class="math inline">\(V\)</span> and reconstruct the orthogonal scores <span class="math inline">\(t\)</span> and loadings <span class="math inline">\(p\)</span>: <span class="math inline">\(t = Z V_{:, i}, \quad p = \frac{X^\top t}{t^\top t}\)</span></li>
-<li>Deflate <span class="math inline">\(X\)</span>: <span class="math inline">\(X_{\text{new}} = X - t p^\top\)</span></li>
-</ol>
+<section id="cascade-ionization" class="level3">
+<h3 class="anchored" data-anchor-id="cascade-ionization">Cascade Ionization</h3>
+<p>In pure water, seed electrons are primarily generated through the multiphoton ionization (MPI) of water molecules. In contrast, in water containing impurities, seed electrons are more likely produced through the ionization of impurities by thermal excitation, which establishes an initial density of free electrons within the laser’s focal volume. Notably, achieving multiphoton initiation of cascade ionization (CI) in pure water requires significantly higher laser intensities. However, the presence of impurities can drastically lower the breakdown threshold and facilitate plasma formation by providing additional seed electrons. For instance, saline water demonstrates this phenomenon effectively. In such cases, seed electrons originate from the ionization of easily ionizable elements (EIE), such as sodium. These free electrons, liberated from the outermost shells of Na atoms, acquire sufficient kinetic energy through inverse Bremsstrahlung (IB) absorption—a process in which seed electrons absorb laser photons during collisions with heavy particles like molecules or ions. This energy gain enables the electrons to produce a cascade of additional free electrons, ultimately resulting in water breakdown.</p>
+<p>For breakdown to occur, the rate of electron energy gain via IB absorption must exceed the rate of energy loss due to inelastic collisions. Similarly, the ionization rate must surpass the loss of free electrons through electron-ion recombination and diffusion out of the focal volume. Consequently, the laser intensity within the focal volume must be sufficiently high to drive these energy gains and maintain a net increase in free electrons. Finally, CI is the dominant breakdown mechanism in most scenarios, especially when long-duration laser pulses (in the nanosecond regime) are employed.</p>
 </section>
 </section>
-<section id="implementation" class="level2">
-<h2 class="anchored" data-anchor-id="implementation">Implementation</h2>
-<p>We begin by implementing these algorithms, creating functions named <code>wold_osc</code>, <code>sjoblom_osc</code>, and <code>fearn_osc</code>. Each function takes five key parameters. The first parameter, <code>x</code>, represents the input data matrix, which typically contains spectral or chemical measurements. The second parameter, <code>y</code>, corresponds to the target variable or response vector. The <code>ncomp</code> parameter specifies the number of orthogonal components to extract, while <code>tol</code> sets the tolerance level for convergence, determining the stopping criterion for iterations. Finally, <code>max.iter</code> establishes the maximum number of iterations allowed during the optimization process. The function definitions for these algorithms follow this structure:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>wold_osc <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, ncomp, tol, max.iter)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>sjoblom_osc <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, ncomp, tol, max.iter)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>fearn_osc <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, ncomp, tol, max.iter)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>To begin, the original data matrix <code>x</code> is stored, and empty lists are initialized to hold the extracted principal components, weights, and scores for each component. This step ensures that the algorithm’s outputs are organized for further processing or analysis:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x_original <span class="ot">&lt;-</span> x</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>ps <span class="ot">&lt;-</span> ws <span class="ot">&lt;-</span> ts <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">"list"</span>, ncomp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>The algorithm proceeds with a loop to extract the specified number of orthogonal components. For each iteration, Principal Component Analysis (PCA) is performed on the current <code>x</code> matrix without centering, using the <code>stats::prcomp</code> function. The initial score vector <code>t</code> is derived from the first principal component. Variables <code>.iter</code> and <code>.diff</code> are initialized to track the number of iterations and the difference between successive score vectors, which serves as the convergence criterion.</p>
-<p>Within the loop, the orthogonalization process begins. Variation correlated with the response variable <code>y</code> is iteratively removed from the score vector <code>t</code>, refining its orthogonality. Weights, representing the relationship between the input matrix <code>x</code> and the score vector, are calculated and normalized to unit length. A new score vector is then computed, and the convergence check compares the difference between successive score vectors (<code>.diff</code>) to the tolerance level (<code>tol</code>). The loop continues until the difference falls below the specified tolerance or the maximum number of iterations is reached.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> (.diff <span class="sc">&gt;</span> tol <span class="sc">&amp;&amp;</span> .iter <span class="sc">&lt;</span> max.iter) {</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  .iter <span class="ot">&lt;-</span> .iter <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  t_new <span class="ot">&lt;-</span> t <span class="sc">-</span> y <span class="sc">%*%</span> MASS<span class="sc">::</span><span class="fu">ginv</span>(<span class="fu">crossprod</span>(y, y)) <span class="sc">%*%</span> <span class="fu">crossprod</span>(y, t)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  w <span class="ot">&lt;-</span> <span class="fu">crossprod</span>(x, t_new) <span class="sc">%*%</span> MASS<span class="sc">::</span><span class="fu">ginv</span>(<span class="fu">crossprod</span>(t_new, t_new))</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  w <span class="ot">&lt;-</span> w <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>(w<span class="sc">^</span><span class="dv">2</span>))</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  t_new <span class="ot">&lt;-</span> x <span class="sc">%*%</span> w</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  .diff <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>((t_new <span class="sc">-</span> t)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> <span class="fu">sum</span>(t_new<span class="sc">^</span><span class="dv">2</span>))</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  t <span class="ot">&lt;-</span> t_new</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>After achieving convergence, a Partial Least Squares (PLS) model is fitted to the data using the extracted scores. The weights and scores are updated, and the loadings are computed. At this stage, <code>y</code>-correlated variation is removed, and the input matrix <code>x</code> is deflated by subtracting the modeled variation. This step prepares the matrix for the next orthogonal component extraction.</p>
-<p>The extracted weights, loadings, and scores for each orthogonal component are stored in their respective lists:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ws[[i]] <span class="ot">&lt;-</span> w</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>ps[[i]] <span class="ot">&lt;-</span> p</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>ts[[i]] <span class="ot">&lt;-</span> t</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Once all components are extracted, the results are combined to construct the orthogonal components matrix. The orthogonally corrected matrix <code>x_osc</code> is then computed by removing the contributions of the orthogonal components from the original data matrix:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>x_osc <span class="ot">&lt;-</span> x_original <span class="sc">-</span> x_original <span class="sc">%*%</span> <span class="fu">tcrossprod</span>(w_ortho, p_ortho)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Finally, to evaluate the algorithm’s performance, two metrics are computed. The percentage of variation removed <code>R2</code> quantifies how effectively the algorithm deflates the input matrix, while the angle between the orthogonal scores and the target variable <code>y</code> provides insight into the degree of orthogonality achieved. These metrics allow us to assess the quality and effectiveness of the orthogonal signal correction methods.</p>
+<section id="breakdown-threshold" class="level2">
+<h2 class="anchored" data-anchor-id="breakdown-threshold">Breakdown Threshold</h2>
+<p>In this section, we summarize some published theoretical modeling results and experimental measurements of breakdown thresholds in water. Before going any further, it is important to remember that for aqueous solutions, in the nanosecond regime, the breakdown threshold is significantly higher for MPI compared to CI. As the duration of the laser pulse decreases, MPI begins to dominate the IC mechanism, both for pure water and for water with impurities. In addition, the uncertainty associated with the search for seed electrons in the focal volume at a given time makes breakdown by CI a probabilistic process, which defined breakdown threshold in terms of breakdown probability.</p>
+<section id="optical-breakdown" class="level3">
+<h3 class="anchored" data-anchor-id="optical-breakdown">Optical breakdown</h3>
+<p>Breakdown threshold in water can be defined experimentally as the minimum laser intensity required for observing a spark, the signal emitted by plasma (which rather refers to the plasma emission threshold), the appearance of bubbles in water, the production of shock waves or the generation of acoustic sound. Breakdown defined as the appearance of a spark visible to the naked eye or detectable by an optical imaging system is the approach commonly used by many authors. In contrast, in theoretical modeling, the breakdown threshold is commonly defined as the minimum laser intensity required for the production of a sufficiently dense plasma to significantly absorb laser photons. The latter is typically defined by a critical free electron density <span class="math inline">\(N_{cr}\)</span> of approximately <span class="math inline">\(10^{19}-10^{20} \text{cm}^{3}\)</span> in the focal volume, which has a cylindrical shape given by [1]:</p>
+<p><span class="math display">\[V = (\sqrt{2}-1)\frac{πd^{2}}{2}\frac{f^{2}\theta}{D_{0}}\]</span> where <span class="math inline">\(d\)</span> is the beam spot size, <span class="math inline">\(f\)</span> is the focal length of the focusing lens, <span class="math inline">\(\theta\)</span> is the beam divergence and <span class="math inline">\(D_{0}\)</span> is the unfocused beam diameter.</p>
+<section id="rate-equations" class="level5">
+<h5 class="anchored" data-anchor-id="rate-equations">Rate equations</h5>
+<p>The rate equation of free electrons density under the MPI mechanism is expressed by [1]:</p>
+<p><span class="math display">\[\frac{\text{d}}{\text{dt}}(N_{mpi}) = \frac{2 \omega}{9 \pi} \left( \frac{m^{'}}{ℏ} \right )^{3/2} \left( \frac{e^{2}}{16nc\epsilon_{0}m^{'} \Delta E \omega^{2}} \right)^{k} I^{k}e^{(2kI)} \Phi \cdot \sqrt{2 \left( k-\frac{\Delta E}{ℏ\omega} \right)}\]</span> with, <span class="math inline">\(\Phi(x) = e^{(-x^{2})}∫_{0}^{x}e^{y^{2}}\text{d}y\)</span>, and <span class="math inline">\(m^{'} = \frac{m_{e}m_{ℏ}}{m_{e} + m_{ℏ}}\)</span>, where <span class="math inline">\(\omega\)</span> is the angular frequency of laser light, <span class="math inline">\(I\)</span> is the laser intensity, <span class="math inline">\(m^{'}\)</span> is the reduced exciton mass, <span class="math inline">\(e\)</span> is the electron charge, <span class="math inline">\(n\)</span> is the refractive index of water, <span class="math inline">\(c\)</span> is the velocity of light, <span class="math inline">\(k\)</span> is degree of non-linearity of MPI (i.e.&nbsp;the smallest number of laser photons required for MPI), <span class="math inline">\(ℏ\)</span> the reduced Planck constant, <span class="math inline">\(\epsilon_{0}\)</span> is permittivity of free space and <span class="math inline">\(\Delta E\)</span> is the ionization potential of water. While the rate equation under CI mechanism is expressed by [1]:</p>
+<p><span class="math display">\[N_{ci} = \frac{1}{\omega^{2}\tau_{m}^{2} + 1} \left( \frac{e^{2}\tau_{m}}{cnm\epsilon_{0} \Delta E} I - \frac{m \omega^{2} \tau_{m}}{M} \right)\]</span> where <span class="math inline">\(\tau_{m}\)</span> is the mean free time between electron-heavy particle collisions, <span class="math inline">\(M\)</span> is the mass of the liquid molecule, and <span class="math inline">\(m\)</span> is the electron mass. Following the above equations, the rate equation under the combined effect of both MPI and CI mechanisms is expressed as [1]:</p>
+<p><span class="math display">\[\frac{\text{d}}{\text{dt}}(N_{e}) = \frac{\text{d}}{\text{dt}}(N_{mpi}) + N_{ci}N_{e} - (RN_{e} + D)N_{e}\]</span> where <span class="math inline">\(N_{e}\)</span> is the free electron density, <span class="math inline">\(D\)</span> and <span class="math inline">\(R\)</span> are losses by diffusion and recombination, respectively.</p>
 </section>
-<section id="exemple" class="level2">
-<h2 class="anchored" data-anchor-id="exemple">Exemple</h2>
-<p>We will use the <code>beer</code> dataset introduced in our previous post. The dataset consists of Near-Infrared Spectroscopy (NIRS) spectra collected from 80 beer samples, <code>x_matrix</code>. The target variable of interest is the Original Gravity (OG), also known as the original extract, <code>y_target</code>. This parameter measures the concentration of dissolved solids in the wort before fermentation begins, providing a crucial indicator of the brewing process. Next, we will perform standard PCA and PLS regression on the Near-Infrared Spectroscopy (NIRS) spectra of the beer dataset to uncover patterns and relationships within the data.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>x_matrix <span class="ot">&lt;-</span> beer <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>extract) <span class="sc">%&gt;%</span> <span class="fu">as.matrix</span>()</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>y_target <span class="ot">&lt;-</span> beer <span class="sc">%&gt;%</span> <span class="fu">pull</span>(extract)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="1152"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Now, we can apply Orthogonal Signal Correction (OSC) filtering to the dataset and evaluate its impact by comparing the results with the original PCA and PLS scores. By incorporating OSC-filtered data, we can visualize the changes in the X-scores for PCA and PLS to assess how the orthogonal correction modifies the data structure. Specifically, we’ll examine how the OSC filtering affects the distribution of samples in the reduced-dimensionality space and whether the variation captured aligns better with the response variable.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>osc_filter <span class="ot">&lt;-</span> <span class="fu">sjoblom_osc</span>(<span class="fu">scale</span>(x_matrix, <span class="at">scale =</span> <span class="cn">FALSE</span>), y_target, <span class="at">ncomp =</span> <span class="dv">10</span>, <span class="at">tol =</span> <span class="fl">1e5</span>, <span class="at">max.iter =</span> <span class="dv">10</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>osc_scores <span class="ot">&lt;-</span> osc_filter <span class="sc">%&gt;%</span> <span class="fu">pluck</span>(<span class="st">"scores"</span>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">extract =</span> y_target)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div class="cell">
-<details class="code-fold">
-<summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>wold_osc_filter <span class="ot">&lt;-</span> <span class="fu">wold_osc</span>(<span class="fu">scale</span>(x_matrix, <span class="at">scale =</span> <span class="cn">FALSE</span>), y_target, <span class="at">ncomp =</span> <span class="dv">10</span>, <span class="at">tol =</span> <span class="fl">1e5</span>, <span class="at">max.iter =</span> <span class="dv">10</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>wold_osc_scores <span class="ot">&lt;-</span> wold_osc_filter <span class="sc">%&gt;%</span> <span class="fu">pluck</span>(<span class="st">"scores"</span>) <span class="sc">%&gt;%</span> <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">extract =</span> y_target)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
+</section>
+<section id="breakdown-threshold-dependence" class="level3">
+<h3 class="anchored" data-anchor-id="breakdown-threshold-dependence">Breakdown threshold dependence</h3>
+<p>The laser intensity threshold required for the optical breakdown and plasma formation is a function of both the characteristics of the liquid (ionization energy, level of impurities) and the characteristics of the laser beam (wavelength, pulse duration, and spot size).</p>
+<section id="pulse-duration-and-impurity-dependence" class="level5">
+<h5 class="anchored" data-anchor-id="pulse-duration-and-impurity-dependence">Pulse duration and impurity dependence</h5>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="1152"></p>
+<p><img src="clipboard-1276974377.png" class="img-fluid figure-img"></p>
+<figcaption>Fig.1: Breakdown threshold as a function of the laser pulse duration in pure and impure water. Laser spot size is fixed at 30 um and wavelength is at 1064 nm [4].</figcaption>
 </figure>
 </div>
-</div>
-</div>
-<p>The following plot compares the results of OSC, PCA, and PLS modeling by overlaying their respective loadings on a single graph. By presenting their loadings together, we can clearly observe the differences in how each method captures and prioritizes spectral features and filter noise, highlighting their unique contributions and areas of overlap.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div>
+</section>
+<section id="pulse-duration-and-spot-size-dependence" class="level5">
+<h5 class="anchored" data-anchor-id="pulse-duration-and-spot-size-dependence">Pulse duration and spot size dependence</h5>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="864"></p>
+<p><img src="clipboard-309784663.png" class="img-fluid figure-img"></p>
+<figcaption>Fig.2: Breakdown threshold as a function of the laser pulse duration and spot size in pure and impure water. Laser wavelength is at 1064 nm [4].</figcaption>
 </figure>
 </div>
+</section>
+<section id="pulse-duration-and-wavelength-dependence" class="level5">
+<h5 class="anchored" data-anchor-id="pulse-duration-and-wavelength-dependence">Pulse duration and wavelength dependence</h5>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="clipboard-3698903444.png" class="img-fluid figure-img"></p>
+<figcaption>Fig.3: Breakdown threshold as a function of the laser pulse duration and wavelength in pure and impure water. Laser spot size is set at 30 um [4].</figcaption>
+</figure>
 </div>
-</div>
-<p>Unlike PCA (in red) and PLS (in dark green), which show substantial variability, particularly in the region above 1350 nm, OSC (in blue) effectively filters the noise, reducing it to near-zero levels. This smoothing demonstrates OSC’s ability to isolate and preserve only the information strongly correlated with the target variable while systematically discarding irrelevant or orthogonal components. However, its aggressive filtering comes at the expense of potentially reducing some useful signal.</p>
-<p>The PCA and PLS loadings, on the other hand, display pronounced fluctuations, reflecting their sensitivity to variance within the dataset. PCA, focusing solely on maximizing variance without considering the target variable, captures not only relevant features but also substantial noise. PLS, while more targeted as it incorporates the correlation with the target variable, still exhibits residual noise, especially in the higher wavelengths, indicating its partial retention of irrelevant variance.</p>
+</section>
+</section>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>This post highlights the strong dependence of the breakdown threshold on the duration of the laser pulse. When using ultrashort pulses in the femtosecond range, a significantly high-intensity laser source is required in the focal volume due to the dominance of multiphoton ionization as the primary absorption mechanism. This also explains why laser sources in the Visible or UV range, which provide higher-energy photons, are more effective for such applications than IR sources. In contrast, laser pulses in the nanosecond regime allow for a lower breakdown threshold by leveraging the thermal excitation of impurities present in the water. However, it is essential to conduct measurements well above the breakdown threshold, as the threshold itself is governed by probabilistic mechanisms, unlike the more deterministic breakdown behavior observed in the femtosecond regime.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ol type="1">
+<li><p>Gaabour, L. H., Gamal, Y. E. E. D. &amp; Abdellatif, G. Numerical Investigation of the Plasma Formation in Distilled Water by Nd-YAG Laser Pulses of Different Duration. <em>J Mod Phys</em> 03, 1683–1691 (2012).</p></li>
+<li><p>Hammer, D. X. et al.&nbsp;Experimental investigation of ultrashort pulse laser-induced breakdown thresholds in aqueous media. <em>IEEE J Quantum Elect</em> 32, 670–678 (1996).</p></li>
+<li><p>Vogel, A., Nahen, K., Theisen, D. &amp; Noack, J. Plasma formation in water by picosecond and nanosecond Nd:YAG laser pulses. I. Optical breakdown at threshold and superthreshold irradiance. <em>IEEE J Sel Top Quant</em> 2, 847–860 (1996).</p></li>
+<li><p>Kennedy, P. A first-order model for computation of laser-induced breakdown thresholds in ocular and aqueous media. I. Theory. <em>Progress in Quantum Electronics</em> (1995).</p></li>
+</ol>
 </section>
 </div>
 
