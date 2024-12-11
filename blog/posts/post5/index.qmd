@@ -1,6 +1,6 @@
 ---
 title: "Optical Breakdown Threshold in Water"
-description: "Cascade (or avalanche) ionization and multiphoton ionization are the two primary mechanisms responsible for laser-induced plasma (LIP) formation in water. These absorption processes are influenced by the intensity of the laser pulse and the physical and chemical properties of the water itself. While a comprehensive characterization of LIP in water involves understanding a complex interplay of interrelated phenomena, this post will focus on providing a concise overview of these key mechanisms."
+description: "Cascade (or avalanche) ionization and multiphoton ionization are the two primary mechanisms responsible for laser-induced plasma (LIP) formation in water. These absorption processes are influenced by the intensity of the laser pulse and the physical and chemical properties of the water itself. This post focuses on providing a concise overview of these key mechanisms."
 author: "Christian L. Goueguel"
 date: "9/7/2022"
 image: "cover.png"
@@ -53,13 +53,25 @@ The laser intensity threshold required for the optical breakdown and plasma form
 
 ##### Pulse duration and impurity dependence
 
+This graph illustrates the breakdown threshold (irradiance threshold, ($\text{I}_{th}​$) as a function of the laser pulse width (pulse duration) for pure and impure water, with the laser operating at a wavelength of 1064 nm and a focal spot size of $d = 30 \mu$m.
+
 ![Fig.1: Breakdown threshold as a function of the laser pulse duration in pure and impure water. Laser spot size is fixed at 30 um and wavelength is at 1064 nm \[4\].](clipboard-1276974377.png){fig-align="center"}
+
+For ultrashort pulse durations in the femtosecond regime (leftmost part of the graph), the breakdown threshold is very high. This is because multiphoton ionization (MPI) dominates, requiring simultaneous absorption of multiple photons to ionize valence electrons. As the pulse width increases into the picosecond and nanosecond regimes (rightward on the graph), the breakdown threshold significantly decreases. In this range, cascade ionization becomes dominant, which involves free electron generation through seed electrons and their subsequent acceleration via inverse Bremsstrahlung absorption.
+
+The difference between the dashed and solid lines in the nanosecond regime highlights the significant role impurities play in lowering the breakdown threshold through thermal excitation.
 
 ##### Pulse duration and spot size dependence
 
+This graph shows the breakdown threshold (irradiance threshold) as a function of pulse duration for pure water at various focal spot sizes (10, 30, and 90 $\mu$m) compared to impure water, using a laser wavelength of 1064 nm.
+
 ![Fig.2: Breakdown threshold as a function of the laser pulse duration and spot size in pure and impure water. Laser wavelength is at 1064 nm \[4\].](clipboard-309784663.png){fig-align="center"}
 
+As the pulse duration increases from the femtosecond to the nanosecond regime, the threshold decreases significantly. In pure water, the breakdown threshold is higher and depends strongly on the focal spot size, with smaller focal spots (e.g., 10 $\mu$m) requiring higher irradiance to achieve breakdown.
+
 ##### Pulse duration and wavelength dependence
+
+This graph illustrates the dependence of the water breakdown threshold on laser wavelength as a function of pulse width. Notably, it reveals a significant decrease in the breakdown threshold at a laser wavelength of 532 nm compared to 1064 nm, highlighting the wavelength's impact on the process.
 
 ![Fig.3: Breakdown threshold as a function of the laser pulse duration and wavelength in pure and impure water. Laser spot size is set at 30 um \[4\].](clipboard-3698903444.png){fig-align="center"}
 
