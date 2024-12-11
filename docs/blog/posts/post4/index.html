@@ -340,14 +340,14 @@ window.Quarto = {
 </div>
 <p>Now, we can apply Orthogonal Signal Correction (OSC) filtering to the dataset and evaluate its impact by comparing the results with the original PCA and PLS scores. By incorporating OSC-filtered data, we can visualize the changes in the X-scores for PCA and PLS to assess how the orthogonal correction modifies the data structure. Specifically, we’ll examine how the OSC filtering affects the distribution of samples in the reduced-dimensionality space and whether the variation captured aligns better with the response variable.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>osc_filter <span class="ot">&lt;-</span> <span class="fu">sjoblom_osc</span>(x_matrix, y_target, <span class="at">ncomp =</span> <span class="dv">10</span>, <span class="at">tol =</span> <span class="fl">1e5</span>, <span class="at">max.iter =</span> <span class="dv">10</span>)</span>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>osc_filter <span class="ot">&lt;-</span> <span class="fu">sjoblom_osc</span>(<span class="fu">scale</span>(x_matrix, <span class="at">scale =</span> <span class="cn">FALSE</span>), y_target, <span class="at">ncomp =</span> <span class="dv">10</span>, <span class="at">tol =</span> <span class="fl">1e5</span>, <span class="at">max.iter =</span> <span class="dv">10</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>osc_scores <span class="ot">&lt;-</span> osc_filter <span class="sc">%&gt;%</span> <span class="fu">pluck</span>(<span class="st">"scores"</span>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">extract =</span> y_target)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -362,6 +362,8 @@ window.Quarto = {
 </div>
 </div>
 </div>
+<p>Unlike PCA (in red) and PLS (in dark green), which show substantial variability, particularly in the region above 1350 nm, OSC (in blue) effectively filters the noise, reducing it to near-zero levels. This smoothing demonstrates OSC’s ability to isolate and preserve only the information strongly correlated with the target variable while systematically discarding irrelevant or orthogonal components. However, its aggressive filtering comes at the expense of potentially reducing some useful signal.</p>
+<p>The PCA and PLS loadings, on the other hand, display pronounced fluctuations, reflecting their sensitivity to variance within the dataset. PCA, focusing solely on maximizing variance without considering the target variable, captures not only relevant features but also substantial noise. PLS, while more targeted as it incorporates the correlation with the target variable, still exhibits residual noise, especially in the higher wavelengths, indicating its partial retention of irrelevant variance.</p>
 </section>
 </div>
 
