@@ -326,8 +326,11 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="exemple">Exemple</h2>
 <p>We will use the <code>beer</code> dataset introduced in our previous post. The dataset consists of Near-Infrared Spectroscopy (NIRS) spectra collected from 80 beer samples, <code>x_matrix</code>. The target variable of interest is the Original Gravity (OG), also known as the original extract, <code>y_target</code>. This parameter measures the concentration of dissolved solids in the wort before fermentation begins, providing a crucial indicator of the brewing process. Next, we will perform standard PCA and PLS regression on the Near-Infrared Spectroscopy (NIRS) spectra of the beer dataset to uncover patterns and relationships within the data.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>x_matrix <span class="ot">&lt;-</span> beer <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>extract) <span class="sc">%&gt;%</span> <span class="fu">as.matrix</span>()</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>y_target <span class="ot">&lt;-</span> beer <span class="sc">%&gt;%</span> <span class="fu">pull</span>(extract)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <div class="cell">
 <div class="cell-output-display">
@@ -340,8 +343,11 @@ window.Quarto = {
 </div>
 <p>Now, we can apply Orthogonal Signal Correction (OSC) filtering to the dataset and evaluate its impact by comparing the results with the original PCA and PLS scores. By incorporating OSC-filtered data, we can visualize the changes in the X-scores for PCA and PLS to assess how the orthogonal correction modifies the data structure. Specifically, we’ll examine how the OSC filtering affects the distribution of samples in the reduced-dimensionality space and whether the variation captured aligns better with the response variable.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>osc_filter <span class="ot">&lt;-</span> <span class="fu">sjoblom_osc</span>(<span class="fu">scale</span>(x_matrix, <span class="at">scale =</span> <span class="cn">FALSE</span>), y_target, <span class="at">ncomp =</span> <span class="dv">10</span>, <span class="at">tol =</span> <span class="fl">1e5</span>, <span class="at">max.iter =</span> <span class="dv">10</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>osc_scores <span class="ot">&lt;-</span> osc_filter <span class="sc">%&gt;%</span> <span class="fu">pluck</span>(<span class="st">"scores"</span>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">extract =</span> y_target)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">

@@ -86,6 +86,8 @@ beer_data %>% head()
 ```
 
 ```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
 p <- beer_data %>% mutate(spectra_id = paste0("s", 1:80)) %>%
   pivot_longer(
   cols = -c(originalGravity, spectra_id),
@@ -142,6 +144,8 @@ cv_folds <- vfold_cv(train_data, v = 5, repeats = 3)
 Interestingly, the `vfold_cv` function provides a powerful way to visualize the distribution of data across folds, allowing us to confirm that the stratification and splits are evenly balanced. This ensures that each fold accurately represents the overall dataset, enhancing the reliability of cross-validation results.
 
 ```{r, fig.width=12, fig.height=6}
+#| code-fold: true
+#| code-summary: "Show the code"
 cv_folds %>%
   tidy() %>%
   ggplot(aes(x = Fold, y = Row, fill = Data)) +
@@ -303,6 +307,8 @@ train_results <- wflowSet %>%
 ```
 
 ```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
 p1 <- train_results %>% 
   ggplot() +
   aes(x = originalGravity, y = .pred) +
@@ -313,6 +319,8 @@ p1 <- train_results %>%
 ```
 
 ```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
 p2 <- train_results %>% 
   ggplot() +
   aes(x = .pred, y = (originalGravity - .pred)/sd((originalGravity - .pred))) +
@@ -323,6 +331,8 @@ p2 <- train_results %>%
 ```
 
 ```{r, message=FALSE}
+#| code-fold: true
+#| code-summary: "Show the code"
 p1 | p2
 ```
 
@@ -344,6 +354,8 @@ test_results %>% collect_metrics()
 ```
 
 ```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
 p3 <- test_results %>% 
   collect_predictions() %>% 
   ggplot() +
@@ -355,6 +367,8 @@ p3 <- test_results %>%
 ```
 
 ```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
 p4 <- test_results %>% 
   collect_predictions() %>% 
   ggplot() +
@@ -366,6 +380,8 @@ p4 <- test_results %>%
 ```
 
 ```{r, message=FALSE}
+#| code-fold: true
+#| code-summary: "Show the code"
 p3 | p4
 ```
 ### **Conclusion**

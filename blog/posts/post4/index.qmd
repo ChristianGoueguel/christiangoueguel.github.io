@@ -269,6 +269,8 @@ beer <- beer %>% rename(extract = originalGravity)
 ```
 
 ```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
 x_matrix <- beer %>% select(-extract) %>% as.matrix()
 y_target <- beer %>% pull(extract)
 ```
@@ -373,6 +375,8 @@ pca_plot + pls_plot + plot_layout(ncol = 2, guides = 'collect')
 Now, we can apply Orthogonal Signal Correction (OSC) filtering to the dataset and evaluate its impact by comparing the results with the original PCA and PLS scores. By incorporating OSC-filtered data, we can visualize the changes in the X-scores for PCA and PLS to assess how the orthogonal correction modifies the data structure. Specifically, we'll examine how the OSC filtering affects the distribution of samples in the reduced-dimensionality space and whether the variation captured aligns better with the response variable.
 
 ```{r warning=FALSE, message=FALSE}
+#| code-fold: true
+#| code-summary: "Show the code"
 osc_filter <- sjoblom_osc(scale(x_matrix, scale = FALSE), y_target, ncomp = 10, tol = 1e5, max.iter = 10)
 osc_scores <- osc_filter %>% pluck("scores") %>% mutate(extract = y_target)
 ```
