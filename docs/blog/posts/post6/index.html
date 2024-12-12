@@ -6,8 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Christian L. Goueguel">
+<meta name="dcterms.date" content="2019-04-05">
+<meta name="description" content="In the field of spectroscopy, particularly laser spectroscopy, accurately modeling spectral line shapes is crucial for extracting valuable information about the physical and chemical properties of matter. One such function is the Pseudo-Voigt function which is a versatile tool that combines the best aspects of two fundamental line shapes: Gaussian and Lorentzian profiles.">
 
-<title>bio – Christian L. Goueguel</title>
+<title>The Pseudo-Voigt Function – Christian L. Goueguel</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,22 +26,22 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-15f1a39ebb5dcc0ab50acfe4fcc0315b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<script src="../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-15f1a39ebb5dcc0ab50acfe4fcc0315b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -67,10 +70,40 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="styles.scss">
-<meta property="og:title" content="– Christian L. Goueguel">
-<meta property="og:image" content="images/IMG_1985.png">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../styles.scss">
+<meta property="og:title" content="The Pseudo-Voigt Function – Christian L. Goueguel">
+<meta property="og:description" content="In the field of spectroscopy, particularly laser spectroscopy, accurately modeling spectral line shapes is crucial for extracting valuable information about the physical and chemical properties of matter. One such function is the Pseudo-Voigt function which is a versatile tool that combines the best aspects of two fundamental line shapes: Gaussian and Lorentzian profiles.">
+<meta property="og:image" content="cover.png">
 <meta property="og:site_name" content="Christian L. Goueguel">
 </head>
 
@@ -81,7 +114,7 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../../index.html">
     <span class="navbar-title">Christian L. Goueguel</span>
     </a>
   </div>
@@ -92,31 +125,31 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./bio.html" aria-current="page"> 
+    <a class="nav-link" href="../../../bio.html"> 
 <span class="menu-text">ABOUT</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./research.html"> 
+    <a class="nav-link" href="../../../research.html"> 
 <span class="menu-text">RESEARCH</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./publications.html"> 
+    <a class="nav-link" href="../../../publications.html"> 
 <span class="menu-text">PUBLICATIONS</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./talks.html"> 
+    <a class="nav-link" href="../../../talks.html"> 
 <span class="menu-text">TALKS</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./projects/index.html"> 
+    <a class="nav-link" href="../../../projects/index.html"> 
 <span class="menu-text">PROJECTS</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./photography.html"> 
+    <a class="nav-link" href="../../../photography.html"> 
 <span class="menu-text">PHOTOGRAPHY</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./blog/index.html"> 
+    <a class="nav-link" href="../../../blog/index.html"> 
 <span class="menu-text">BLOG</span></a>
   </li>  
 </ul>
@@ -138,29 +171,99 @@ ul.task-list li input[type="checkbox"] {
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">The Pseudo-Voigt Function</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Maths</div>
+    <div class="quarto-category">Preprocessing</div>
+    <div class="quarto-category">Spectroscopy</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    In the field of spectroscopy, particularly laser spectroscopy, accurately modeling spectral line shapes is crucial for extracting valuable information about the physical and chemical properties of matter. One such function is the Pseudo-Voigt function which is a versatile tool that combines the best aspects of two fundamental line shapes: Gaussian and Lorentzian profiles.
+  </div>
+</div>
 
 
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Christian L. Goueguel </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">April 5, 2019</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
 
 
 <div class="justified">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/IMG_1985.png" class="img-fluid figure-img"></p>
-<figcaption>Photo by Christian L. Goueguel.</figcaption>
+<p><img src="cover.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
 </figure>
 </div>
-<section id="about" class="level2">
-<h2 class="anchored" data-anchor-id="about">About</h2>
-<p>Christian earned his PhD in 2012 from the Institut National de la Recherche Scientifique (INRS)-University of Quebec, in Varennes, Canada under the supervision of Mohamed Chaker and François Vidal. Before pursuing his PhD in Canada, he completed both his Bachelor’s and Master’s degrees in Physics at the Grenoble Institute of Technology, France. His doctoral research, conducted at the National Research Council (NRC) in Boucherville, Canada, focused on improving the analytical performance of Laser-Induced Breakdown Spectroscopy (LIBS) for trace element analysis in metallic alloys.</p>
-<p>Following his PhD, Christian undertook a NETL-RAU postdoctoral role at Carnegie Mellon University (CMU) in Pittsburgh, Pennsylvania, and an ORISE postdoctoral fellowship at the U.S. Department of Energy’s National Energy Technology Laboratory (NETL). He conducted research on underwater LIBS for real-time environmental monitoring in carbon capture and storage (CCS). His efforts centered on developing innovative approaches to address analytical challenges associated with monitoring trace elements under extreme subsurface conditions.</p>
-<p>Christian has also applied his expertise in agricultural innovation as a research scientist in an agronomic services company. He developed LIBS-based systems for rapid, cost-effective soil and plant tissue analysis, optimizing measurement procedures, designing multivariate calibration models, and integrating machine learning algorithms to predict soil textural properties and nutrient content with high accuracy. Christian also worked as a senior optical engineer for a California-based tech company headquartered in Fremont, while contributing to operations at their Scottsdale office in Arizona. Additionally, he has worked as a chemometrics consultant, where he specialized in developing machine learning models for milk quality assessment using near-infrared spectroscopy (NIRS) data.</p>
-Christian values quality time with his friends and family, finding joy in outdoor activities. A passionate amateur photographer, he also enjoys capturing the beauty of landscapes and cities through his lens, blending his love for optics with his artistic passion. Driven by his belief in learning through teaching, Christian launched his blog to share insights and ideas. Having written a few posts already, he looks forward to publishing many more in the future.
-<hr>
-
-
+<section id="background" class="level2">
+<h2 class="anchored" data-anchor-id="background">Background</h2>
+<p>The Pseudo-Voigt function represents a significant advancement in spectroscopy, emerging from the long-standing challenge of accurately modeling spectral line shapes. While Gaussian and Lorentzian profiles have been fundamental tools in spectral analysis for decades, they individually fell short in capturing the complexity of real-world spectral phenomena. In the mid-20th century, researchers began to recognize the inherent limitations of relying solely on Gaussian and Lorentzian profiles. Complex spectral lines often result from multiple broadening mechanisms, including:</p>
+<ul>
+<li>Doppler broadening, which occurs due to thermal motion of particles</li>
+<li>Collisional broadening, resulting from interactions between particles</li>
+<li>Instrumental broadening introduced by measurement apparatus</li>
+</ul>
+<p>When Doppler broadening dominates, a Gaussian profile can effectively model the line shape. However, in many cases, other broadening mechanisms contribute, making the Pseudo-Voigt function a more suitable choice. On the other hand, collisional broadening often leads to Lorentzian line shapes. The Pseudo-Voigt function can account for both collisional and Doppler broadening effects. Moreover, natural broadening results from the finite lifetime of excited states. It can also be modeled using the Pseudo-Voigt function. Therefore, the Pseudo-Voigt function emerged as an elegant solution to these challenges. By combining the characteristics of Gaussian and Lorentzian profiles, it offers a more nuanced representation of spectral line shapes. This hybrid approach provides a smooth, bell-shaped profile reminiscent of Gaussian distributions, or a broader wings that capture the sharp peak characteristics of Lorentzian profile.</p>
+<p>The Pseudo-Voigt function is an approximation of the more precise Voigt profile (named after German physicist Woldemar Voigt). The Voigt profile (<span class="math inline">\(V\)</span>) represents the exact convolution of Gaussian and Lorentzian profiles, providing a more accurate description of spectral line shapes, particularly when both Doppler and Lorentzian broadening are significant.</p>
+<p><span class="math display">\[
+V(x;\sigma,\gamma) = \int_{-\infty}^{\infty} G(x';\sigma) L(x - x';\gamma) \, dx'
+\]</span></p>
+<p>The Voigt profile can also be expressed using the Faddeeva function <span class="math inline">\(\omega(z)\)</span>, given by:</p>
+<p><span class="math display">\[
+w(z) = e^{-z^2} \left( 1 + \frac{2i}{\sqrt{\pi}} \int_0^z e^{t^2} \, dt \right)
+\]</span> where <span class="math inline">\(z\)</span> is a complex number. Using the Faddeeva function, the Voigt profile is: <span class="math display">\[
+V(x; \sigma, \gamma) = \frac{\operatorname{Re} [w\left( \frac{x + i\gamma}{\sigma\sqrt{2}} \right)]}{\sigma\sqrt{2\pi}}
+\]</span></p>
+<p>where <span class="math inline">\(\operatorname{Re}[w(z)]\)</span> denotes the real part of the Faddeeva function.</p>
+<p>The computational complexity of the Voigt profile’s convolution integral prompted the development of approximations like the Pseudo-Voigt function. This approach strikes a critical balance between computational efficiency and acceptable levels of spectral line shape accuracy. The Pseudo-Voigt function (<span class="math inline">\(PV\)</span>) is a linear combination of a Gaussian (<span class="math inline">\(G\)</span>) and a Lorentzian (<span class="math inline">\(L\)</span>) function, and is defined as:</p>
+<p><span class="math display">\[
+PV(x;\sigma,\gamma,\eta) = ηL(x;\gamma) + (1-η)G(x;\sigma)
+\]</span></p>
+<p><span class="math display">\[
+G(x;\sigma) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{x^2}{2\sigma^2}}
+\]</span></p>
+<p><span class="math display">\[
+L(x; \gamma) = \frac{\gamma}{\pi (x^2 + \gamma^2)}
+\]</span></p>
+<p>where, <span class="math inline">\(\eta\)</span> is a mixing parameter that determines the relative contribution of the Lorentzian (<span class="math inline">\(\eta = 0\)</span>) and Gaussian (<span class="math inline">\(\eta = 1\)</span>) components. Here, the parameters <span class="math inline">\(\sigma\)</span> and <span class="math inline">\(\gamma\)</span> represent, respectively, the standard deviation of the Gaussian component, related to the full width at half maximum (FWHM) of the Gaussian by <span class="math inline">\(\text{FWHM}_G = 2\sqrt{2\ln 2} \, \sigma\)</span>, and the half-width at half maximum (HWHM) of the Lorentzian component, related to the Lorentzian FWHM by <span class="math inline">\(\text{FWHM}_L = 2\gamma\)</span>.</p>
+</section>
+<section id="visualizing-the-pseudo-voigt-function" class="level2">
+<h2 class="anchored" data-anchor-id="visualizing-the-pseudo-voigt-function">Visualizing the Pseudo-Voigt Function</h2>
+<p>The following animation illustrates how the Pseudo-Voigt function varies with the mixing parameter <span class="math inline">\(\eta\)</span>. As <span class="math inline">\(\eta\)</span> increases from 0 to 1, the contribution of the Gaussian component becomes more significant.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="voigt_animated.gif" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+</figure>
+</div>
 </section>
 </div>
+
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

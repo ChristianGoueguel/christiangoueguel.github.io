@@ -1,0 +1,125 @@
+---
+title: "The Pseudo-Voigt Function"
+description: "In the field of spectroscopy, particularly laser spectroscopy, accurately modeling spectral line shapes is crucial for extracting valuable information about the physical and chemical properties of matter. One such function is the Pseudo-Voigt function which is a versatile tool that combines the best aspects of two fundamental line shapes: Gaussian and Lorentzian profiles."
+author: "Christian L. Goueguel"
+date: "4/5/2019"
+image: "cover.png"
+include: false
+categories:
+  - Maths
+  - Preprocessing
+  - Spectroscopy
+---
+
+::: justified
+![](cover.png){fig-align="center"}
+
+## Background
+
+The Pseudo-Voigt function represents a significant advancement in spectroscopy, emerging from the long-standing challenge of accurately modeling spectral line shapes. While Gaussian and Lorentzian profiles have been fundamental tools in spectral analysis for decades, they individually fell short in capturing the complexity of real-world spectral phenomena. In the mid-20th century, researchers began to recognize the inherent limitations of relying solely on Gaussian and Lorentzian profiles. Complex spectral lines often result from multiple broadening mechanisms, including:
+
+-   Doppler broadening, which occurs due to thermal motion of particles
+-   Collisional broadening, resulting from interactions between particles
+-   Instrumental broadening introduced by measurement apparatus
+
+When Doppler broadening dominates, a Gaussian profile can effectively model the line shape. However, in many cases, other broadening mechanisms contribute, making the Pseudo-Voigt function a more suitable choice. On the other hand, collisional broadening often leads to Lorentzian line shapes. The Pseudo-Voigt function can account for both collisional and Doppler broadening effects. Moreover, natural broadening results from the finite lifetime of excited states. It can also be modeled using the Pseudo-Voigt function. Therefore, the Pseudo-Voigt function emerged as an elegant solution to these challenges. By combining the characteristics of Gaussian and Lorentzian profiles, it offers a more nuanced representation of spectral line shapes. This hybrid approach provides a smooth, bell-shaped profile reminiscent of Gaussian distributions, or a broader wings that capture the sharp peak characteristics of Lorentzian profile.
+
+The Pseudo-Voigt function is an approximation of the more precise Voigt profile (named after German physicist Woldemar Voigt). The Voigt profile ($V$) represents the exact convolution of Gaussian and Lorentzian profiles, providing a more accurate description of spectral line shapes, particularly when both Doppler and Lorentzian broadening are significant.
+
+$$
+V(x;\sigma,\gamma) = \int_{-\infty}^{\infty} G(x';\sigma) L(x - x';\gamma) \, dx'
+$$
+
+The Voigt profile can also be expressed using the Faddeeva function $\omega(z)$, given by:
+
+$$
+w(z) = e^{-z^2} \left( 1 + \frac{2i}{\sqrt{\pi}} \int_0^z e^{t^2} \, dt \right)
+$$ where $z$ is a complex number. Using the Faddeeva function, the Voigt profile is: $$
+V(x; \sigma, \gamma) = \frac{\operatorname{Re} [w\left( \frac{x + i\gamma}{\sigma\sqrt{2}} \right)]}{\sigma\sqrt{2\pi}}
+$$
+
+where $\operatorname{Re}[w(z)]$ denotes the real part of the Faddeeva function.
+
+The computational complexity of the Voigt profile's convolution integral prompted the development of approximations like the Pseudo-Voigt function. This approach strikes a critical balance between computational efficiency and acceptable levels of spectral line shape accuracy. The Pseudo-Voigt function ($PV$) is a linear combination of a Gaussian ($G$) and a Lorentzian ($L$) function, and is defined as:
+
+$$
+PV(x;\sigma,\gamma,\eta) = ηL(x;\gamma) + (1-η)G(x;\sigma)
+$$
+
+$$
+G(x;\sigma) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{x^2}{2\sigma^2}}
+$$
+
+$$
+L(x; \gamma) = \frac{\gamma}{\pi (x^2 + \gamma^2)}
+$$
+
+where, $\eta$ is a mixing parameter that determines the relative contribution of the Lorentzian ($\eta = 0$) and Gaussian ($\eta = 1$) components. Here, the parameters $\sigma$ and $\gamma$ represent, respectively, the standard deviation of the Gaussian component, related to the full width at half maximum (FWHM) of the Gaussian by $\text{FWHM}_G = 2\sqrt{2\ln 2} \, \sigma$, and the half-width at half maximum (HWHM) of the Lorentzian component, related to the Lorentzian FWHM by $\text{FWHM}_L = 2\gamma$.
+
+## Visualizing the Pseudo-Voigt Function
+
+The following animation illustrates how the Pseudo-Voigt function varies with the mixing parameter $\eta$. As $\eta$ increases from 0 to 1, the contribution of the Gaussian component becomes more significant.
+
+```{r warning=FALSE, eval=FALSE}
+#| code-fold: true
+#| code-summary: "Show the code"
+library(ggplot2)
+library(gganimate)
+
+gaussian <- function(x, x_c, w_G, A, y_0) {
+  y_0 + A / (w_G * sqrt(pi / (4 * log(2)))) * exp(-4 * log(2) * (x - x_c)^2 / w_G^2)
+}
+lorentzian <- function(x, x_c, w_L, A, y_0) {
+  y_0 + A / pi * w_L / ((x - x_c)^2 + w_L^2)
+}
+pseudo_voigt <- function(x, x_c, w_L, w_G, A, y_0, eta) {
+  y_0 + A * (eta * lorentzian(x, x_c, w_L, A, y_0) + (1 - eta) * gaussian(x, x_c, w_G, A, y_0))
+}
+
+x_c <- 0
+w_L <- 1
+w_G <- 1
+A <- 1
+y_0 <- 0
+eta_values <- seq(0, 1, by = 0.05)
+
+df <- data.frame(x = seq(-5, 5, by = 0.1))
+for (eta in eta_values) {
+  df[[paste0("eta = ", eta)]] <- pseudo_voigt(df$x, x_c, w_L, w_G, A, y_0, eta)
+}
+
+df_long <- tidyr::pivot_longer(df, cols = -x, names_to = "eta", values_to = "y")
+
+p <- df_long |> 
+  ggplot(aes(x = x, y = y, colour = eta)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2) +
+  theme_bw(base_size = 15) +
+  labs(x = "x", y = "y", title = "The Pseudo-Voigt Function",
+    subtitle = paste0("Varying η (eta) from Lorentzian (η = 0) to Gaussian (η = 1): ", "{closest_state}")) +
+  theme(
+    #panel.grid = element_blank(), 
+    legend.position = "none",
+    plot.title = element_text(hjust = 0, size = 18, face = "bold"),
+    plot.subtitle = element_text(hjust = 0),
+    panel.background = element_rect(colour = "black", linewidth = 1)
+    )
+
+anim <- p +
+  transition_states(eta, transition_length = 2, state_length = 1) +
+  ease_aes('exponential-in-out') +
+  shadow_mark(alpha = 0.3, size = 0.1)
+
+animate(
+  anim, 
+  nframes = 100, 
+  fps = 10, 
+  width = 600, 
+  height = 400, 
+  renderer = gifski_renderer()
+  )
+anim_save("voigt_animated.gif")
+```
+
+![](voigt_animated.gif){fig-align="center" width="700"}
+:::

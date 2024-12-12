@@ -30,7 +30,9 @@ Initialize $t$, the first score vector (e.g., using PCA on $X$).
 3.  Deflate $X$: $X_{\text{new}} = X - t_{\text{new}} p^\top$
 4.  Repeat until $n_{\text{comp}}$.
 
-```{r echo=FALSE}
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
 wold_osc <- function(X, Y, ncomp = 1, tol = 1e-6, max.iter = 100) {
   # Ensure X and Y are matrices
   X <- as.matrix(X)
@@ -118,22 +120,24 @@ Sjöblom's approach is the pragmatic cousin of the Wold method. It uses similar 
 4.  Remove the orthogonal variation from $X$: $X_{\text{new}} = X - t p^\top$
 5.  Iterate for each component.
 
-```{r echo=FALSE}
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
 sjoblom_osc <- function(x, y, ncomp, tol, max.iter) {
   x_original <- x
   ps <- ws <- ts <- vector("list", ncomp)
   for (i in seq_len(ncomp)) {
     pc <- stats::prcomp(x, center = FALSE)
     t <- pc$x[, 1]
-    dif <- 1
-    iter <- 0
-    while (dif > tol && iter < max.iter) {
-      iter <- iter + 1
+    .diff <- 1
+    .iter <- 0
+    while (.diff > tol && .iter < max.iter) {
+      .iter <- .iter + 1
       t_new <- t - y %*% MASS::ginv(crossprod(y, y)) %*% crossprod(y, t)
       w <- crossprod(x, t_new) %*% MASS::ginv(crossprod(t_new, t_new))
       w <- w / sqrt(sum(w^2))
       t_new <- x %*% w
-      dif <- sqrt(sum((t_new - t)^2) / sum(t_new^2))
+      .diff <- sqrt(sum((t_new - t)^2) / sum(t_new^2))
       t <- t_new
     }
     plsFit <- pls::simpls.fit(x, t, ncomp)
@@ -178,7 +182,9 @@ Fearn's method stands out by using Singular Value Decomposition (SVD) as its fou
 3.  Extract the first $n_{\text{comp}}$ components from $V$ and reconstruct the orthogonal scores $t$ and loadings $p$: $t = Z V_{:, i}, \quad p = \frac{X^\top t}{t^\top t}$
 4.  Deflate $X$: $X_{\text{new}} = X - t p^\top$
 
-```{r echo=FALSE}
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
 fearn_osc <- function(x, y, ncomp, tol, max.iter) {
   x_original <- x
   ps <- ws <- ts <- vector("list", ncomp)
@@ -284,75 +290,71 @@ Finally, to evaluate the algorithm's performance, two metrics are computed. The 
 
 ## Exemple
 
-We will use the `beer` dataset introduced in our previous post. The dataset consists of Near-Infrared Spectroscopy (NIRS) spectra collected from 80 beer samples, `x_matrix`. The target variable of interest is the Original Gravity (OG), also known as the original extract, `y_target`. This parameter measures the concentration of dissolved solids in the wort before fermentation begins, providing a crucial indicator of the brewing process. Next, we will perform standard PCA and PLS regression on the Near-Infrared Spectroscopy (NIRS) spectra of the beer dataset to uncover patterns and relationships within the data.
+We will use the `beer` dataset introduced in our previous post. The dataset consists of Near-Infrared Spectroscopy (NIRS) spectra collected from 80 beer samples, `x_matrix`. The target variable of interest is the Original Gravity (OG), also known as the original extract, `y_target`. This parameter measures the concentration of dissolved solids in the wort before fermentation begins, providing a crucial indicator of the brewing process.
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(pls)
 library(patchwork)
+library(viridis)
 library(HotellingEllipse)
-```
-
-```{r echo=FALSE}
-beer <- read_csv("beer.csv", show_col_types = FALSE)
-beer <- beer %>% rename(extract = originalGravity)
 ```
 
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
-x_matrix <- beer %>% select(-extract) %>% as.matrix()
-y_target <- beer %>% pull(extract)
+beer <- readr::read_csv("beer.csv", show_col_types = FALSE) |> dplyr::rename(extract = originalGravity)
+x_matrix <- beer |> dplyr::select(-extract) |> as.matrix() |> scale(scale = FALSE) 
+y_target <- beer |> dplyr::pull(extract)
+```
+
+Next, we will perform standard PCA and PLS on the NIRS spectra of the beer dataset to assess how applying orthogonal correction modifies the data structure.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+set.seed(123)
+n_samples <- as.integer(nrow(x_matrix))
+# PCA
+pca_result <- stats::prcomp(x_matrix, center = FALSE, scale = FALSE)
+pca_scores <- pca_result$x
+pca_df <- data.frame(
+  comp1 = pca_scores[, 1],
+  comp2 = pca_scores[, 2],
+  extract = y_target,
+  Sample = factor(n_samples)
+)
+
+# PLS
+pls_result <- pls::plsr(y_target ~ x_matrix, ncomp = 10, validation = "none")
+pls_scores <- pls::scores(pls_result)[, 1:10]
+pls_df <- data.frame(
+  comp1 = pls_scores[, 1],
+  comp2 = pls_scores[, 2],
+  extract = y_target,
+  Sample = factor(n_samples)
+)
+
+# Hotelling's T-squared ellipse
+pca_T2ellipse <- HotellingEllipse::ellipseParam(pca_scores, k = 2, pcx = 1, pcy = 2)
+pls_T2ellipse <- HotellingEllipse::ellipseParam(pls_scores, k = 2, pcx = 1, pcy = 2)
 ```
 
 ```{r echo=FALSE}
-set.seed(123)
-
-n_samples <- nrow(x_matrix)
-
-# Perform PCA on the NIRS spectra
-pca_result <- prcomp(x_matrix, center = TRUE, scale. = FALSE)
-pca_scores <- pca_result$x
-
-# Perform PLS on the NIRS spectra
-pls_result <- plsr(y_target ~ x_matrix, ncomp = 10, validation = "none")
-pls_scores <- scores(pls_result)[, 1:10]
-
-pca_ellipse <- ellipseParam(pca_scores, k = 2, pcx = 1, pcy = 2)
-pls_ellipse <- ellipseParam(pls_scores, k = 2, pcx = 1, pcy = 2)
-
-# Create a data frame for plotting PCA scores
-pca_df <- data.frame(
-  PC1 = pca_scores[, 1],
-  PC2 = pca_scores[, 2],
-  PC3 = pca_scores[, 3],
-  extract = y_target,
-  Sample = factor(1:n_samples)
-)
-
-# Create a data frame for plotting PLS scores
-pls_df <- data.frame(
-  Comp1 = pls_scores[, 1],
-  Comp2 = pls_scores[, 2],
-  Comp3 = pls_scores[, 3],
-  extract = y_target,
-  Sample = factor(1:n_samples)
-)
-
 # Plot PCA scores
-pca_plot <- pca_df %>%
+p1 <- pca_df %>%
   ggplot() +
   ggforce::geom_ellipse(
     aes(
       x0 = 0, 
       y0 = 0, 
-      a = pluck(pca_ellipse, "Ellipse", "a.95pct"), 
-      b = pluck(pca_ellipse, "Ellipse", "b.95pct"),
+      a = pluck(pca_T2ellipse, "Ellipse", "a.95pct"), 
+      b = pluck(pca_T2ellipse, "Ellipse", "b.95pct"),
       angle = 0), 
     linewidth = .5, linetype = "solid", fill = "white") +
-  aes(x = PC1, y = PC2, fill = extract) +
-  geom_point(size = 5L, shape = 21, colour = "#112446") +
-  scale_fill_viridis_c(option = "cividis", direction = 1) +
+  aes(x = comp1, y = comp2, fill = extract) +
+  geom_point(size = 5L, shape = 21, colour = "black") +
+  scale_colour_gradient2(low = "red", mid = "green", high = "blue", midpoint = 10.74, aesthetics = "fill") +
   labs(
     title = "Standard PCA", 
     x = "Component 1", 
@@ -369,19 +371,19 @@ pca_plot <- pca_df %>%
   )
 
 # Plot PLS scores
-pls_plot <- pls_df %>%
+p2 <- pls_df %>%
   ggplot() +
   ggforce::geom_ellipse(
     aes(
       x0 = 0, 
       y0 = 0, 
-      a = pluck(pls_ellipse, "Ellipse", "a.95pct"), 
-      b = pluck(pls_ellipse, "Ellipse", "b.95pct"),
+      a = pluck(pls_T2ellipse, "Ellipse", "a.95pct"), 
+      b = pluck(pls_T2ellipse, "Ellipse", "b.95pct"),
       angle = 0), 
     linewidth = .5, linetype = "solid", fill = "white") +
-  aes(x = Comp1, y = Comp2, fill = extract) +
-  geom_point(size = 5L, shape = 21, colour = "#112446") +
-  scale_fill_viridis_c(option = "cividis", direction = 1) +
+  aes(x = comp1, y = comp2, fill = extract) +
+  geom_point(size = 5L, shape = 21, colour = "black") +
+  scale_colour_gradient2(low = "red", mid = "green", high = "blue", midpoint = 10.74, aesthetics = "fill") +
   labs(
     title = "Standard PLS", 
     x = "Component 1", 
@@ -399,91 +401,97 @@ pls_plot <- pls_df %>%
 ```
 
 ```{r echo=FALSE, fig.height=5, fig.width=12}
-pca_plot + pls_plot + plot_layout(ncol = 2, guides = 'collect')
+(p1 | p1) + plot_layout(guides = 'collect')
 ```
 
-Now, we can apply Orthogonal Signal Correction (OSC) filtering to the dataset and evaluate its impact by comparing the results with the original PCA and PLS scores. By incorporating OSC-filtered data, we can visualize the changes in the X-scores for PCA and PLS to assess how the orthogonal correction modifies the data structure. Specifically, we'll examine how the OSC filtering affects the distribution of samples in the reduced-dimensionality space and whether the variation captured aligns better with the response variable.
+Now, we can apply the OSC algorithms to the dataset and compare their impact. Specifically, we'll examine how the OSC filtering affects the distribution of samples in the reduced-dimensionality space and whether the variation captured aligns better with the response variable.
 
 ```{r warning=FALSE, message=FALSE}
 #| code-fold: true
 #| code-summary: "Show the code"
-osc_filter <- sjoblom_osc(scale(x_matrix, scale = FALSE), y_target, ncomp = 10, tol = 1e5, max.iter = 10)
-osc_scores <- osc_filter %>% pluck("scores") %>% mutate(extract = y_target)
+wold_filter <- wold_osc(x_matrix, y_target, ncomp = 10, tol = 1e10, max.iter = 10)
+sjoblom_filter <- sjoblom_osc(x_matrix, y_target, ncomp = 10, tol = 1, max.iter = 10)
+
+wold_scores <- wold_filter %>%
+  pluck("scores") %>%
+  as_tibble() %>%
+  mutate(extract = y_target)
+
+sjoblom_scores <- sjoblom_filter %>%
+  pluck("scores") %>%
+  as_tibble() %>%
+  mutate(extract = y_target)
 ```
 
-```{r warning=FALSE, message=FALSE}
-#| code-fold: true
-#| code-summary: "Show the code"
-wold_osc_filter <- wold_osc(scale(x_matrix, scale = FALSE), y_target, ncomp = 10, tol = 1e5, max.iter = 10)
-wold_osc_scores <- wold_osc_filter %>% pluck("scores") %>% as_tibble() %>% mutate(extract = y_target)
+```{r echo=FALSE}
+wold_ellipse <- ellipseParam(wold_scores, k = 2, pcx = 1, pcy = 2)
+p3 <- wold_scores %>%
+  ggplot() +
+  ggforce::geom_ellipse(
+    aes(
+      x0 = 0, 
+      y0 = 0, 
+      a = pluck(wold_ellipse, "Ellipse", "a.95pct"), 
+      b = pluck(wold_ellipse, "Ellipse", "b.95pct"),
+      angle = 0), 
+    linewidth = .5, linetype = "solid", fill = "white") +
+  aes(x = V1, y = V2, fill = extract) +
+  geom_point(size = 5L, shape = 21, colour = "black") +
+  scale_colour_gradient2(low = "red", mid = "green", high = "blue", midpoint = 10.74, aesthetics = "fill") +
+  labs(
+    title = "Wold's OSC Algorithm", 
+    x = "Component 1", 
+    y = "Component 2", 
+    fill = "Beer's\nextract") +
+  theme_grey() +
+  theme(
+    aspect.ratio = .8,
+    panel.grid = element_blank(),
+    panel.background = element_rect(
+    colour = "black",
+    linewidth = .3
+    )
+  )
+
+sjoblom_ellipse <- ellipseParam(sjoblom_scores, k = 2, pcx = 1, pcy = 2)
+p4 <- sjoblom_scores %>%
+  ggplot() +
+  ggforce::geom_ellipse(
+    aes(
+      x0 = 0, 
+      y0 = 0, 
+      a = pluck(sjoblom_ellipse, "Ellipse", "a.95pct"), 
+      b = pluck(sjoblom_ellipse, "Ellipse", "b.95pct"),
+      angle = 0), 
+    linewidth = .5, linetype = "solid", fill = "white") +
+  aes(x = V1, y = V2, fill = extract) +
+  geom_point(size = 5L, shape = 21, colour = "black") +
+  scale_colour_gradient2(low = "red", mid = "green", high = "blue", midpoint = 10.74, aesthetics = "fill") +
+  labs(
+    title = "Sjöblom's OSC Algorithm", 
+    x = "Component 1", 
+    y = "Component 2", 
+    fill = "Beer's\nextract") +
+  theme_grey() +
+  theme(
+    aspect.ratio = .8,
+    panel.grid = element_blank(),
+    panel.background = element_rect(
+    colour = "black",
+    linewidth = .3
+    )
+  )
 ```
 
 ```{r echo=FALSE, fig.height=5, fig.width=12, fig.align='center'}
-osc_ellipse <- ellipseParam(osc_scores, k = 2, pcx = 1, pcy = 2)
-p1 <- osc_scores %>%
-  ggplot() +
-  ggforce::geom_ellipse(
-    aes(
-      x0 = 0, 
-      y0 = 0, 
-      a = pluck(osc_ellipse, "Ellipse", "a.95pct"), 
-      b = pluck(osc_ellipse, "Ellipse", "b.95pct"),
-      angle = 0), 
-    linewidth = .5, linetype = "solid", fill = "white") +
-  aes(x = V1, y = V2, fill = extract) +
-  geom_point(size = 5L, shape = 21, colour = "#112446") +
-  scale_fill_viridis_c(option = "cividis", direction = 1) +
-  labs(
-    title = "Sjöblom's OSC Algorithm", 
-    subtitle = "Scores of the Filtered Spectra", 
-    x = "Component 1", 
-    y = "Component 2", 
-    fill = "Beer's\nextract") +
-  theme_grey() +
-  theme(
-    aspect.ratio = .8,
-    panel.grid = element_blank(),
-    panel.background = element_rect(
-    colour = "black",
-    linewidth = .3
-    )
-  )
-wold_osc_ellipse <- ellipseParam(wold_osc_scores, k = 2, pcx = 1, pcy = 2)
-p2 <- wold_osc_scores %>%
-  ggplot() +
-  ggforce::geom_ellipse(
-    aes(
-      x0 = 0, 
-      y0 = 0, 
-      a = pluck(wold_osc_ellipse, "Ellipse", "a.95pct"), 
-      b = pluck(wold_osc_ellipse, "Ellipse", "b.95pct"),
-      angle = 0), 
-    linewidth = .5, linetype = "solid", fill = "white") +
-  aes(x = V1, y = V2, fill = extract) +
-  geom_point(size = 5L, shape = 21, colour = "#112446") +
-  scale_fill_viridis_c(option = "cividis", direction = 1) +
-  labs(
-    title = "Wold's OSC Algorithm", 
-    subtitle = "Scores of the Filtered Spectra", 
-    x = "Component 1", 
-    y = "Component 2", 
-    fill = "Beer's\nextract") +
-  theme_grey() +
-  theme(
-    aspect.ratio = .8,
-    panel.grid = element_blank(),
-    panel.background = element_rect(
-    colour = "black",
-    linewidth = .3
-    )
-  )
-
-p1 + p2 + plot_layout(ncol = 2, guides = 'collect')
+(p3 | p4) + plot_layout(guides = 'collect')
 ```
 
 The following plot compares the results of OSC, PCA, and PLS modeling by overlaying their respective loadings on a single graph. By presenting their loadings together, we can clearly observe the differences in how each method captures and prioritizes spectral features and filter noise, highlighting their unique contributions and areas of overlap.
 
-```{r echo=FALSE}
+```{r warning=FALSE, message=FALSE}
+#| code-fold: true
+#| code-summary: "Show the code"
 pca_loadings <- pca_result %>% 
   pluck("rotation") %>%
   as_tibble() %>%
@@ -493,19 +501,19 @@ pls_loadings <- loadings(pls_result)[, 1:10] %>%
   as_tibble() %>%
   janitor::clean_names() %>%
   mutate(wavelength = rep(seq(1100, 2250, 2), times = 1))
-  
-osc_loadings <- osc_filter %>% 
-  pluck("loadings") %>%
-  mutate(wavelength = rep(seq(1100, 2250, 2), times = 1))
 
-wold_osc_loadings <- wold_osc_filter %>% 
+wold_loadings <- wold_filter %>% 
   pluck("loadings") %>%
   as_tibble() %>%
+  mutate(wavelength = rep(seq(1100, 2250, 2), times = 1))
+  
+sjoblom_loadings <- sjoblom_filter %>% 
+  pluck("loadings") %>%
   mutate(wavelength = rep(seq(1100, 2250, 2), times = 1))
 ```
 
 ```{r echo=FALSE}
-p3 <- beer %>% mutate(spectra_id = paste0("s", 1:80)) %>%
+p5 <- beer %>% mutate(spectra_id = paste0("s", 1:80)) %>%
   pivot_longer(
   cols = -c(extract, spectra_id),
   names_to = "wavelength",
@@ -526,9 +534,9 @@ p3 <- beer %>% mutate(spectra_id = paste0("s", 1:80)) %>%
   theme_bw() +
   theme(panel.grid = element_blank())
 
-p4 <- ggplot() +
-  geom_line(data = wold_osc_loadings, aes(x = wavelength, y = V1, color = "Wold's OSC"), linewidth = 0.8) +
-  geom_line(data = osc_loadings, aes(x = wavelength, y = V1, color = "Sjöblom's OSC")) +
+p6 <- ggplot() +
+  geom_line(data = wold_loadings, aes(x = wavelength, y = V1, color = "Wold's OSC")) +
+  geom_line(data = sjoblom_loadings, aes(x = wavelength, y = V1, color = "Sjöblom's OSC")) +
   geom_line(data = pca_loadings, aes(x = wavelength, y = PC1, color = "PCA")) +
   geom_line(data = pls_loadings, aes(x = wavelength, y = comp_1, color = "PLS")) +
   scale_color_manual(
@@ -542,13 +550,13 @@ p4 <- ggplot() +
 
 ```{r echo=FALSE, fig.height=6, fig.width=9}
 (
-  p3 + theme(
+  p5 + theme(
     legend.position = "right",
     plot.margin = margin(b = 0), 
     axis.title.x = element_blank(),
     axis.text.x = element_blank())
   ) / 
-  (p4 + theme(legend.position = "right", plot.margin = margin(t = 0)))
+  (p6 + theme(legend.position = "right", plot.margin = margin(t = 0)))
 ```
 
 Unlike PCA (in red) and PLS (in dark green), which show substantial variability, particularly in the region above 1350 nm, OSC (in blue) effectively filters the noise, reducing it to near-zero levels. This smoothing demonstrates OSC's ability to isolate and preserve only the information strongly correlated with the target variable while systematically discarding irrelevant or orthogonal components. However, its aggressive filtering comes at the expense of potentially reducing some useful signal.
