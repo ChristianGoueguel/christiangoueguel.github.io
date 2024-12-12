@@ -6,7 +6,7 @@ ditor:
 ---
 
 ::: justified
-![Photo by Christian L. Goueguel.](images/IMG_4742.png){fig-align="center" width="750"}Welcome to an overview of my research projects, from current initiatives to notable past projects in laser spectroscopy (LIBS) and analytical instrumentation. Feel free to reach out if you’d like to collaborate or learn more about my work.
+![Photo by Christian L. Goueguel.](images/IMG_4742.png){fig-align="center" width="750"}Welcome to an overview of my research projects, from current initiatives to notable past projects in laser spectroscopy and analytical instrumentation. Feel free to reach out if you’d like to collaborate or learn more about my work.
 
 ## Current Research
 
