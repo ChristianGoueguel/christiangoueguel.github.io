@@ -83,7 +83,7 @@ $$
 
 The FWHM are given by $w_I = 2 \gamma_I \sqrt{(2^{2/3} - 1)}$, and $w_P = 2 \gamma_P \ln{(\sqrt{2} + 1)}$.
 
-Likewise, we obtain a Gaussian profile when the mixing parameters $\eta_L = \eta_I = \eta_P = 0$, while the Lorentzian component is controlled by paramater $\eta_L$. We obtain a pure Lorentzian profile for $\eta_L = 1$. These parameters are constrained to vary between 0 and 1 and must satisfy the condition $\eta_L + \eta_I + \eta_P = 1$, the parameters represent a simplex in three dimensions.
+Similarly, a Gaussian profile is obtained when the mixing parameters are set to $\eta_L = \eta_I = \eta_P = 0$, while the Lorentzian contribution is governed by the parameter $\eta_L$. Specifically, a pure Lorentzian profile arises when $\eta_L = 1$. These parameters are constrained to the range from 0 to 1 and must satisfy the condition $\eta_L + \eta_I + \eta_P = 1$. This constraint defines a 2D simplex within a plane in 3D space, representing all possible combinations of the mixing parameters.
 
 ## Visualizing the pseudo-Voigt functions
 
@@ -227,7 +227,7 @@ animate(
 anim_save("epv_animation.gif")
 ```
 
-![](epv_animation.gif){fig-align="center"}
+![](epv_animation.gif){fig-align="center" width="700"}
 
 ## References
 
