@@ -256,17 +256,17 @@ window.Quarto = {
 </div>
 <section id="background" class="level2">
 <h2 class="anchored" data-anchor-id="background">Background</h2>
-<p>The Pseudo-Voigt function represents a significant advancement in spectroscopy, emerging from the long-standing challenge of accurately modeling spectral line shapes. While Gaussian and Lorentzian profiles have been fundamental tools in spectral analysis for decades, they individually fell short in capturing the complexity of real-world spectral phenomena. In the mid-20th century, researchers began to recognize the inherent limitations of relying solely on Gaussian (normal distribution) and Lorentzian (Cauchy distribution) profiles. Complex spectral lines often result from multiple broadening mechanisms, including:</p>
+<p>The pseudo-Voigt function represents a significant advancement in spectroscopy, emerging from the long-standing challenge of accurately modeling spectral line shapes. While Gaussian and Lorentzian profiles have been fundamental tools in spectral data analysis for decades, they often fell short in capturing the complexity of spectral signal. In the mid-20th century, researchers began to recognize the inherent limitations of relying solely on Gaussian (normal distribution) and Lorentzian (Cauchy distribution) profiles. Complex spectral lines often result from multiple broadening mechanisms, including:</p>
 <ul>
 <li>Doppler broadening, which occurs due to thermal motion of particles</li>
 <li>Collisional broadening, resulting from interactions between particles</li>
 <li>Instrumental broadening introduced by measurement apparatus</li>
 </ul>
-<p>When Doppler broadening dominates, a Gaussian profile can effectively model the line shape. However, in many cases, other broadening mechanisms contribute, making the Pseudo-Voigt function a more suitable choice. On the other hand, collisional broadening often leads to Lorentzian line shapes. The Pseudo-Voigt function can account for both collisional and Doppler broadening effects. Moreover, natural broadening results from the finite lifetime of excited states. It can also be modeled using the Pseudo-Voigt function. Therefore, the Pseudo-Voigt function emerged as an elegant solution to these challenges. By combining the characteristics of Gaussian and Lorentzian profiles, it offers a more nuanced representation of spectral line shapes. This hybrid approach provides a smooth, bell-shaped profile reminiscent of Gaussian distributions, or a broader wings that capture the sharp peak characteristics of Lorentzian profile.</p>
-<p>The pseudo-Voigt function was first derived by Thompson, Cox, and Hastings in 1987 [1], in their study describing the application of the Rietveld refinement technique to synchrotron X-ray data collected from a capillary sample of Al₂O₃ using Debye–Scherrer geometry at CHESS. Their analysis showed that individual peak shapes are accurately modeled by a pseudo-Voigt function, in which the Gaussian and Lorentzian half-widths vary with the Bragg angle due to instrumental resolution and particle-size broadening, respectively.</p>
+<p>When Doppler broadening dominates, the shape of a spectral line is best modeled by a Gaussian profile. In contrast, collisional broadening typically leads to a Lorentzian line shape. However, in many cases, the observed line shape results from the interplay of multiple broadening mechanisms. As a result, the pseudo-Voigt function often provides a more accurate representation of the line shape. Indeed, the pseudo-Voigt function can account for both collisional and Doppler broadening effects. Moreover, natural broadening resulting from the finite lifetime of excited states can also be modeled using the pseudo-Voigt function. Therefore, the pseudo-Voigt function emerged as an elegant solution to these challenges. By combining the characteristics of Gaussian and Lorentzian profiles, it offers a more nuanced representation of spectral line shapes.</p>
+<p>The pseudo-Voigt function was first derived by Thompson, Cox, and Hastings in 1987 [1], in their study describing the application of the Rietveld refinement technique to synchrotron X-ray data collected from a capillary sample of Al₂O₃ using Debye–Scherrer geometry at the Cornell High Energy Synchrotron Source (CHESS). Their analysis showed that individual peak shapes are accurately modeled by a pseudo-Voigt function, in which the Gaussian and Lorentzian half-widths vary, respectively, with the Bragg angle due to instrumental resolution and particle-size broadening.</p>
 <section id="voigt-profile" class="level3">
 <h3 class="anchored" data-anchor-id="voigt-profile">Voigt profile</h3>
-<p>The pseudo-Voigt function is an approximation of the more precise Voigt profile (named after German physicist Woldemar Voigt). The Voigt profile (<span class="math inline">\(V\)</span>) represents the exact convolution of Gaussian and Lorentzian profiles, providing a more accurate description of spectral line shapes, particularly when both Doppler and Lorentzian broadening are significant.</p>
+<p>Fundamentally, the pseudo-Voigt function is an approximation of the more precise Voigt profile (named after German physicist Woldemar Voigt). The Voigt profile (<span class="math inline">\(V\)</span>) represents the exact convolution of Gaussian and Lorentzian profiles, providing a more accurate description of spectral line shapes, particularly when both Doppler and Lorentzian broadening are significant.</p>
 <p><span class="math display">\[
 V(x;\sigma,\gamma) = \int_{-\infty}^{\infty} G(x';\sigma) L(x - x';\gamma) \, dx'
 \]</span></p>
@@ -274,10 +274,10 @@ V(x;\sigma,\gamma) = \int_{-\infty}^{\infty} G(x';\sigma) L(x - x';\gamma) \, dx
 <p><span class="math display">\[
 w(z) = e^{-z^2} \left( 1 + \frac{2i}{\sqrt{\pi}} \int_0^z e^{t^2} \, dt \right)
 \]</span> where <span class="math inline">\(z\)</span> is a complex number. Using the Faddeeva function, the Voigt profile is: <span class="math display">\[
-V(x; \sigma, \gamma) = \frac{\operatorname{Re} [w\left( \frac{x + i\gamma}{\sigma\sqrt{2}} \right)]}{\sigma\sqrt{2\pi}}
+V(x; \sigma, \gamma) = \frac{1}{\sigma\sqrt{2\pi}}\Re\left[w\left( \frac{x + i\gamma}{\sigma\sqrt{2}} \right)\right]
 \]</span></p>
-<p>where <span class="math inline">\(\operatorname{Re}[w(z)]\)</span> denotes the real part of the Faddeeva function.</p>
-<p>The computational complexity of the Voigt profile’s convolution integral prompted the development of approximations like the Pseudo-Voigt function. This approach strikes a critical balance between computational efficiency and acceptable levels of spectral line shape accuracy.</p>
+<p>where <span class="math inline">\(\Re[w(z)]\)</span> denotes the real part of the Faddeeva function.</p>
+<p>However, the Voigt profile is computationally intensive, requiring efficient numerical methods to accurately evaluate the convolution integral. This complexity has led to the development of approximations, such as the pseudo-Voigt function, which strike a balance between computational efficiency and maintaining acceptable levels of accuracy in the spectral line shape.</p>
 </section>
 <section id="pseudo-voigt-function" class="level3">
 <h3 class="anchored" data-anchor-id="pseudo-voigt-function">Pseudo-Voigt function</h3>
@@ -295,19 +295,18 @@ L(x; \gamma) = \frac{\gamma}{\pi (x^2 + \gamma^2)}
 </section>
 <section id="extended-pseudo-voigt-function" class="level3">
 <h3 class="anchored" data-anchor-id="extended-pseudo-voigt-function">Extended pseudo-Voigt function</h3>
-<p>Recently, Ida <em>et al</em>. [2], refined the pseudo-Voigt function by proposing an extended formula of the pseudo-Voigt function for precisely approximating the Voigt profile. The proposed formula is given by:</p>
+<p>In the early 2000s, Ida <em>et al</em>. [2] refined the pseudo-Voigt function by introducing an extended formula designed to more accurately approximate the Voigt profile. This formula is given by:</p>
 <p><span class="math display">\[
 epV(x;\eta_L, \eta_I, \eta_P) = (1 - \eta_L - \eta_I - \eta_P)G(x;\sigma) + \eta_L L(x; \gamma) + \eta_I F_I(x;\gamma_I) + \eta_P F_P(x;\gamma_P)
 \]</span></p>
-<p>where <span class="math inline">\(F_I\)</span> and <span class="math inline">\(F_P\)</span> are intermediate function, between the Lorentzian and Gaussian profiles, respectivley. <span class="math inline">\(F_I\)</span> is the irrational function and <span class="math inline">\(F_P\)</span> is the squared hyperbolic secant function, and are given by:</p>
+<p>where <span class="math inline">\(F_I\)</span> and <span class="math inline">\(F_P\)</span> are intermediate functions that represent the transition between the Lorentzian and Gaussian profiles, respectively. <span class="math inline">\(F_I\)</span> is an irrational function involving a square root, while <span class="math inline">\(F_P\)</span> is the squared hyperbolic secant function. These functions are defined as follows:</p>
 <p><span class="math display">\[
-F_I(x;\gamma_I) = \frac{ \left( 1 + (\frac{x}{\gamma_I})^2 \right)^{-3/2}}{2\gamma_I}
+F_I(x;\gamma_I) = \frac{1}{2\gamma_I}\left( 1 + \left(\frac{x}{\gamma_I}\right)^2 \right)^{-3/2}
 \]</span></p>
 <p><span class="math display">\[
-F_P(x;\gamma_P) = \frac{\text{sech}^2(\frac{x}{\gamma_P})}{2\gamma_P}
+F_P(x;\gamma_P) = \frac{1}{2\gamma_P}\text{sech}^2\left(\frac{x}{\gamma_P}\right)
 \]</span></p>
-<p>The FWHM are given by <span class="math inline">\(w_I = 2 \gamma_I \sqrt{(2^{2/3} - 1)}\)</span>, and <span class="math inline">\(w_P = 2 \gamma_P \ln{(\sqrt{2} + 1)}\)</span>.</p>
-<p>Similarly, a Gaussian profile is obtained when the mixing parameters are set to <span class="math inline">\(\eta_L = \eta_I = \eta_P = 0\)</span>, while the Lorentzian contribution is governed by the parameter <span class="math inline">\(\eta_L\)</span>. Specifically, a pure Lorentzian profile arises when <span class="math inline">\(\eta_L = 1\)</span>. These parameters are constrained to the range from 0 to 1 and must satisfy the condition <span class="math inline">\(\eta_L + \eta_I + \eta_P = 1\)</span>. This constraint defines a 2D simplex within a plane in 3D space, representing all possible combinations of the mixing parameters.</p>
+<p>The FWHMs are given by <span class="math inline">\(w_I = 2 \gamma_I \sqrt{(2^{2/3} - 1)}\)</span>, and <span class="math inline">\(w_P = 2 \gamma_P \ln{(\sqrt{2} + 1)}\)</span>. A Gaussian profile is obtained when the mixing parameters are set to <span class="math inline">\(\eta_L = \eta_I = \eta_P = 0\)</span>, while the Lorentzian contribution is governed by the parameter <span class="math inline">\(\eta_L\)</span>. Specifically, a pure Lorentzian profile arises when <span class="math inline">\(\eta_L = 1\)</span>. These parameters are constrained to the range from 0 to 1 and must satisfy the condition <span class="math inline">\(\eta_L + \eta_I + \eta_P = 1\)</span>. This constraint defines a 2D simplex within a plane in 3D space, representing all possible combinations of the mixing parameters.</p>
 </section>
 </section>
 <section id="visualizing-the-pseudo-voigt-functions" class="level2">
