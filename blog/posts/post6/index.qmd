@@ -1,6 +1,6 @@
 ---
 title: "The Pseudo-Voigt Function"
-description: "In the field of spectroscopy, particularly laser spectroscopy, accurately modeling spectral line shapes is crucial for extracting valuable information about the physical and chemical properties of matter. One such function is the Pseudo-Voigt function which is a versatile tool that combines the best aspects of two fundamental line shapes: Gaussian and Lorentzian profiles."
+description: "In spectroscopy, especially laser spectroscopy, accurate modeling of spectral line shapes is essential for analyzing the physical and chemical properties of matter. A commonly used approximation is the pseudo-Voigt function, which serves as a simplified representation of the Voigt profile. The Voigt profile, defined as the convolution of a Gaussian function and a Lorentzian function, accurately describes the line shapes, but its calculation is often time consuming."
 author: "Christian L. Goueguel"
 date: "4/5/2019"
 image: "cover.png"
@@ -15,7 +15,7 @@ categories:
 
 ## Background
 
-The Pseudo-Voigt function represents a significant advancement in spectroscopy, emerging from the long-standing challenge of accurately modeling spectral line shapes. While Gaussian and Lorentzian profiles have been fundamental tools in spectral analysis for decades, they individually fell short in capturing the complexity of real-world spectral phenomena. In the mid-20th century, researchers began to recognize the inherent limitations of relying solely on Gaussian and Lorentzian profiles. Complex spectral lines often result from multiple broadening mechanisms, including:
+The Pseudo-Voigt function represents a significant advancement in spectroscopy, emerging from the long-standing challenge of accurately modeling spectral line shapes. While Gaussian and Lorentzian profiles have been fundamental tools in spectral analysis for decades, they individually fell short in capturing the complexity of real-world spectral phenomena. In the mid-20th century, researchers began to recognize the inherent limitations of relying solely on Gaussian (normal distribution) and Lorentzian (Cauchy distribution) profiles. Complex spectral lines often result from multiple broadening mechanisms, including:
 
 -   Doppler broadening, which occurs due to thermal motion of particles
 -   Collisional broadening, resulting from interactions between particles
@@ -23,7 +23,11 @@ The Pseudo-Voigt function represents a significant advancement in spectroscopy, 
 
 When Doppler broadening dominates, a Gaussian profile can effectively model the line shape. However, in many cases, other broadening mechanisms contribute, making the Pseudo-Voigt function a more suitable choice. On the other hand, collisional broadening often leads to Lorentzian line shapes. The Pseudo-Voigt function can account for both collisional and Doppler broadening effects. Moreover, natural broadening results from the finite lifetime of excited states. It can also be modeled using the Pseudo-Voigt function. Therefore, the Pseudo-Voigt function emerged as an elegant solution to these challenges. By combining the characteristics of Gaussian and Lorentzian profiles, it offers a more nuanced representation of spectral line shapes. This hybrid approach provides a smooth, bell-shaped profile reminiscent of Gaussian distributions, or a broader wings that capture the sharp peak characteristics of Lorentzian profile.
 
-The Pseudo-Voigt function is an approximation of the more precise Voigt profile (named after German physicist Woldemar Voigt). The Voigt profile ($V$) represents the exact convolution of Gaussian and Lorentzian profiles, providing a more accurate description of spectral line shapes, particularly when both Doppler and Lorentzian broadening are significant.
+The pseudo-Voigt function was first derived by Thompson, Cox, and Hastings in 1987 \[1\], in their study describing the application of the Rietveld refinement technique to synchrotron X-ray data collected from a capillary sample of Al₂O₃ using Debye–Scherrer geometry at CHESS. Their analysis showed that individual peak shapes are accurately modeled by a pseudo-Voigt function, in which the Gaussian and Lorentzian half-widths vary with the Bragg angle due to instrumental resolution and particle-size broadening, respectively.
+
+### Voigt profile
+
+The pseudo-Voigt function is an approximation of the more precise Voigt profile (named after German physicist Woldemar Voigt). The Voigt profile ($V$) represents the exact convolution of Gaussian and Lorentzian profiles, providing a more accurate description of spectral line shapes, particularly when both Doppler and Lorentzian broadening are significant.
 
 $$
 V(x;\sigma,\gamma) = \int_{-\infty}^{\infty} G(x';\sigma) L(x - x';\gamma) \, dx'
@@ -39,10 +43,14 @@ $$
 
 where $\operatorname{Re}[w(z)]$ denotes the real part of the Faddeeva function.
 
-The computational complexity of the Voigt profile's convolution integral prompted the development of approximations like the Pseudo-Voigt function. This approach strikes a critical balance between computational efficiency and acceptable levels of spectral line shape accuracy. The Pseudo-Voigt function ($PV$) is a linear combination of a Gaussian ($G$) and a Lorentzian ($L$) function, and is defined as:
+The computational complexity of the Voigt profile's convolution integral prompted the development of approximations like the Pseudo-Voigt function. This approach strikes a critical balance between computational efficiency and acceptable levels of spectral line shape accuracy.
+
+### Pseudo-Voigt function
+
+The pseudo-Voigt function ($pV$) is a linear combination of a Gaussian ($G$) and a Lorentzian ($L$) function, and is defined as:
 
 $$
-PV(x;\sigma,\gamma,\eta) = ηL(x;\gamma) + (1-η)G(x;\sigma)
+pV(x;\eta) = ηL(x;\gamma) + (1-η)G(x;\sigma)
 $$
 
 $$
@@ -53,11 +61,33 @@ $$
 L(x; \gamma) = \frac{\gamma}{\pi (x^2 + \gamma^2)}
 $$
 
-where, $\eta$ is a mixing parameter that determines the relative contribution of the Lorentzian ($\eta = 0$) and Gaussian ($\eta = 1$) components. Here, the parameters $\sigma$ and $\gamma$ represent, respectively, the standard deviation of the Gaussian component, related to the full width at half maximum (FWHM) of the Gaussian by $\text{FWHM}_G = 2\sqrt{2\ln 2} \, \sigma$, and the half-width at half maximum (HWHM) of the Lorentzian component, related to the Lorentzian FWHM by $\text{FWHM}_L = 2\gamma$.
+where, $\eta$ is a mixing parameter that determines the relative contribution of the Lorentzian ($\eta = 0$) and Gaussian ($\eta = 1$) components. Here, the parameters $\sigma$ and $\gamma$ represent, respectively, the standard deviation of the Gaussian component, related to the full width at half maximum (FWHM) of the Gaussian by $w_G = 2\sqrt{2\ln 2} \, \sigma$, and the half-width at half maximum (HWHM) of the Lorentzian component, related to the Lorentzian FWHM by $w_L = 2\gamma$.
 
-## Visualizing the Pseudo-Voigt Function
+### Extended pseudo-Voigt function
 
-The following animation illustrates how the Pseudo-Voigt function varies with the mixing parameter $\eta$. As $\eta$ increases from 0 to 1, the contribution of the Gaussian component becomes more significant.
+Recently, Ida *et al*. \[2\], refined the pseudo-Voigt function by proposing an extended formula of the pseudo-Voigt function for precisely approximating the Voigt profile. The proposed formula is given by:
+
+$$
+epV(x;\eta_L, \eta_I, \eta_P) = (1 - \eta_L - \eta_I - \eta_P)G(x;\sigma) + \eta_L L(x; \gamma) + \eta_I F_I(x;\gamma_I) + \eta_P F_P(x;\gamma_P)
+$$
+
+where $F_I$ and $F_P$ are intermediate function, between the Lorentzian and Gaussian profiles, respectivley. $F_I$ is the irrational function and $F_P$ is the squared hyperbolic secant function, and are given by:
+
+$$
+F_I(x;\gamma_I) = \frac{ \left( 1 + (\frac{x}{\gamma_I})^2 \right)^{-3/2}}{2\gamma_I} 
+$$
+
+$$
+F_P(x;\gamma_P) = \frac{\text{sech}^2(\frac{x}{\gamma_P})}{2\gamma_P}
+$$
+
+The FWHM are given by $w_I = 2 \gamma_I \sqrt{(2^{2/3} - 1)}$, and $w_P = 2 \gamma_P \ln{(\sqrt{2} + 1)}$.
+
+Likewise, we obtain a Gaussian profile when the mixing parameters $\eta_L = \eta_I = \eta_P = 0$, while the Lorentzian component is controlled by paramater $\eta_L$. We obtain a pure Lorentzian profile for $\eta_L = 1$. These parameters are constrained to vary between 0 and 1 and must satisfy the condition $\eta_L + \eta_I + \eta_P = 1$, the parameters represent a simplex in three dimensions.
+
+## Visualizing the pseudo-Voigt functions
+
+The following animation illustrates how the pseudo-Voigt function varies with the mixing parameter $\eta$. As $\eta$ increases from 0 to 1, the contribution of the Gaussian component becomes more significant. Next, is the extended pseudo-Voigt function, with varying parameter $\eta_L$.
 
 ```{r warning=FALSE, eval=FALSE}
 #| code-fold: true
@@ -74,6 +104,7 @@ lorentzian <- function(x, x_c, w_L, A, y_0) {
 pseudo_voigt <- function(x, x_c, w_L, w_G, A, y_0, eta) {
   y_0 + A * (eta * lorentzian(x, x_c, w_L, A, y_0) + (1 - eta) * gaussian(x, x_c, w_G, A, y_0))
 }
+
 x_c <- y_0 <- 0; w_L <- w_G <- A <- 1
 eta_values <- seq(0, 1, by = 0.05)
 df <- data.frame(x = seq(-5, 5, by = 0.1))
@@ -90,7 +121,6 @@ p <- df_long |>
   labs(x = "x", y = "y", title = "The Pseudo-Voigt Function",
     subtitle = paste0("Varying η (eta) from Lorentzian (η = 0) to Gaussian (η = 1): ", "{closest_state}")) +
   theme(
-    #panel.grid = element_blank(), 
     legend.position = "none",
     plot.title = element_text(hjust = 0, size = 18, face = "bold"),
     plot.subtitle = element_text(hjust = 0),
@@ -110,8 +140,98 @@ animate(
   height = 400, 
   renderer = gifski_renderer()
   )
-anim_save("voigt_animated.gif")
+anim_save("pv_animation.gif")
 ```
 
 ![](voigt_animated.gif){fig-align="center" width="700"}
+
+```{r warning=FALSE, eval=FALSE}
+#| code-fold: true
+#| code-summary: "Show the code"
+library(ggplot2)
+library(gganimate)
+library(dplyr)
+library(tidyr)
+library(viridis)
+library(gifski)
+
+epv <- function(x, eta_L, eta_I, eta_P, sigma, gamma_L, gamma_I, gamma_P) {
+  G <- dnorm(x, mean = 0, sd = sigma)
+  L <- 1 / (pi * gamma_L * (1 + (x / gamma_L)^2))
+  sech <- function(x) {2 / (exp(x) + exp(-x))}
+  F_I <- (1 + (x / gamma_I)^2)^(-3/2) / (2 * gamma_I)
+  F_P <- sech(x / gamma_P)^2 / (2 * gamma_P)
+  res <- (1 - eta_L - eta_I - eta_P) * G + eta_L * L + eta_I * F_I + eta_P * F_P
+  return(res)
+}
+
+set.seed(123)
+x <- seq(-5, 5, length.out = 50)
+df_params <- expand.grid(
+  x = x,
+  eta_L = seq(0, 1, length.out = 20),
+  eta_I = seq(0, 1, length.out = 20),
+  eta_P = seq(0, 1, length.out = 20)
+) |>
+  mutate(
+    total_eta = eta_L + eta_I + eta_P,
+    eta_L = eta_L / total_eta,
+    eta_I = eta_I / total_eta,
+    eta_P = eta_P / total_eta
+  )
+
+df_params$y <- mapply(
+  function(x, eta_L, eta_I, eta_P) 
+    epv(x, eta_L, eta_I, eta_P, sigma = 1, gamma_L = 1, gamma_I = 1, gamma_P = 1),
+  df_params$x, 
+  df_params$eta_L, 
+  df_params$eta_I, 
+  df_params$eta_P
+)
+
+p <- df_params |>
+  ggplot() +
+  aes(x = x, y = y, color = eta_L) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2) +
+  labs(
+    x = "x", y = "y",
+    title = "Extended Pseudo-Voigt Function",
+    subtitle = "Varying the Lorentzian component (ηL): {closest_state}"
+  ) +
+  theme_bw(base_size = 15) +
+  scale_color_viridis_c(name = expression(eta[L]), begin = 0, end = 1) +
+  theme(
+    legend.position = "none",
+    plot.title = element_text(hjust = 0, size = 18, face = "bold"),
+    plot.subtitle = element_text(hjust = 0),
+    panel.background = element_rect(colour = "black", linewidth = 1)
+  )
+
+anim <- p +
+  transition_states(eta_L, transition_length = 2, state_length = 1) +
+  shadow_mark(alpha = 0.1, size = 0.1) +
+  enter_fade() +
+  exit_shrink() +
+  ease_aes('exponential-in-out')
+
+animate(
+  anim, 
+  nframes = 100, 
+  fps = 10, 
+  width = 600, 
+  height = 400,
+  renderer = gifski_renderer()
+)
+
+anim_save("epv_animation.gif")
+```
+
+![](epv_animation.gif){fig-align="center"}
+
+## References
+
+1.  P. Thompson, D.E. Cox, and J.B. Hastings, Rietveld refinement of Debye–Scherrer synchrotron X-ray data from Al2O3. *J. Appl. Cryst*. 20, 79-83, 1987.
+
+2.  T. Ida, M. Ando, H. Toraya, Extended pseudo-Voigt function for approximating the Voigt profile. *J. Appl. Cryst*. 33, 1311-1316, 2000.
 :::

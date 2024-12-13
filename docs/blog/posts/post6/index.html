@@ -8,7 +8,7 @@
 
 <meta name="author" content="Christian L. Goueguel">
 <meta name="dcterms.date" content="2019-04-05">
-<meta name="description" content="In the field of spectroscopy, particularly laser spectroscopy, accurately modeling spectral line shapes is crucial for extracting valuable information about the physical and chemical properties of matter. One such function is the Pseudo-Voigt function which is a versatile tool that combines the best aspects of two fundamental line shapes: Gaussian and Lorentzian profiles.">
+<meta name="description" content="In spectroscopy, especially laser spectroscopy, accurate modeling of spectral line shapes is essential for analyzing the physical and chemical properties of matter. A commonly used approximation is the pseudo-Voigt function, which serves as a simplified representation of the Voigt profile. The Voigt profile, defined as the convolution of a Gaussian function and a Lorentzian function, accurately describes the line shapes, but its calculation is often time consuming.">
 
 <title>The Pseudo-Voigt Function – Christian L. Goueguel</title>
 <style>
@@ -136,7 +136,7 @@ window.Quarto = {
 
 <link rel="stylesheet" href="../../../styles.scss">
 <meta property="og:title" content="The Pseudo-Voigt Function – Christian L. Goueguel">
-<meta property="og:description" content="In the field of spectroscopy, particularly laser spectroscopy, accurately modeling spectral line shapes is crucial for extracting valuable information about the physical and chemical properties of matter. One such function is the Pseudo-Voigt function which is a versatile tool that combines the best aspects of two fundamental line shapes: Gaussian and Lorentzian profiles.">
+<meta property="og:description" content="In spectroscopy, especially laser spectroscopy, accurate modeling of spectral line shapes is essential for analyzing the physical and chemical properties of matter. A commonly used approximation is the pseudo-Voigt function, which serves as a simplified representation of the Voigt profile. The Voigt profile, defined as the convolution of a Gaussian function and a Lorentzian function, accurately describes the line shapes, but its calculation is often time consuming.">
 <meta property="og:image" content="cover.png">
 <meta property="og:site_name" content="Christian L. Goueguel">
 </head>
@@ -219,7 +219,7 @@ window.Quarto = {
 
 <div>
   <div class="description">
-    In the field of spectroscopy, particularly laser spectroscopy, accurately modeling spectral line shapes is crucial for extracting valuable information about the physical and chemical properties of matter. One such function is the Pseudo-Voigt function which is a versatile tool that combines the best aspects of two fundamental line shapes: Gaussian and Lorentzian profiles.
+    In spectroscopy, especially laser spectroscopy, accurate modeling of spectral line shapes is essential for analyzing the physical and chemical properties of matter. A commonly used approximation is the pseudo-Voigt function, which serves as a simplified representation of the Voigt profile. The Voigt profile, defined as the convolution of a Gaussian function and a Lorentzian function, accurately describes the line shapes, but its calculation is often time consuming.
   </div>
 </div>
 
@@ -256,14 +256,17 @@ window.Quarto = {
 </div>
 <section id="background" class="level2">
 <h2 class="anchored" data-anchor-id="background">Background</h2>
-<p>The Pseudo-Voigt function represents a significant advancement in spectroscopy, emerging from the long-standing challenge of accurately modeling spectral line shapes. While Gaussian and Lorentzian profiles have been fundamental tools in spectral analysis for decades, they individually fell short in capturing the complexity of real-world spectral phenomena. In the mid-20th century, researchers began to recognize the inherent limitations of relying solely on Gaussian and Lorentzian profiles. Complex spectral lines often result from multiple broadening mechanisms, including:</p>
+<p>The Pseudo-Voigt function represents a significant advancement in spectroscopy, emerging from the long-standing challenge of accurately modeling spectral line shapes. While Gaussian and Lorentzian profiles have been fundamental tools in spectral analysis for decades, they individually fell short in capturing the complexity of real-world spectral phenomena. In the mid-20th century, researchers began to recognize the inherent limitations of relying solely on Gaussian (normal distribution) and Lorentzian (Cauchy distribution) profiles. Complex spectral lines often result from multiple broadening mechanisms, including:</p>
 <ul>
 <li>Doppler broadening, which occurs due to thermal motion of particles</li>
 <li>Collisional broadening, resulting from interactions between particles</li>
 <li>Instrumental broadening introduced by measurement apparatus</li>
 </ul>
 <p>When Doppler broadening dominates, a Gaussian profile can effectively model the line shape. However, in many cases, other broadening mechanisms contribute, making the Pseudo-Voigt function a more suitable choice. On the other hand, collisional broadening often leads to Lorentzian line shapes. The Pseudo-Voigt function can account for both collisional and Doppler broadening effects. Moreover, natural broadening results from the finite lifetime of excited states. It can also be modeled using the Pseudo-Voigt function. Therefore, the Pseudo-Voigt function emerged as an elegant solution to these challenges. By combining the characteristics of Gaussian and Lorentzian profiles, it offers a more nuanced representation of spectral line shapes. This hybrid approach provides a smooth, bell-shaped profile reminiscent of Gaussian distributions, or a broader wings that capture the sharp peak characteristics of Lorentzian profile.</p>
-<p>The Pseudo-Voigt function is an approximation of the more precise Voigt profile (named after German physicist Woldemar Voigt). The Voigt profile (<span class="math inline">\(V\)</span>) represents the exact convolution of Gaussian and Lorentzian profiles, providing a more accurate description of spectral line shapes, particularly when both Doppler and Lorentzian broadening are significant.</p>
+<p>The pseudo-Voigt function was first derived by Thompson, Cox, and Hastings in 1987 [1], in their study describing the application of the Rietveld refinement technique to synchrotron X-ray data collected from a capillary sample of Al₂O₃ using Debye–Scherrer geometry at CHESS. Their analysis showed that individual peak shapes are accurately modeled by a pseudo-Voigt function, in which the Gaussian and Lorentzian half-widths vary with the Bragg angle due to instrumental resolution and particle-size broadening, respectively.</p>
+<section id="voigt-profile" class="level3">
+<h3 class="anchored" data-anchor-id="voigt-profile">Voigt profile</h3>
+<p>The pseudo-Voigt function is an approximation of the more precise Voigt profile (named after German physicist Woldemar Voigt). The Voigt profile (<span class="math inline">\(V\)</span>) represents the exact convolution of Gaussian and Lorentzian profiles, providing a more accurate description of spectral line shapes, particularly when both Doppler and Lorentzian broadening are significant.</p>
 <p><span class="math display">\[
 V(x;\sigma,\gamma) = \int_{-\infty}^{\infty} G(x';\sigma) L(x - x';\gamma) \, dx'
 \]</span></p>
@@ -274,9 +277,13 @@ w(z) = e^{-z^2} \left( 1 + \frac{2i}{\sqrt{\pi}} \int_0^z e^{t^2} \, dt \right)
 V(x; \sigma, \gamma) = \frac{\operatorname{Re} [w\left( \frac{x + i\gamma}{\sigma\sqrt{2}} \right)]}{\sigma\sqrt{2\pi}}
 \]</span></p>
 <p>where <span class="math inline">\(\operatorname{Re}[w(z)]\)</span> denotes the real part of the Faddeeva function.</p>
-<p>The computational complexity of the Voigt profile’s convolution integral prompted the development of approximations like the Pseudo-Voigt function. This approach strikes a critical balance between computational efficiency and acceptable levels of spectral line shape accuracy. The Pseudo-Voigt function (<span class="math inline">\(PV\)</span>) is a linear combination of a Gaussian (<span class="math inline">\(G\)</span>) and a Lorentzian (<span class="math inline">\(L\)</span>) function, and is defined as:</p>
+<p>The computational complexity of the Voigt profile’s convolution integral prompted the development of approximations like the Pseudo-Voigt function. This approach strikes a critical balance between computational efficiency and acceptable levels of spectral line shape accuracy.</p>
+</section>
+<section id="pseudo-voigt-function" class="level3">
+<h3 class="anchored" data-anchor-id="pseudo-voigt-function">Pseudo-Voigt function</h3>
+<p>The pseudo-Voigt function (<span class="math inline">\(pV\)</span>) is a linear combination of a Gaussian (<span class="math inline">\(G\)</span>) and a Lorentzian (<span class="math inline">\(L\)</span>) function, and is defined as:</p>
 <p><span class="math display">\[
-PV(x;\sigma,\gamma,\eta) = ηL(x;\gamma) + (1-η)G(x;\sigma)
+pV(x;\eta) = ηL(x;\gamma) + (1-η)G(x;\sigma)
 \]</span></p>
 <p><span class="math display">\[
 G(x;\sigma) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{x^2}{2\sigma^2}}
@@ -284,11 +291,28 @@ G(x;\sigma) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{x^2}{2\sigma^2}}
 <p><span class="math display">\[
 L(x; \gamma) = \frac{\gamma}{\pi (x^2 + \gamma^2)}
 \]</span></p>
-<p>where, <span class="math inline">\(\eta\)</span> is a mixing parameter that determines the relative contribution of the Lorentzian (<span class="math inline">\(\eta = 0\)</span>) and Gaussian (<span class="math inline">\(\eta = 1\)</span>) components. Here, the parameters <span class="math inline">\(\sigma\)</span> and <span class="math inline">\(\gamma\)</span> represent, respectively, the standard deviation of the Gaussian component, related to the full width at half maximum (FWHM) of the Gaussian by <span class="math inline">\(\text{FWHM}_G = 2\sqrt{2\ln 2} \, \sigma\)</span>, and the half-width at half maximum (HWHM) of the Lorentzian component, related to the Lorentzian FWHM by <span class="math inline">\(\text{FWHM}_L = 2\gamma\)</span>.</p>
+<p>where, <span class="math inline">\(\eta\)</span> is a mixing parameter that determines the relative contribution of the Lorentzian (<span class="math inline">\(\eta = 0\)</span>) and Gaussian (<span class="math inline">\(\eta = 1\)</span>) components. Here, the parameters <span class="math inline">\(\sigma\)</span> and <span class="math inline">\(\gamma\)</span> represent, respectively, the standard deviation of the Gaussian component, related to the full width at half maximum (FWHM) of the Gaussian by <span class="math inline">\(w_G = 2\sqrt{2\ln 2} \, \sigma\)</span>, and the half-width at half maximum (HWHM) of the Lorentzian component, related to the Lorentzian FWHM by <span class="math inline">\(w_L = 2\gamma\)</span>.</p>
 </section>
-<section id="visualizing-the-pseudo-voigt-function" class="level2">
-<h2 class="anchored" data-anchor-id="visualizing-the-pseudo-voigt-function">Visualizing the Pseudo-Voigt Function</h2>
-<p>The following animation illustrates how the Pseudo-Voigt function varies with the mixing parameter <span class="math inline">\(\eta\)</span>. As <span class="math inline">\(\eta\)</span> increases from 0 to 1, the contribution of the Gaussian component becomes more significant.</p>
+<section id="extended-pseudo-voigt-function" class="level3">
+<h3 class="anchored" data-anchor-id="extended-pseudo-voigt-function">Extended pseudo-Voigt function</h3>
+<p>Recently, Ida <em>et al</em>. [2], refined the pseudo-Voigt function by proposing an extended formula of the pseudo-Voigt function for precisely approximating the Voigt profile. The proposed formula is given by:</p>
+<p><span class="math display">\[
+epV(x;\eta_L, \eta_I, \eta_P) = (1 - \eta_L - \eta_I - \eta_P)G(x;\sigma) + \eta_L L(x; \gamma) + \eta_I F_I(x;\gamma_I) + \eta_P F_P(x;\gamma_P)
+\]</span></p>
+<p>where <span class="math inline">\(F_I\)</span> and <span class="math inline">\(F_P\)</span> are intermediate function, between the Lorentzian and Gaussian profiles, respectivley. <span class="math inline">\(F_I\)</span> is the irrational function and <span class="math inline">\(F_P\)</span> is the squared hyperbolic secant function, and are given by:</p>
+<p><span class="math display">\[
+F_I(x;\gamma_I) = \frac{ \left( 1 + (\frac{x}{\gamma_I})^2 \right)^{-3/2}}{2\gamma_I}
+\]</span></p>
+<p><span class="math display">\[
+F_P(x;\gamma_P) = \frac{\text{sech}^2(\frac{x}{\gamma_P})}{2\gamma_P}
+\]</span></p>
+<p>The FWHM are given by <span class="math inline">\(w_I = 2 \gamma_I \sqrt{(2^{2/3} - 1)}\)</span>, and <span class="math inline">\(w_P = 2 \gamma_P \ln{(\sqrt{2} + 1)}\)</span>.</p>
+<p>Likewise, we obtain a Gaussian profile when the mixing parameters <span class="math inline">\(\eta_L = \eta_I = \eta_P = 0\)</span>, while the Lorentzian component is controlled by paramater <span class="math inline">\(\eta_L\)</span>. We obtain a pure Lorentzian profile for <span class="math inline">\(\eta_L = 1\)</span>. These parameters are constrained to vary between 0 and 1 and must satisfy the condition <span class="math inline">\(\eta_L + \eta_I + \eta_P = 1\)</span>, the parameters represent a simplex in three dimensions.</p>
+</section>
+</section>
+<section id="visualizing-the-pseudo-voigt-functions" class="level2">
+<h2 class="anchored" data-anchor-id="visualizing-the-pseudo-voigt-functions">Visualizing the pseudo-Voigt functions</h2>
+<p>The following animation illustrates how the pseudo-Voigt function varies with the mixing parameter <span class="math inline">\(\eta\)</span>. As <span class="math inline">\(\eta\)</span> increases from 0 to 1, the contribution of the Gaussian component becomes more significant. Next, is the extended pseudo-Voigt function, with varying parameter <span class="math inline">\(\eta_L\)</span>.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
@@ -304,23 +328,23 @@ L(x; \gamma) = \frac{\gamma}{\pi (x^2 + \gamma^2)}
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>pseudo_voigt <span class="ot">&lt;-</span> <span class="cf">function</span>(x, x_c, w_L, w_G, A, y_0, eta) {</span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  y_0 <span class="sc">+</span> A <span class="sc">*</span> (eta <span class="sc">*</span> <span class="fu">lorentzian</span>(x, x_c, w_L, A, y_0) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">-</span> eta) <span class="sc">*</span> <span class="fu">gaussian</span>(x, x_c, w_G, A, y_0))</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>x_c <span class="ot">&lt;-</span> y_0 <span class="ot">&lt;-</span> <span class="dv">0</span>; w_L <span class="ot">&lt;-</span> w_G <span class="ot">&lt;-</span> A <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>eta_values <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.05</span>)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="at">by =</span> <span class="fl">0.1</span>))</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (eta <span class="cf">in</span> eta_values) {</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  df[[<span class="fu">paste0</span>(<span class="st">"eta = "</span>, eta)]] <span class="ot">&lt;-</span> <span class="fu">pseudo_voigt</span>(df<span class="sc">$</span>x, x_c, w_L, w_G, A, y_0, eta)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>df_long <span class="ot">&lt;-</span> tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(df, <span class="at">cols =</span> <span class="sc">-</span>x, <span class="at">names_to =</span> <span class="st">"eta"</span>, <span class="at">values_to =</span> <span class="st">"y"</span>)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> df_long <span class="sc">|&gt;</span> </span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">colour =</span> eta)) <span class="sc">+</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">15</span>) <span class="sc">+</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"x"</span>, <span class="at">y =</span> <span class="st">"y"</span>, <span class="at">title =</span> <span class="st">"The Pseudo-Voigt Function"</span>,</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">paste0</span>(<span class="st">"Varying η (eta) from Lorentzian (η = 0) to Gaussian (η = 1): "</span>, <span class="st">"{closest_state}"</span>)) <span class="sc">+</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    <span class="co">#panel.grid = element_blank(), </span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>x_c <span class="ot">&lt;-</span> y_0 <span class="ot">&lt;-</span> <span class="dv">0</span>; w_L <span class="ot">&lt;-</span> w_G <span class="ot">&lt;-</span> A <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>eta_values <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.05</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="at">by =</span> <span class="fl">0.1</span>))</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (eta <span class="cf">in</span> eta_values) {</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  df[[<span class="fu">paste0</span>(<span class="st">"eta = "</span>, eta)]] <span class="ot">&lt;-</span> <span class="fu">pseudo_voigt</span>(df<span class="sc">$</span>x, x_c, w_L, w_G, A, y_0, eta)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>df_long <span class="ot">&lt;-</span> tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(df, <span class="at">cols =</span> <span class="sc">-</span>x, <span class="at">names_to =</span> <span class="st">"eta"</span>, <span class="at">values_to =</span> <span class="st">"y"</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> df_long <span class="sc">|&gt;</span> </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">colour =</span> eta)) <span class="sc">+</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">15</span>) <span class="sc">+</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"x"</span>, <span class="at">y =</span> <span class="st">"y"</span>, <span class="at">title =</span> <span class="st">"The Pseudo-Voigt Function"</span>,</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">paste0</span>(<span class="st">"Varying η (eta) from Lorentzian (η = 0) to Gaussian (η = 1): "</span>, <span class="st">"{closest_state}"</span>)) <span class="sc">+</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
 <span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
 <span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">size =</span> <span class="dv">18</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
 <span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>),</span>
@@ -340,7 +364,7 @@ L(x; \gamma) = \frac{\gamma}{\pi (x^2 + \gamma^2)}
 <span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="dv">400</span>, </span>
 <span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  <span class="at">renderer =</span> <span class="fu">gifski_renderer</span>()</span>
 <span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="fu">anim_save</span>(<span class="st">"voigt_animated.gif"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="fu">anim_save</span>(<span class="st">"pv_animation.gif"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="quarto-figure quarto-figure-center">
@@ -348,6 +372,100 @@ L(x; \gamma) = \frac{\gamma}{\pi (x^2 + \gamma^2)}
 <p><img src="voigt_animated.gif" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
 </figure>
 </div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gganimate)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gifski)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>epv <span class="ot">&lt;-</span> <span class="cf">function</span>(x, eta_L, eta_I, eta_P, sigma, gamma_L, gamma_I, gamma_P) {</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  G <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(x, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sigma)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  L <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> (pi <span class="sc">*</span> gamma_L <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> (x <span class="sc">/</span> gamma_L)<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  sech <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {<span class="dv">2</span> <span class="sc">/</span> (<span class="fu">exp</span>(x) <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>x))}</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  F_I <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">+</span> (x <span class="sc">/</span> gamma_I)<span class="sc">^</span><span class="dv">2</span>)<span class="sc">^</span>(<span class="sc">-</span><span class="dv">3</span><span class="sc">/</span><span class="dv">2</span>) <span class="sc">/</span> (<span class="dv">2</span> <span class="sc">*</span> gamma_I)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  F_P <span class="ot">&lt;-</span> <span class="fu">sech</span>(x <span class="sc">/</span> gamma_P)<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (<span class="dv">2</span> <span class="sc">*</span> gamma_P)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> eta_L <span class="sc">-</span> eta_I <span class="sc">-</span> eta_P) <span class="sc">*</span> G <span class="sc">+</span> eta_L <span class="sc">*</span> L <span class="sc">+</span> eta_I <span class="sc">*</span> F_I <span class="sc">+</span> eta_P <span class="sc">*</span> F_P</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(res)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="at">length.out =</span> <span class="dv">50</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>df_params <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> x,</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">eta_L =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">20</span>),</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">eta_I =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">20</span>),</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">eta_P =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">20</span>)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_eta =</span> eta_L <span class="sc">+</span> eta_I <span class="sc">+</span> eta_P,</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">eta_L =</span> eta_L <span class="sc">/</span> total_eta,</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">eta_I =</span> eta_I <span class="sc">/</span> total_eta,</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">eta_P =</span> eta_P <span class="sc">/</span> total_eta</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>df_params<span class="sc">$</span>y <span class="ot">&lt;-</span> <span class="fu">mapply</span>(</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(x, eta_L, eta_I, eta_P) </span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">epv</span>(x, eta_L, eta_I, eta_P, <span class="at">sigma =</span> <span class="dv">1</span>, <span class="at">gamma_L =</span> <span class="dv">1</span>, <span class="at">gamma_I =</span> <span class="dv">1</span>, <span class="at">gamma_P =</span> <span class="dv">1</span>),</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  df_params<span class="sc">$</span>x, </span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>  df_params<span class="sc">$</span>eta_L, </span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>  df_params<span class="sc">$</span>eta_I, </span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>  df_params<span class="sc">$</span>eta_P</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> df_params <span class="sc">|&gt;</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">color =</span> eta_L) <span class="sc">+</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"x"</span>, <span class="at">y =</span> <span class="st">"y"</span>,</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Extended Pseudo-Voigt Function"</span>,</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Varying the Lorentzian component (ηL): {closest_state}"</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">15</span>) <span class="sc">+</span></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_c</span>(<span class="at">name =</span> <span class="fu">expression</span>(eta[L]), <span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">size =</span> <span class="dv">18</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>),</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>)</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>anim <span class="ot">&lt;-</span> p <span class="sc">+</span></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transition_states</span>(eta_L, <span class="at">transition_length =</span> <span class="dv">2</span>, <span class="at">state_length =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shadow_mark</span>(<span class="at">alpha =</span> <span class="fl">0.1</span>, <span class="at">size =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">enter_fade</span>() <span class="sc">+</span></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">exit_shrink</span>() <span class="sc">+</span></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ease_aes</span>(<span class="st">'exponential-in-out'</span>)</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a><span class="fu">animate</span>(</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>  anim, </span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>  <span class="at">nframes =</span> <span class="dv">100</span>, </span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>  <span class="at">fps =</span> <span class="dv">10</span>, </span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">600</span>, </span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="dv">400</span>,</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>  <span class="at">renderer =</span> <span class="fu">gifski_renderer</span>()</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a><span class="fu">anim_save</span>(<span class="st">"epv_animation.gif"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="epv_animation.gif" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ol type="1">
+<li><p>P. Thompson, D.E. Cox, and J.B. Hastings, Rietveld refinement of Debye–Scherrer synchrotron X-ray data from Al2O3. <em>J. Appl. Cryst</em>. 20, 79-83, 1987.</p></li>
+<li><p>T. Ida, M. Ando, H. Toraya, Extended pseudo-Voigt function for approximating the Voigt profile. <em>J. Appl. Cryst</em>. 33, 1311-1316, 2000.</p></li>
+</ol>
 </section>
 </div>
 
