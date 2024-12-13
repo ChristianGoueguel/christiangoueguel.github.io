@@ -50,7 +50,7 @@ The computational complexity of the Voigt profile's convolution integral prompte
 The pseudo-Voigt function ($pV$) is a linear combination of a Gaussian ($G$) and a Lorentzian ($L$) function, and is defined as:
 
 $$
-pV(x;\eta) = ηL(x;\gamma) + (1-η)G(x;\sigma)
+pV(x;\eta) = ηG(x;\sigma) + (1-η)L(x;\gamma)
 $$
 
 $$
@@ -87,7 +87,7 @@ Similarly, a Gaussian profile is obtained when the mixing parameters are set to 
 
 ## Visualizing the pseudo-Voigt functions
 
-The following animation illustrates how the pseudo-Voigt function varies with the mixing parameter $\eta$. As $\eta$ increases from 0 to 1, the contribution of the Gaussian component becomes more significant. Next, is the extended pseudo-Voigt function, with varying parameter $\eta_L$.
+The following animation illustrates how the pseudo-Voigt function varies with the mixing parameter $\eta$. As $\eta$ increases from 0 to 1, the contribution of the Gaussian component becomes more significant.
 
 ```{r warning=FALSE, eval=FALSE}
 #| code-fold: true
@@ -102,24 +102,29 @@ lorentzian <- function(x, x_c, w_L, A, y_0) {
   y_0 + A / pi * w_L / ((x - x_c)^2 + w_L^2)
 }
 pseudo_voigt <- function(x, x_c, w_L, w_G, A, y_0, eta) {
-  y_0 + A * (eta * lorentzian(x, x_c, w_L, A, y_0) + (1 - eta) * gaussian(x, x_c, w_G, A, y_0))
+  y_0 + A * (eta * gaussian(x, x_c, w_G, A, y_0)  + (1 - eta) * lorentzian(x, x_c, w_L, A, y_0))
 }
 
 x_c <- y_0 <- 0; w_L <- w_G <- A <- 1
 eta_values <- seq(0, 1, by = 0.05)
 df <- data.frame(x = seq(-5, 5, by = 0.1))
 for (eta in eta_values) {
-  df[[paste0("eta = ", eta)]] <- pseudo_voigt(df$x, x_c, w_L, w_G, A, y_0, eta)
+  df[[paste0("η = ", eta)]] <- pseudo_voigt(df$x, x_c, w_L, w_G, A, y_0, eta)
 }
 df_long <- tidyr::pivot_longer(df, cols = -x, names_to = "eta", values_to = "y")
 
 p <- df_long |> 
   ggplot(aes(x = x, y = y, colour = eta)) +
   geom_line(linewidth = 1) +
+  scale_y_continuous(limits = c(0,1)) +
   geom_point(size = 2) +
   theme_bw(base_size = 15) +
-  labs(x = "x", y = "y", title = "The Pseudo-Voigt Function",
-    subtitle = paste0("Varying η (eta) from Lorentzian (η = 0) to Gaussian (η = 1): ", "{closest_state}")) +
+  labs(
+    x = "x", 
+    y = "y", 
+    title = "The Pseudo-Voigt Function",
+    subtitle = paste0("Varying η from Lorentzian (η = 0) to Gaussian (η = 1): ", "{closest_state}"),
+    caption = "The mixing parameter η determines the relative contribution of the Lorentzian and Gaussian components.") +
   theme(
     legend.position = "none",
     plot.title = element_text(hjust = 0, size = 18, face = "bold"),
@@ -130,7 +135,7 @@ p <- df_long |>
 anim <- p +
   transition_states(eta, transition_length = 2, state_length = 1) +
   ease_aes('exponential-in-out') +
-  shadow_mark(alpha = 0.3, size = 0.1)
+  shadow_mark(alpha = 2/10, size = 0.1)
 
 animate(
   anim, 
@@ -143,9 +148,11 @@ animate(
 anim_save("pv_animation.gif")
 ```
 
-![](voigt_animated.gif){fig-align="center" width="700"}
+![](pv_animation.gif){fig-align="center" width="700"}
 
-```{r warning=FALSE, eval=FALSE}
+Next, we visualize the normalized extended pseudo-Voigt profiles, illustrating the transition from Gaussian to Lorentzian shapes as the mixing parameters $\eta_L, \eta_I$, and $\eta_P$, are varied simultaneously.
+
+```{r warning=FALSE, eval=FALSE, echo=FALSE}
 #| code-fold: true
 #| code-summary: "Show the code"
 library(ggplot2)
@@ -156,74 +163,105 @@ library(viridis)
 library(gifski)
 
 epv <- function(x, eta_L, eta_I, eta_P, sigma, gamma_L, gamma_I, gamma_P) {
-  G <- dnorm(x, mean = 0, sd = sigma)
+  G <- (1 / sigma * sqrt(2 * pi)) * exp(-x^2 / (2 * sigma^2))
   L <- 1 / (pi * gamma_L * (1 + (x / gamma_L)^2))
-  sech <- function(x) {2 / (exp(x) + exp(-x))}
   F_I <- (1 + (x / gamma_I)^2)^(-3/2) / (2 * gamma_I)
-  F_P <- sech(x / gamma_P)^2 / (2 * gamma_P)
+  z <- x / gamma_P
+  F_P <- pracma::sech(z)^2 / (2 * gamma_P)
   res <- (1 - eta_L - eta_I - eta_P) * G + eta_L * L + eta_I * F_I + eta_P * F_P
   return(res)
 }
 
-set.seed(123)
-x <- seq(-5, 5, length.out = 50)
-df_params <- expand.grid(
-  x = x,
-  eta_L = seq(0, 1, length.out = 20),
-  eta_I = seq(0, 1, length.out = 20),
-  eta_P = seq(0, 1, length.out = 20)
-) |>
-  mutate(
-    total_eta = eta_L + eta_I + eta_P,
-    eta_L = eta_L / total_eta,
-    eta_I = eta_I / total_eta,
-    eta_P = eta_P / total_eta
-  )
+s <- 1/2*sqrt(2*log(2))
+d <- 1/2*log(sqrt(2)+1)
+u <- 1 # 1/2
+p <- 1 # 2*sqrt(2^(2/3)-1)
 
-df_params$y <- mapply(
-  function(x, eta_L, eta_I, eta_P) 
-    epv(x, eta_L, eta_I, eta_P, sigma = 1, gamma_L = 1, gamma_I = 1, gamma_P = 1),
-  df_params$x, 
-  df_params$eta_L, 
-  df_params$eta_I, 
-  df_params$eta_P
+etas <- tibble(
+  eta_L = c(1,.8,.6,.4,.2,0, 0, 0, 0, 0,0,.2,.4,.6,.8),
+  eta_I = c(0,.2,.4,.6,.8,0,.8,.6,.4,.2,0, 0, 0, 0, 0),
+  eta_P = c(0, 0,0, 0, 0, 0,.2,.4,.6,.8,1,.8,.6,.4,.2)
 )
 
-p <- df_params |>
-  ggplot() +
-  aes(x = x, y = y, color = eta_L) +
+profile_tbl <- tibble::tibble(
+  x = seq(-5, 5, length.out = 100),
+  y01 = epv(x, 1, 0, 0, sigma = s, gamma_L = u, gamma_I = p, gamma_P = d),
+  y02 = epv(x,.8,.2, 0, sigma = s, gamma_L = u, gamma_I = p, gamma_P = d),
+  y03 = epv(x,.6,.4, 0, sigma = s, gamma_L = u, gamma_I = p, gamma_P = d),
+  y04 = epv(x,.4,.6, 0, sigma = s, gamma_L = u, gamma_I = p, gamma_P = d),
+  y05 = epv(x,.2,.8, 0, sigma = s, gamma_L = u, gamma_I = p, gamma_P = d),
+  y06 = epv(x, 0, 1, 0, sigma = s, gamma_L = u, gamma_I = p, gamma_P = d),
+  y07 = epv(x, 0,.8,.2, sigma = s, gamma_L = u, gamma_I = p, gamma_P = d),
+  y08 = epv(x, 0,.6,.4, sigma = s, gamma_L = u, gamma_I = p, gamma_P = d),
+  y09 = epv(x, 0,.4,.6, sigma = s, gamma_L = u, gamma_I = p, gamma_P = d),
+  y10 = epv(x, 0,.2,.8, sigma = s, gamma_L = u, gamma_I = p, gamma_P = d),
+  y11 = epv(x, 0, 0, 1, sigma = s, gamma_L = u, gamma_I = p, gamma_P = d),
+  y12 = epv(x,.2, 0,.8, sigma = s, gamma_L = u, gamma_I = p, gamma_P = d),
+  y13 = epv(x,.4, 0,.6, sigma = s, gamma_L = u, gamma_I = p, gamma_P = d),
+  y14 = epv(x,.6, 0,.4, sigma = s, gamma_L = u, gamma_I = p, gamma_P = d),
+  y15 = epv(x,.8, 0,.2, sigma = s, gamma_L = u, gamma_I = p, gamma_P = d)
+  #y16 = epv(x,0,0,0, sigma = s, gamma_L = u, gamma_I = p, gamma_P = d)
+) |>
+  transmute(
+    x = x,
+    `ηL = 0.0, ηI = 0.0, ηP = 1.0` = specProc::minmax(y11),
+    `ηL = 0.0, ηI = 0.2, ηP = 0.8` = specProc::minmax(y10),
+    `ηL = 0.0, ηI = 0.4, ηP = 0.6` = specProc::minmax(y09),
+    `ηL = 0.0, ηI = 0.6, ηP = 0.4` = specProc::minmax(y08),
+    `ηL = 0.0, ηI = 0.8, ηP = 0.2` = specProc::minmax(y07),
+    `ηL = 0.0, ηI = 1.0, ηP = 0.0` = specProc::minmax(y06),
+    `ηL = 0.2, ηI = 0.8, ηP = 0.0` = specProc::minmax(y05),
+    `ηL = 0.4, ηI = 0.6, ηP = 0.0` = specProc::minmax(y04),
+    `ηL = 0.6, ηI = 0.4, ηP = 0.0` = specProc::minmax(y03),
+    `ηL = 0.8, ηI = 0.2, ηP = 0.0` = specProc::minmax(y02),
+    `ηL = 1.0, ηI = 0.0, ηP = 0.0` = specProc::minmax(y01)
+    # `ηL = 0.2, ηI = 0.0, ηP = 0.8` = specProc::minmax(y12),
+    # `ηL = 0.4, ηI = 0.0, ηP = 0.6` = specProc::minmax(y13),
+    # `ηL = 0.6, ηI = 0.0, ηP = 0.4` = specProc::minmax(y14),
+    # `ηL = 0.8, ηI = 0.0, ηP = 0.2` = specProc::minmax(y15)
+    #y16 = specProc::minmax(y16)
+  )
+
+df_long <- tidyr::pivot_longer(
+  profile_tbl, 
+  cols = -x, 
+  names_to = "label", 
+  values_to = "y"
+  )
+
+p <- df_long |> 
+  ggplot(aes(x = x, y = y, colour = label, group = label)) +
   geom_line(linewidth = 1) +
+  scale_y_continuous(limits = c(0,1)) +
   geom_point(size = 2) +
-  labs(
-    x = "x", y = "y",
-    title = "Extended Pseudo-Voigt Function",
-    subtitle = "Varying the Lorentzian component (ηL): {closest_state}"
-  ) +
   theme_bw(base_size = 15) +
-  scale_color_viridis_c(name = expression(eta[L]), begin = 0, end = 1) +
+  labs(
+    x = "x", 
+    y = "y", 
+    title = "The Extended Pseudo-Voigt Function",
+    subtitle = paste0("Varying mixing parameters: ", "{closest_state}"),
+    caption = "The parameters ηL, ηI, and ηP control the relative contribution of the Gaussian component,\n whereas ηL governs the contribution of the Lorentzian component."
+    ) +
   theme(
     legend.position = "none",
     plot.title = element_text(hjust = 0, size = 18, face = "bold"),
     plot.subtitle = element_text(hjust = 0),
     panel.background = element_rect(colour = "black", linewidth = 1)
-  )
+    )
 
 anim <- p +
-  transition_states(eta_L, transition_length = 2, state_length = 1) +
-  shadow_mark(alpha = 0.1, size = 0.1) +
-  enter_fade() +
-  exit_shrink() +
-  ease_aes('exponential-in-out')
+  transition_states(label, transition_length = 2, state_length = 1) +
+  ease_aes('exponential-in-out') +
+  shadow_mark(alpha = 2/10, size = 0.1)
 
 animate(
   anim, 
   nframes = 100, 
   fps = 10, 
   width = 600, 
-  height = 400,
+  height = 400, 
   renderer = gifski_renderer()
-)
-
+  )
 anim_save("epv_animation.gif")
 ```
 
