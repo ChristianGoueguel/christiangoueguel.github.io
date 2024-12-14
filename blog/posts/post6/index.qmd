@@ -267,7 +267,7 @@ anim_save("epv_animation.gif")
 
 ## References
 
-1.  P. Thompson, D.E. Cox, and J.B. Hastings, Rietveld refinement of Debye–Scherrer synchrotron X-ray data from Al2O3. *J. Appl. Cryst*. 20, 79-83, 1987.
+1.  P. Thompson, D.E. Cox, and J.B. Hastings, Rietveld refinement of Debye–Scherrer synchrotron X-ray data from Al~2~O~3~. *J. Appl. Cryst*. 20, 79-83, 1987.
 
 2.  T. Ida, M. Ando, H. Toraya, Extended pseudo-Voigt function for approximating the Voigt profile. *J. Appl. Cryst*. 33, 1311-1316, 2000.
 :::
