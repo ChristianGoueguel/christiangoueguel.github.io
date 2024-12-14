@@ -264,8 +264,9 @@ window.Quarto = {
 </ul>
 <p>When Doppler broadening dominates, the shape of a spectral line is best modeled by a Gaussian profile. In contrast, collisional broadening typically leads to a Lorentzian line shape. However, in many cases, the observed line shape results from the interplay of multiple broadening mechanisms. As a result, the pseudo-Voigt function often provides a more accurate representation of the line shape. Indeed, the pseudo-Voigt function can account for both collisional and Doppler broadening effects. Moreover, natural broadening resulting from the finite lifetime of excited states can also be modeled using the pseudo-Voigt function. Therefore, the pseudo-Voigt function emerged as an elegant solution to these challenges. By combining the characteristics of Gaussian and Lorentzian profiles, it offers a more nuanced representation of spectral line shapes.</p>
 <p>The pseudo-Voigt function was first derived by Thompson, Cox, and Hastings in 1987 [1], in their study describing the application of the Rietveld refinement technique to synchrotron X-ray data collected from a capillary sample of Al₂O₃ using Debye–Scherrer geometry at the Cornell High Energy Synchrotron Source (CHESS). Their analysis showed that individual peak shapes are accurately modeled by a pseudo-Voigt function, in which the Gaussian and Lorentzian half-widths vary, respectively, with the Bragg angle due to instrumental resolution and particle-size broadening.</p>
-<section id="voigt-profile" class="level3">
-<h3 class="anchored" data-anchor-id="voigt-profile">Voigt profile</h3>
+</section>
+<section id="voigt-profile" class="level2">
+<h2 class="anchored" data-anchor-id="voigt-profile">Voigt profile</h2>
 <p>Fundamentally, the pseudo-Voigt function is an approximation of the more precise Voigt profile (named after German physicist Woldemar Voigt). The Voigt profile (<span class="math inline">\(V\)</span>) represents the exact convolution of Gaussian and Lorentzian profiles, providing a more accurate description of spectral line shapes, particularly when both Doppler and Lorentzian broadening are significant.</p>
 <p><span class="math display">\[
 V(x;\sigma,\gamma) = \int_{-\infty}^{\infty} G(x';\sigma) L(x - x';\gamma) \, dx'
@@ -288,8 +289,8 @@ V(x; \sigma, \gamma) = \frac{1}{\sigma\sqrt{2\pi}}\Re\left[w\left( \frac{x + i\g
 </div>
 <p>However, the Voigt profile is computationally intensive, requiring efficient numerical methods to accurately evaluate the convolution integral. This complexity has led to the development of approximations, such as the pseudo-Voigt function, which strike a balance between computational efficiency and maintaining acceptable levels of accuracy in the spectral line shape.</p>
 </section>
-<section id="pseudo-voigt-function" class="level3">
-<h3 class="anchored" data-anchor-id="pseudo-voigt-function">Pseudo-Voigt function</h3>
+<section id="pseudo-voigt-function" class="level2">
+<h2 class="anchored" data-anchor-id="pseudo-voigt-function">Pseudo-Voigt function</h2>
 <p>The pseudo-Voigt function (<span class="math inline">\(pV\)</span>) is a linear combination of a Gaussian (<span class="math inline">\(G\)</span>) and a Lorentzian (<span class="math inline">\(L\)</span>) function, and is defined as:</p>
 <p><span class="math display">\[
 pV(x;\eta) = ηG(x;\sigma) + (1-η)L(x;\gamma)
@@ -366,8 +367,8 @@ L(x; \gamma) = \frac{\gamma}{\pi (x^2 + \gamma^2)}
 </figure>
 </div>
 </section>
-<section id="extended-pseudo-voigt-function" class="level3">
-<h3 class="anchored" data-anchor-id="extended-pseudo-voigt-function">Extended pseudo-Voigt function</h3>
+<section id="extended-pseudo-voigt-function" class="level2">
+<h2 class="anchored" data-anchor-id="extended-pseudo-voigt-function">Extended pseudo-Voigt function</h2>
 <p>In the early 2000s, Ida <em>et al</em>. [2] refined the pseudo-Voigt function by introducing an extended formula designed to more accurately approximate the Voigt profile. This formula is given by:</p>
 <p><span class="math display">\[
 epV(x;\eta_L, \eta_I, \eta_P) = (1 - \eta_L - \eta_I - \eta_P)G(x;\sigma) + \eta_L L(x; \gamma) + \eta_I F_I(x;\gamma_I) + \eta_P F_P(x;\gamma_P)
@@ -386,7 +387,6 @@ F_P(x;\gamma_P) = \frac{1}{2\gamma_P}\text{sech}^2\left(\frac{x}{\gamma_P}\right
 <p><img src="epv_animation.gif" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
 </figure>
 </div>
-</section>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>

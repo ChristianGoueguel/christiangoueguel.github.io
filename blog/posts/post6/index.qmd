@@ -25,7 +25,7 @@ When Doppler broadening dominates, the shape of a spectral line is best modeled 
 
 The pseudo-Voigt function was first derived by Thompson, Cox, and Hastings in 1987 \[1\], in their study describing the application of the Rietveld refinement technique to synchrotron X-ray data collected from a capillary sample of Al₂O₃ using Debye–Scherrer geometry at the Cornell High Energy Synchrotron Source (CHESS). Their analysis showed that individual peak shapes are accurately modeled by a pseudo-Voigt function, in which the Gaussian and Lorentzian half-widths vary, respectively, with the Bragg angle due to instrumental resolution and particle-size broadening.
 
-### Voigt profile
+## Voigt profile
 
 Fundamentally, the pseudo-Voigt function is an approximation of the more precise Voigt profile (named after German physicist Woldemar Voigt). The Voigt profile ($V$) represents the exact convolution of Gaussian and Lorentzian profiles, providing a more accurate description of spectral line shapes, particularly when both Doppler and Lorentzian broadening are significant.
 
@@ -80,7 +80,7 @@ tibble::tibble(x = x, Real = real_part, Imaginary = imag_part) |>
 
 However, the Voigt profile is computationally intensive, requiring efficient numerical methods to accurately evaluate the convolution integral. This complexity has led to the development of approximations, such as the pseudo-Voigt function, which strike a balance between computational efficiency and maintaining acceptable levels of accuracy in the spectral line shape.
 
-### Pseudo-Voigt function
+## Pseudo-Voigt function
 
 The pseudo-Voigt function ($pV$) is a linear combination of a Gaussian ($G$) and a Lorentzian ($L$) function, and is defined as:
 
@@ -160,7 +160,7 @@ animate(
 
 ![](pv_animation.gif){fig-align="center" width="700"}
 
-### Extended pseudo-Voigt function
+## Extended pseudo-Voigt function
 
 In the early 2000s, Ida *et al*. \[2\] refined the pseudo-Voigt function by introducing an extended formula designed to more accurately approximate the Voigt profile. This formula is given by:
 
