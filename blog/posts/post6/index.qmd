@@ -43,6 +43,41 @@ $$
 
 where $\Re[w(z)]$ denotes the real part of the Faddeeva function.
 
+```{r echo=FALSE, fig.height=4, fig.width=7, message=FALSE, warning=FALSE}
+voigt <- function(x, sigma, gamma) {
+  z <- (x + 1i * gamma) / (sigma * sqrt(2))
+  w <- NORMT3::wofz(z)
+  return(w)
+}
+
+sigma <- 1
+gamma <- 0.5
+x <- seq(-10, 10, length.out = 500)
+
+voigt_values <- voigt(x, sigma, gamma)
+real_part <- Re(voigt_values)
+imag_part <- Im(voigt_values)
+
+tibble::tibble(x = x, Real = real_part, Imaginary = imag_part) |>
+  tidyr::pivot_longer(
+    cols = c("Real", "Imaginary"), 
+    names_to = "component", 
+    values_to = "y"
+    ) |>
+  ggplot2::ggplot() +
+  ggplot2::aes(x = x, y = y, color = component) +
+  ggplot2::geom_line(size = 1) +
+  ggplot2::facet_wrap(~component, ncol = 2, scales = "free_y") +
+  ggplot2::labs(caption = "Real and imaginary parts of the Voigt function.") +
+  ggplot2::theme_minimal(base_size = 15) +
+  ggplot2::scale_color_manual(values = c("blue", "red")) +
+  ggplot2::theme(
+    legend.position = "none",
+    strip.text.x = ggplot2::element_text(size = 10, face = "bold"),
+    panel.background = ggplot2::element_rect(colour = "darkgrey", linewidth = 1)
+  )
+```
+
 However, the Voigt profile is computationally intensive, requiring efficient numerical methods to accurately evaluate the convolution integral. This complexity has led to the development of approximations, such as the pseudo-Voigt function, which strike a balance between computational efficiency and maintaining acceptable levels of accuracy in the spectral line shape.
 
 ### Pseudo-Voigt function
@@ -62,28 +97,6 @@ L(x; \gamma) = \frac{\gamma}{\pi (x^2 + \gamma^2)}
 $$
 
 where, $\eta$ is a mixing parameter that determines the relative contribution of the Lorentzian ($\eta = 0$) and Gaussian ($\eta = 1$) components. Here, the parameters $\sigma$ and $\gamma$ represent, respectively, the standard deviation of the Gaussian component, related to the full width at half maximum (FWHM) of the Gaussian by $w_G = 2\sqrt{2\ln 2} \, \sigma$, and the half-width at half maximum (HWHM) of the Lorentzian component, related to the Lorentzian FWHM by $w_L = 2\gamma$.
-
-### Extended pseudo-Voigt function
-
-In the early 2000s, Ida *et al*. \[2\] refined the pseudo-Voigt function by introducing an extended formula designed to more accurately approximate the Voigt profile. This formula is given by:
-
-$$
-epV(x;\eta_L, \eta_I, \eta_P) = (1 - \eta_L - \eta_I - \eta_P)G(x;\sigma) + \eta_L L(x; \gamma) + \eta_I F_I(x;\gamma_I) + \eta_P F_P(x;\gamma_P)
-$$
-
-where $F_I$ and $F_P$ are intermediate functions that represent the transition between the Lorentzian and Gaussian profiles, respectively. $F_I$ is an irrational function involving a square root, while $F_P$ is the squared hyperbolic secant function. These functions are defined as follows:
-
-$$
-F_I(x;\gamma_I) = \frac{1}{2\gamma_I}\left( 1 + \left(\frac{x}{\gamma_I}\right)^2 \right)^{-3/2} 
-$$
-
-$$
-F_P(x;\gamma_P) = \frac{1}{2\gamma_P}\text{sech}^2\left(\frac{x}{\gamma_P}\right)
-$$
-
-The FWHMs are given by $w_I = 2 \gamma_I \sqrt{(2^{2/3} - 1)}$, and $w_P = 2 \gamma_P \ln{(\sqrt{2} + 1)}$. A Gaussian profile is obtained when the mixing parameters are set to $\eta_L = \eta_I = \eta_P = 0$, while the Lorentzian contribution is governed by the parameter $\eta_L$. Specifically, a pure Lorentzian profile arises when $\eta_L = 1$. These parameters are constrained to the range from 0 to 1 and must satisfy the condition $\eta_L + \eta_I + \eta_P = 1$. This constraint defines a 2D simplex within a plane in 3D space, representing all possible combinations of the mixing parameters.
-
-## Visualizing the pseudo-Voigt functions
 
 The following animation illustrates how the pseudo-Voigt function varies with the mixing parameter $\eta$. As $\eta$ increases from 0 to 1, the contribution of the Gaussian component becomes more significant.
 
@@ -143,12 +156,31 @@ animate(
   height = 400, 
   renderer = gifski_renderer()
   )
-anim_save("pv_animation.gif")
 ```
 
 ![](pv_animation.gif){fig-align="center" width="700"}
 
-Next, we visualize the normalized extended pseudo-Voigt profiles, illustrating the transition from Gaussian to Lorentzian shapes as the mixing parameters $\eta_L, \eta_I$, and $\eta_P$, are varied simultaneously.
+### Extended pseudo-Voigt function
+
+In the early 2000s, Ida *et al*. \[2\] refined the pseudo-Voigt function by introducing an extended formula designed to more accurately approximate the Voigt profile. This formula is given by:
+
+$$
+epV(x;\eta_L, \eta_I, \eta_P) = (1 - \eta_L - \eta_I - \eta_P)G(x;\sigma) + \eta_L L(x; \gamma) + \eta_I F_I(x;\gamma_I) + \eta_P F_P(x;\gamma_P)
+$$
+
+where $F_I$ and $F_P$ are intermediate functions that represent the transition between the Lorentzian and Gaussian profiles, respectively. $F_I$ is an irrational function involving a square root, while $F_P$ is the squared hyperbolic secant function. These functions are defined as follows:
+
+$$
+F_I(x;\gamma_I) = \frac{1}{2\gamma_I}\left( 1 + \left(\frac{x}{\gamma_I}\right)^2 \right)^{-3/2} 
+$$
+
+$$
+F_P(x;\gamma_P) = \frac{1}{2\gamma_P}\text{sech}^2\left(\frac{x}{\gamma_P}\right)
+$$
+
+The FWHMs are given by $w_I = 2 \gamma_I \sqrt{(2^{2/3} - 1)}$, and $w_P = 2 \gamma_P \ln{(\sqrt{2} + 1)}$. A Gaussian profile is obtained when the mixing parameters are set to $\eta_L = \eta_I = \eta_P = 0$, while the Lorentzian contribution is governed by the parameter $\eta_L$. Specifically, a pure Lorentzian profile arises when $\eta_L = 1$. These parameters are constrained to the range from 0 to 1 and must satisfy the condition $\eta_L + \eta_I + \eta_P = 1$. This constraint defines a 2D simplex within a plane in 3D space, representing all possible combinations of the mixing parameters.
+
+The animation below is a visual representation of the normalized extended pseudo-Voigt profiles, illustrating the transition from Gaussian to Lorentzian shapes as the mixing parameters $\eta_L, \eta_I$, and $\eta_P$, are varied simultaneously.
 
 ```{r warning=FALSE, eval=FALSE, echo=FALSE}
 #| code-fold: true

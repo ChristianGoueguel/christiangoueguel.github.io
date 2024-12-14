@@ -277,6 +277,15 @@ w(z) = e^{-z^2} \left( 1 + \frac{2i}{\sqrt{\pi}} \int_0^z e^{t^2} \, dt \right)
 V(x; \sigma, \gamma) = \frac{1}{\sigma\sqrt{2\pi}}\Re\left[w\left( \frac{x + i\gamma}{\sigma\sqrt{2}} \right)\right]
 \]</span></p>
 <p>where <span class="math inline">\(\Re[w(z)]\)</span> denotes the real part of the Faddeeva function.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>However, the Voigt profile is computationally intensive, requiring efficient numerical methods to accurately evaluate the convolution integral. This complexity has led to the development of approximations, such as the pseudo-Voigt function, which strike a balance between computational efficiency and maintaining acceptable levels of accuracy in the spectral line shape.</p>
 </section>
 <section id="pseudo-voigt-function" class="level3">
@@ -292,25 +301,6 @@ G(x;\sigma) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{x^2}{2\sigma^2}}
 L(x; \gamma) = \frac{\gamma}{\pi (x^2 + \gamma^2)}
 \]</span></p>
 <p>where, <span class="math inline">\(\eta\)</span> is a mixing parameter that determines the relative contribution of the Lorentzian (<span class="math inline">\(\eta = 0\)</span>) and Gaussian (<span class="math inline">\(\eta = 1\)</span>) components. Here, the parameters <span class="math inline">\(\sigma\)</span> and <span class="math inline">\(\gamma\)</span> represent, respectively, the standard deviation of the Gaussian component, related to the full width at half maximum (FWHM) of the Gaussian by <span class="math inline">\(w_G = 2\sqrt{2\ln 2} \, \sigma\)</span>, and the half-width at half maximum (HWHM) of the Lorentzian component, related to the Lorentzian FWHM by <span class="math inline">\(w_L = 2\gamma\)</span>.</p>
-</section>
-<section id="extended-pseudo-voigt-function" class="level3">
-<h3 class="anchored" data-anchor-id="extended-pseudo-voigt-function">Extended pseudo-Voigt function</h3>
-<p>In the early 2000s, Ida <em>et al</em>. [2] refined the pseudo-Voigt function by introducing an extended formula designed to more accurately approximate the Voigt profile. This formula is given by:</p>
-<p><span class="math display">\[
-epV(x;\eta_L, \eta_I, \eta_P) = (1 - \eta_L - \eta_I - \eta_P)G(x;\sigma) + \eta_L L(x; \gamma) + \eta_I F_I(x;\gamma_I) + \eta_P F_P(x;\gamma_P)
-\]</span></p>
-<p>where <span class="math inline">\(F_I\)</span> and <span class="math inline">\(F_P\)</span> are intermediate functions that represent the transition between the Lorentzian and Gaussian profiles, respectively. <span class="math inline">\(F_I\)</span> is an irrational function involving a square root, while <span class="math inline">\(F_P\)</span> is the squared hyperbolic secant function. These functions are defined as follows:</p>
-<p><span class="math display">\[
-F_I(x;\gamma_I) = \frac{1}{2\gamma_I}\left( 1 + \left(\frac{x}{\gamma_I}\right)^2 \right)^{-3/2}
-\]</span></p>
-<p><span class="math display">\[
-F_P(x;\gamma_P) = \frac{1}{2\gamma_P}\text{sech}^2\left(\frac{x}{\gamma_P}\right)
-\]</span></p>
-<p>The FWHMs are given by <span class="math inline">\(w_I = 2 \gamma_I \sqrt{(2^{2/3} - 1)}\)</span>, and <span class="math inline">\(w_P = 2 \gamma_P \ln{(\sqrt{2} + 1)}\)</span>. A Gaussian profile is obtained when the mixing parameters are set to <span class="math inline">\(\eta_L = \eta_I = \eta_P = 0\)</span>, while the Lorentzian contribution is governed by the parameter <span class="math inline">\(\eta_L\)</span>. Specifically, a pure Lorentzian profile arises when <span class="math inline">\(\eta_L = 1\)</span>. These parameters are constrained to the range from 0 to 1 and must satisfy the condition <span class="math inline">\(\eta_L + \eta_I + \eta_P = 1\)</span>. This constraint defines a 2D simplex within a plane in 3D space, representing all possible combinations of the mixing parameters.</p>
-</section>
-</section>
-<section id="visualizing-the-pseudo-voigt-functions" class="level2">
-<h2 class="anchored" data-anchor-id="visualizing-the-pseudo-voigt-functions">Visualizing the pseudo-Voigt functions</h2>
 <p>The following animation illustrates how the pseudo-Voigt function varies with the mixing parameter <span class="math inline">\(\eta\)</span>. As <span class="math inline">\(\eta\)</span> increases from 0 to 1, the contribution of the Gaussian component becomes more significant.</p>
 <div class="cell">
 <details class="code-fold">
@@ -367,8 +357,7 @@ F_P(x;\gamma_P) = \frac{1}{2\gamma_P}\text{sech}^2\left(\frac{x}{\gamma_P}\right
 <span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">600</span>, </span>
 <span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="dv">400</span>, </span>
 <span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>  <span class="at">renderer =</span> <span class="fu">gifski_renderer</span>()</span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="fu">anim_save</span>(<span class="st">"pv_animation.gif"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="quarto-figure quarto-figure-center">
@@ -376,12 +365,28 @@ F_P(x;\gamma_P) = \frac{1}{2\gamma_P}\text{sech}^2\left(\frac{x}{\gamma_P}\right
 <p><img src="pv_animation.gif" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
 </figure>
 </div>
-<p>Next, we visualize the normalized extended pseudo-Voigt profiles, illustrating the transition from Gaussian to Lorentzian shapes as the mixing parameters <span class="math inline">\(\eta_L, \eta_I\)</span>, and <span class="math inline">\(\eta_P\)</span>, are varied simultaneously.</p>
+</section>
+<section id="extended-pseudo-voigt-function" class="level3">
+<h3 class="anchored" data-anchor-id="extended-pseudo-voigt-function">Extended pseudo-Voigt function</h3>
+<p>In the early 2000s, Ida <em>et al</em>. [2] refined the pseudo-Voigt function by introducing an extended formula designed to more accurately approximate the Voigt profile. This formula is given by:</p>
+<p><span class="math display">\[
+epV(x;\eta_L, \eta_I, \eta_P) = (1 - \eta_L - \eta_I - \eta_P)G(x;\sigma) + \eta_L L(x; \gamma) + \eta_I F_I(x;\gamma_I) + \eta_P F_P(x;\gamma_P)
+\]</span></p>
+<p>where <span class="math inline">\(F_I\)</span> and <span class="math inline">\(F_P\)</span> are intermediate functions that represent the transition between the Lorentzian and Gaussian profiles, respectively. <span class="math inline">\(F_I\)</span> is an irrational function involving a square root, while <span class="math inline">\(F_P\)</span> is the squared hyperbolic secant function. These functions are defined as follows:</p>
+<p><span class="math display">\[
+F_I(x;\gamma_I) = \frac{1}{2\gamma_I}\left( 1 + \left(\frac{x}{\gamma_I}\right)^2 \right)^{-3/2}
+\]</span></p>
+<p><span class="math display">\[
+F_P(x;\gamma_P) = \frac{1}{2\gamma_P}\text{sech}^2\left(\frac{x}{\gamma_P}\right)
+\]</span></p>
+<p>The FWHMs are given by <span class="math inline">\(w_I = 2 \gamma_I \sqrt{(2^{2/3} - 1)}\)</span>, and <span class="math inline">\(w_P = 2 \gamma_P \ln{(\sqrt{2} + 1)}\)</span>. A Gaussian profile is obtained when the mixing parameters are set to <span class="math inline">\(\eta_L = \eta_I = \eta_P = 0\)</span>, while the Lorentzian contribution is governed by the parameter <span class="math inline">\(\eta_L\)</span>. Specifically, a pure Lorentzian profile arises when <span class="math inline">\(\eta_L = 1\)</span>. These parameters are constrained to the range from 0 to 1 and must satisfy the condition <span class="math inline">\(\eta_L + \eta_I + \eta_P = 1\)</span>. This constraint defines a 2D simplex within a plane in 3D space, representing all possible combinations of the mixing parameters.</p>
+<p>The animation below is a visual representation of the normalized extended pseudo-Voigt profiles, illustrating the transition from Gaussian to Lorentzian shapes as the mixing parameters <span class="math inline">\(\eta_L, \eta_I\)</span>, and <span class="math inline">\(\eta_P\)</span>, are varied simultaneously.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="epv_animation.gif" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
 </figure>
 </div>
+</section>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
