@@ -302,7 +302,16 @@ G(x;\sigma) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{x^2}{2\sigma^2}}
 L(x; \gamma) = \frac{\gamma}{\pi (x^2 + \gamma^2)}
 \]</span></p>
 <p>where, <span class="math inline">\(\eta\)</span> is a mixing parameter that determines the relative contribution of the Lorentzian (<span class="math inline">\(\eta = 0\)</span>) and Gaussian (<span class="math inline">\(\eta = 1\)</span>) components. Here, the parameters <span class="math inline">\(\sigma\)</span> and <span class="math inline">\(\gamma\)</span> represent, respectively, the standard deviation of the Gaussian component, related to the full width at half maximum (FWHM) of the Gaussian by <span class="math inline">\(w_G = 2\sqrt{2\ln 2} \, \sigma\)</span>, and the half-width at half maximum (HWHM) of the Lorentzian component, related to the Lorentzian FWHM by <span class="math inline">\(w_L = 2\gamma\)</span>.</p>
-<p>The following animation illustrates how the pseudo-Voigt function varies with the mixing parameter <span class="math inline">\(\eta\)</span>. As <span class="math inline">\(\eta\)</span> increases from 0 to 1, the contribution of the Gaussian component becomes more significant.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The following animation illustrates how the pseudo-Voigt function varies with the mixing parameter <span class="math inline">\(\eta\)</span>. As <span class="math inline">\(\eta\)</span> increases from 0 to 1, the contribution of the Gaussian component becomes more significant. Each case has a FWHM of <span class="math inline">\(w_G = w_L = 1\)</span>.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
@@ -381,6 +390,15 @@ F_I(x;\gamma_I) = \frac{1}{2\gamma_I}\left( 1 + \left(\frac{x}{\gamma_I}\right)^
 F_P(x;\gamma_P) = \frac{1}{2\gamma_P}\text{sech}^2\left(\frac{x}{\gamma_P}\right)
 \]</span></p>
 <p>The FWHMs are given by <span class="math inline">\(w_I = 2 \gamma_I \sqrt{(2^{2/3} - 1)}\)</span>, and <span class="math inline">\(w_P = 2 \gamma_P \ln{(\sqrt{2} + 1)}\)</span>. A Gaussian profile is obtained when the mixing parameters are set to <span class="math inline">\(\eta_L = \eta_I = \eta_P = 0\)</span>, while the Lorentzian contribution is governed by the parameter <span class="math inline">\(\eta_L\)</span>. Specifically, a pure Lorentzian profile arises when <span class="math inline">\(\eta_L = 1\)</span>. These parameters are constrained to the range from 0 to 1 and must satisfy the condition <span class="math inline">\(\eta_L + \eta_I + \eta_P = 1\)</span>. This constraint defines a 2D simplex within a plane in 3D space, representing all possible combinations of the mixing parameters.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>The animation below is a visual representation of the normalized extended pseudo-Voigt profiles, illustrating the transition from Gaussian to Lorentzian shapes as the mixing parameters <span class="math inline">\(\eta_L, \eta_I\)</span>, and <span class="math inline">\(\eta_P\)</span>, are varied simultaneously.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">

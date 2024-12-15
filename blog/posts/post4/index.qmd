@@ -1,5 +1,5 @@
 ---
-title: "A Comparative Exploration of Orthogonal Signal Correction Methods"
+title: "Exploring Three Orthogonal Signal Correction (OSC) Algorithms"
 description: "Orthogonal signal correction (OSC) is a powerful preprocessing technique frequently used to remove variation in spectral data that is orthogonal to the property of interest. Over the years, several implementations of OSC have emerged, with the most notable being those by Wold et al., Sjöblom et al., and Fearn. This post compares these three methods, exploring their algorithmic approaches and practical implications."
 author: "Christian L. Goueguel"
 date: "5/25/2023"

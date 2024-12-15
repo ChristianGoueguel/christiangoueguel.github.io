@@ -1,0 +1,120 @@
+---
+title: "Beyond Traditional Boxplots: The Adjusted and Generalized Boxplots"
+description: "Boxplots, also known as box-and-whisker plots, have been a cornerstone of data visualization since their introduction by John Tukey in the 1970s. Boxplots are designed to smmuarise the distribution of a dataset, highlighting the central tendency, spread, and potential outliers. Despite their enduring utility, standard boxplots assume a symmetric distribution and may misrepresent datasets with skewness or heavy tails. Alternative approaches have been proposed to address these limitations."
+author: "Christian L. Goueguel"
+date: "11/20/2023"
+image: "cover.png"
+categories:
+  - Preprocessing
+  - Chemometrics
+  - Machine Learning
+  - Outliers
+  - Data Visualization
+---
+
+::: justified
+![Photo by [Dana Katharina](https://unsplash.com/photos/a-view-of-a-mountain-range-from-a-grassy-field-90J_cdOKTeo?utm_content=creditShareLink&utm_medium=referral&utm_source=unsplash).](cover.png){fig-align="center" width="1500"}
+
+## Tukey's Boxplot
+
+Proposed by Tukey in 1977 \[1\], a boxplot is constructed using five key summary statistics: the minimum, first quartile (Q1), median, third quartile (Q3), and maximum. These elements are complemented by whiskers, which typically extend to 1.5 times the interquartile range (IQR = Q3 - Q1) beyond Q1 and Q3, respectively. Data points outside this range are flagged as potential outliers. Figure 1 shows a boxplot with two outliers. The ends of the whiskers are called *adjacent values.* They are the smallest and largest values not declared outliers. Because the interquartile range has a finite sample breakdown point of .25, it takes more than 25% of the data to be outliers before the problem of masking occurs.
+
+While effective for symmetric distributions, the standard boxplot may inadequately capture the nuances of skewed or heavy-tailed data.
+
+```{r echo=FALSE}
+library(tidyverse)
+set.seed(42)
+
+data_clean <- rnorm(100, mean = 50, sd = 10)
+n_outliers <- floor(length(data_clean) * 0.25)
+data_contaminated <- data_clean
+data_contaminated[1:n_outliers] <- runif(n_outliers, min = 500, max = 1000)
+
+data <- tibble(
+  Value = c(data_clean, data_contaminated),
+  Dataset = rep(c("Clean Data", "Contaminated Data\n(25% Outliers)"), each = length(data_clean))
+)
+
+summary_stats <- data %>%
+  group_by(Dataset) %>%
+  summarise(
+    Q1 = quantile(Value, 0.25),
+    Q3 = quantile(Value, 0.75),
+    IQR = Q3 - Q1
+  )
+
+ggplot(data, aes(x = Value, y = Dataset, fill = Dataset)) +
+  geom_boxplot(outlier.shape = 21, outlier.size = 2, outlier.alpha = 0.85, staplewidth = 0.5) +
+  geom_vline(data = summary_stats, aes(xintercept = Q1, color = Dataset), linetype = "dashed") +
+  geom_vline(data = summary_stats, aes(xintercept = Q3, color = Dataset), linetype = "dashed") +
+  scale_fill_manual(values = c("skyblue", "lightcoral")) +
+  scale_color_manual(values = c("orange", "green")) +
+  labs(x = "", y = "") +
+  theme_bw() +
+  theme(legend.position = "none") +
+  facet_wrap(~Dataset, nrow = 2, ncol = 1, scales = "free") +
+  theme(
+  strip.background = element_blank(),
+  strip.text.x = element_blank(),
+  panel.grid = element_blank()
+)
+
+
+
+# Define the influence function for the IQR
+iqr_influence <- function(x, data) {
+  # Calculate the original Q1, Q3, and IQR
+  q1 <- quantile(data, 0.25)
+  q3 <- quantile(data, 0.75)
+  iqr <- q3 - q1
+  
+  # Add the point x to the dataset
+  data_with_x <- c(data, x)
+  
+  # Recalculate Q1, Q3, and IQR after adding x
+  q1_new <- quantile(data_with_x, 0.25)
+  q3_new <- quantile(data_with_x, 0.75)
+  iqr_new <- q3_new - q1_new
+  
+  # Return the change in IQR
+  return(iqr_new - iqr)
+}
+
+# Generate a clean dataset from a normal distribution
+set.seed(42)
+data_clean <- rnorm(100, mean = 50, sd = 10)
+
+# Generate a sequence of x values (potential outliers)
+x_values <- seq(10, 120, length.out = 500)
+
+# Compute the influence of each x value
+influence_values <- sapply(x_values, function(x) iqr_influence(x, data_clean))
+
+# Create a data frame for plotting
+influence_data <- tibble(x = x_values, influence = influence_values)
+
+# Plot the influence function
+ggplot(influence_data, aes(x = x, y = influence)) +
+  geom_line(color = "blue", size = 1) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray") +
+  labs(
+    title = "Influence Function of the Interquartile Range (IQR)",
+    x = "Value of Added Point (x)",
+    y = "Change in IQR"
+  ) +
+  theme_minimal()
+
+
+
+```
+
+## The Adjusted Boxplot
+
+It should be noted that the boxplot rule for detecting outliers has been criticized on the grounds that it might declare too many points outliers when there is skewness. More precisely, if a distribution is skewed to the right, among the larger values that are observed, too many might be declared outliers. Hubert and Vandervieren (2008) review the literature and suggest a modification of the boxplot rule that is based in part on a robust measure of skewness, called the *medcouple*, which was introduced by Brys et al. (2004) and is given by:
+
+To address the limitations of the standard boxplot in handling skewed data, Hubert and Vandervieren (2008) introduced the skew-adjusted boxplot. This method modifies the whisker length based on the medcouple, a robust skewness statistic. Specifically, the upper whisker extends further for right-skewed data, and the lower whisker extends further for left-skewed data. This adjustment ensures a more accurate representation of the data's spread while retaining the robustness of the standard boxplot.
+
+## The Generalized Boxplot
+
+There is, however, a feature of this adjusted boxplot rule that should be mentioned. Imagine a distribution that is skewed to the right. Among the larger values, the adjusted boxplot rule might declare fewer points outliers, as intended, but among the lower values, it might declare points outliers that are not flagged as outliers by the boxplot rule. Bruffaerts et al. (2014) raise other concerns about this outlier detection method and suggest a more involved approach. The method suggested by Walker et al. (2018) suffers from similar problems.
+:::

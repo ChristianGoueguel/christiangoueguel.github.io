@@ -6,8 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Christian L. Goueguel">
+<meta name="dcterms.date" content="2023-11-20">
+<meta name="description" content="Boxplots, also known as box-and-whisker plots, have been a cornerstone of data visualization since their introduction by John Tukey in the 1970s. Boxplots are designed to smmuarise the distribution of a dataset, highlighting the central tendency, spread, and potential outliers. Despite their enduring utility, standard boxplots assume a symmetric distribution and may misrepresent datasets with skewness or heavy tails. Alternative approaches have been proposed to address these limitations.">
 
-<title>blog – Christian L. Goueguel</title>
+<title>Beyond Traditional Boxplots: The Adjusted and Generalized Boxplots – Christian L. Goueguel</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,24 +26,22 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<script src="../site_libs/quarto-listing/list.min.js"></script>
-<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-15f1a39ebb5dcc0ab50acfe4fcc0315b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<script src="../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-15f1a39ebb5dcc0ab50acfe4fcc0315b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -68,80 +69,23 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
 
-    const options = {
-      valueNames: ['listing-image','listing-date','listing-title','listing-subtitle','listing-description','listing-author','listing-reading-time',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] }],
-      
-      searchColumns: ["listing-title","listing-date"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="../styles.scss">
-<meta property="og:title" content="– Christian L. Goueguel">
-<meta property="og:image" content="../blog/posts/post1/cover.png">
+<link rel="stylesheet" href="../../../styles.scss">
+<meta property="og:title" content="Beyond Traditional Boxplots: The Adjusted and Generalized Boxplots – Christian L. Goueguel">
+<meta property="og:description" content="Boxplots, also known as box-and-whisker plots, have been a cornerstone of data visualization since their introduction by John Tukey in the 1970s. Boxplots are designed to smmuarise the distribution of a dataset, highlighting the central tendency, spread, and potential outliers. Despite their enduring utility, standard boxplots assume a symmetric distribution and may misrepresent datasets with skewness or heavy tails. Alternative approaches have been proposed to address these limitations.">
+<meta property="og:image" content="cover.png">
 <meta property="og:site_name" content="Christian L. Goueguel">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../../index.html">
     <span class="navbar-title">Christian L. Goueguel</span>
     </a>
   </div>
@@ -152,31 +96,31 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../bio.html"> 
+    <a class="nav-link" href="../../../bio.html"> 
 <span class="menu-text">ABOUT</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../research.html"> 
+    <a class="nav-link" href="../../../research.html"> 
 <span class="menu-text">RESEARCH</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../publications.html"> 
+    <a class="nav-link" href="../../../publications.html"> 
 <span class="menu-text">PUBLICATIONS</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../talks.html"> 
+    <a class="nav-link" href="../../../talks.html"> 
 <span class="menu-text">TALKS</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../projects/index.html"> 
+    <a class="nav-link" href="../../../projects/index.html"> 
 <span class="menu-text">PROJECTS</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../photography.html"> 
+    <a class="nav-link" href="../../../photography.html"> 
 <span class="menu-text">PHOTOGRAPHY</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../blog/index.html" aria-current="page"> 
+    <a class="nav-link" href="../../../blog/index.html"> 
 <span class="menu-text">BLOG</span></a>
   </li>  
 </ul>
@@ -196,264 +140,111 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(7)</span></div><div class="category" data-category="Q2hlbW9tZXRyaWNz">Chemometrics <span class="quarto-category-count">(5)</span></div><div class="category" data-category="RGF0YSUyMFZpc3VhbGl6YXRpb24=">Data Visualization <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TGFzZXI=">Laser <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TWFjaGluZSUyMExlYXJuaW5n">Machine Learning <span class="quarto-category-count">(5)</span></div><div class="category" data-category="TWF0aHM=">Maths <span class="quarto-category-count">(1)</span></div><div class="category" data-category="T3V0bGllcnM=">Outliers <span class="quarto-category-count">(2)</span></div><div class="category" data-category="UHJlcHJvY2Vzc2luZw==">Preprocessing <span class="quarto-category-count">(3)</span></div><div class="category" data-category="Ug==">R <span class="quarto-category-count">(2)</span></div><div class="category" data-category="U2NpZW5jZQ==">Science <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U3BlY3Ryb3Njb3B5">Spectroscopy <span class="quarto-category-count">(6)</span></div><div class="category" data-category="VGlkeW1vZGVscw==">Tidymodels <span class="quarto-category-count">(1)</span></div></div></div>
+    
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
 
-
-
-
-
-
-
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="listing-actions-group">
-   <div class="input-group input-group-sm quarto-listing-sort">
-     <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-     <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
-       <option value="" disabled="" selected="" hidden="">Order By</option>
-       <option value="index" data-direction="asc">Default</option>
-         <option value="listing-title" data-direction="asc">
-          Title
-        </option>
-         <option value="listing-date-sort" data-direction="asc">
-          Date - Oldest
-        </option>
-         <option value="listing-date-sort" data-direction="desc">
-          Date - Newest
-        </option>
-     </select>
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Beyond Traditional Boxplots: The Adjusted and Generalized Boxplots</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Preprocessing</div>
+    <div class="quarto-category">Chemometrics</div>
+    <div class="quarto-category">Machine Learning</div>
+    <div class="quarto-category">Outliers</div>
+    <div class="quarto-category">Data Visualization</div>
   </div>
-    <div class="input-group input-group-sm quarto-listing-filter">
-      <span class="input-group-text"><i class="bi bi-search"></i></span>
-      <input type="text" class="search form-control" placeholder="Filter">
+  </div>
+
+<div>
+  <div class="description">
+    Boxplots, also known as box-and-whisker plots, have been a cornerstone of data visualization since their introduction by John Tukey in the 1970s. Boxplots are designed to smmuarise the distribution of a dataset, highlighting the central tendency, spread, and potential outliers. Despite their enduring utility, standard boxplots assume a symmetric distribution and may misrepresent datasets with skewness or heavy tails. Alternative approaches have been proposed to address these limitations.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Christian L. Goueguel </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 20, 2023</p>
     </div>
-</div>
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="Q2hlbW9tZXRyaWNzJTJDTWFjaGluZSUyMExlYXJuaW5nJTJDU3BlY3Ryb3Njb3B5" data-listing-date-sort="1576818000000" data-listing-file-modified-sort="1733674722363" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1051">
-<div class="thumbnail">
-<p><a href="../blog/posts/post1/index.html" class="no-external"></a></p><a href="../blog/posts/post1/index.html" class="no-external">
-<p><img loading="lazy" src="../blog/posts/post1/cover.png" class="thumbnail-image"></p>
-</a><p><a href="../blog/posts/post1/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../blog/posts/post1/index.html" class="no-external">An Overview of Orthogonal Partial Least Squares</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../blog/posts/post1/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="../blog/posts/post1/index.html" class="no-external">Have you ever heard of Orthogonal Partial Least-Squares (OPLS)? This article aims to give you a clear and concise overview of OPLS and its advantages in the development of more efficient predictive models.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../blog/posts/post1/index.html" class="no-external">
-<div class="listing-date">
-Dec 20, 2019
-</div>
-<div class="listing-author">
-Christian L. Goueguel
-</div>
-<div class="listing-reading-time">
-6 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="UHJlcHJvY2Vzc2luZyUyQ0NoZW1vbWV0cmljcyUyQ01hY2hpbmUlMjBMZWFybmluZyUyQ091dGxpZXJzJTJDRGF0YSUyMFZpc3VhbGl6YXRpb24=" data-listing-date-sort="1700456400000" data-listing-file-modified-sort="1734247753451" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="788">
-<div class="thumbnail">
-<p><a href="../blog/posts/post7/index.html" class="no-external"></a></p><a href="../blog/posts/post7/index.html" class="no-external">
-<p><img loading="lazy" src="../blog/posts/post7/cover.png" class="thumbnail-image"></p>
-</a><p><a href="../blog/posts/post7/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../blog/posts/post7/index.html" class="no-external">Beyond Traditional Boxplots: The Adjusted and Generalized Boxplots</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../blog/posts/post7/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="../blog/posts/post7/index.html" class="no-external">Boxplots, also known as box-and-whisker plots, have been a cornerstone of data visualization since their introduction by John Tukey in the 1970s. Boxplots are designed to smmuarise the distribution of a dataset, highlighting the central tendency, spread, and potential outliers. Despite their enduring utility, standard boxplots assume a symmetric distribution and may misrepresent datasets with skewness or heavy tails. Alternative approaches have been proposed to address these limitations.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../blog/posts/post7/index.html" class="no-external">
-<div class="listing-date">
-Nov 20, 2023
-</div>
-<div class="listing-author">
-Christian L. Goueguel
-</div>
-<div class="listing-reading-time">
-4 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-categories="UiUyQ1RpZHltb2RlbHMlMkNDaGVtb21ldHJpY3MlMkNNYWNoaW5lJTIwTGVhcm5pbmclMkNTcGVjdHJvc2NvcHk=" data-listing-date-sort="1650168000000" data-listing-file-modified-sort="1733885750245" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10" data-listing-word-count-sort="1999">
-<div class="thumbnail">
-<p><a href="../blog/posts/post3/index.html" class="no-external"></a></p><a href="../blog/posts/post3/index.html" class="no-external">
-<p><img loading="lazy" src="../blog/posts/post3/cover.png" class="thumbnail-image"></p>
-</a><p><a href="../blog/posts/post3/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../blog/posts/post3/index.html" class="no-external">Chemometric Modeling with Tidymodels: A Tutorial for Spectroscopic Data</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../blog/posts/post3/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="../blog/posts/post3/index.html" class="no-external">In this post, we demonstrate how to build robust chemometric models for spectroscopic data using the Tidymodels framework in R. This workflow is designed to cater to beginners and advanced practitioners alike, offering an end-to-end guide from data preprocessing to model evaluation and interpretation.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../blog/posts/post3/index.html" class="no-external">
-<div class="listing-date">
-Apr 17, 2022
-</div>
-<div class="listing-author">
-Christian L. Goueguel
-</div>
-<div class="listing-reading-time">
-10 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-categories="UiUyQ1ByZXByb2Nlc3NpbmclMkNDaGVtb21ldHJpY3MlMkNNYWNoaW5lJTIwTGVhcm5pbmclMkNTcGVjdHJvc2NvcHk=" data-listing-date-sort="1684987200000" data-listing-file-modified-sort="1734247856749" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="19" data-listing-word-count-sort="3725">
-<div class="thumbnail">
-<p><a href="../blog/posts/post4/index.html" class="no-external"></a></p><a href="../blog/posts/post4/index.html" class="no-external">
-<p><img loading="lazy" src="../blog/posts/post4/cover.png" class="thumbnail-image"></p>
-</a><p><a href="../blog/posts/post4/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../blog/posts/post4/index.html" class="no-external">Exploring Three Orthogonal Signal Correction (OSC) Algorithms</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../blog/posts/post4/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="../blog/posts/post4/index.html" class="no-external">Orthogonal signal correction (OSC) is a powerful preprocessing technique frequently used to remove variation in spectral data that is orthogonal to the property of interest. Over the years, several implementations of OSC have emerged, with the most notable being those by Wold et al., Sjöblom et al., and Fearn. This post compares these three methods, exploring their algorithmic approaches and practical implications.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../blog/posts/post4/index.html" class="no-external">
-<div class="listing-date">
-May 25, 2023
-</div>
-<div class="listing-author">
-Christian L. Goueguel
-</div>
-<div class="listing-reading-time">
-19 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="4" data-categories="Q2hlbW9tZXRyaWNzJTJDTWFjaGluZSUyMExlYXJuaW5nJTJDT3V0bGllcnMlMkNTcGVjdHJvc2NvcHk=" data-listing-date-sort="1578373200000" data-listing-file-modified-sort="1733674722604" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1791">
-<div class="thumbnail">
-<p><a href="../blog/posts/post2/index.html" class="no-external"></a></p><a href="../blog/posts/post2/index.html" class="no-external">
-<p><img loading="lazy" src="../blog/posts/post2/cover.png" class="thumbnail-image"></p>
-</a><p><a href="../blog/posts/post2/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../blog/posts/post2/index.html" class="no-external">Multivariate Outlier Detection in High-Dimensional Spectral Data</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../blog/posts/post2/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="../blog/posts/post2/index.html" class="no-external">High-dimensional data are particularly challenging for outlier detection. Robust PCA methods have been developed to build models that are unaffected by outliers in high dimensions. These outliers are generally characterized by their deviation from the PCA subspace.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../blog/posts/post2/index.html" class="no-external">
-<div class="listing-date">
-Jan 7, 2020
-</div>
-<div class="listing-author">
-Christian L. Goueguel
-</div>
-<div class="listing-reading-time">
-9 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="5" data-categories="U2NpZW5jZSUyQ0xhc2VyJTJDU3BlY3Ryb3Njb3B5" data-listing-date-sort="1662523200000" data-listing-file-modified-sort="1733940832464" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1588">
-<div class="thumbnail">
-<p><a href="../blog/posts/post5/index.html" class="no-external"></a></p><a href="../blog/posts/post5/index.html" class="no-external">
-<p><img loading="lazy" src="../blog/posts/post5/cover.png" class="thumbnail-image"></p>
-</a><p><a href="../blog/posts/post5/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../blog/posts/post5/index.html" class="no-external">Optical Breakdown Threshold in Water</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../blog/posts/post5/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="../blog/posts/post5/index.html" class="no-external">Cascade (or avalanche) ionization and multiphoton ionization are the two primary mechanisms responsible for laser-induced plasma (LIP) formation in water. These absorption processes are influenced by the intensity of the laser pulse and the physical and chemical properties of the water itself. This post focuses on providing a concise overview of these key mechanisms.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../blog/posts/post5/index.html" class="no-external">
-<div class="listing-date">
-Sep 7, 2022
-</div>
-<div class="listing-author">
-Christian L. Goueguel
-</div>
-<div class="listing-reading-time">
-8 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="6" data-categories="TWF0aHMlMkNQcmVwcm9jZXNzaW5nJTJDU3BlY3Ryb3Njb3B5" data-listing-date-sort="1554436800000" data-listing-file-modified-sort="1734247188604" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2645">
-<div class="thumbnail">
-<p><a href="../blog/posts/post6/index.html" class="no-external"></a></p><a href="../blog/posts/post6/index.html" class="no-external">
-<p><img loading="lazy" src="../blog/posts/post6/cover.png" class="thumbnail-image"></p>
-</a><p><a href="../blog/posts/post6/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../blog/posts/post6/index.html" class="no-external">The Pseudo-Voigt Function</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../blog/posts/post6/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="../blog/posts/post6/index.html" class="no-external">In spectroscopy, especially laser spectroscopy, accurate modeling of spectral line shapes is essential for analyzing the physical and chemical properties of matter. A commonly used approximation is the pseudo-Voigt function, which serves as a simplified representation of the Voigt profile. The Voigt profile, defined as the convolution of a Gaussian function and a Lorentzian function, accurately describes the line shapes, but its calculation is often time consuming.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../blog/posts/post6/index.html" class="no-external">
-<div class="listing-date">
-Apr 5, 2019
-</div>
-<div class="listing-author">
-Christian L. Goueguel
-</div>
-<div class="listing-reading-time">
-14 min
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="justified">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="cover.png" class="img-fluid figure-img" width="1500"></p>
+<figcaption>Photo by <a href="https://unsplash.com/photos/a-view-of-a-mountain-range-from-a-grassy-field-90J_cdOKTeo?utm_content=creditShareLink&amp;utm_medium=referral&amp;utm_source=unsplash">Dana Katharina</a>.</figcaption>
+</figure>
+</div>
+<section id="tukeys-boxplot" class="level2">
+<h2 class="anchored" data-anchor-id="tukeys-boxplot">Tukey’s Boxplot</h2>
+<p>Proposed by Tukey in 1977 [1], a boxplot is constructed using five key summary statistics: the minimum, first quartile (Q1), median, third quartile (Q3), and maximum. These elements are complemented by whiskers, which typically extend to 1.5 times the interquartile range (IQR = Q3 - Q1) beyond Q1 and Q3, respectively. Data points outside this range are flagged as potential outliers. Figure 1 shows a boxplot with two outliers. The ends of the whiskers are called <em>adjacent values.</em> They are the smallest and largest values not declared outliers. Because the interquartile range has a finite sample breakdown point of .25, it takes more than 25% of the data to be outliers before the problem of masking occurs.</p>
+<p>While effective for symmetric distributions, the standard boxplot may inadequately capture the nuances of skewed or heavy-tailed data.</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="the-adjusted-boxplot" class="level2">
+<h2 class="anchored" data-anchor-id="the-adjusted-boxplot">The Adjusted Boxplot</h2>
+<p>It should be noted that the boxplot rule for detecting outliers has been criticized on the grounds that it might declare too many points outliers when there is skewness. More precisely, if a distribution is skewed to the right, among the larger values that are observed, too many might be declared outliers. Hubert and Vandervieren (2008) review the literature and suggest a modification of the boxplot rule that is based in part on a robust measure of skewness, called the <em>medcouple</em>, which was introduced by Brys et al.&nbsp;(2004) and is given by:</p>
+<p>To address the limitations of the standard boxplot in handling skewed data, Hubert and Vandervieren (2008) introduced the skew-adjusted boxplot. This method modifies the whisker length based on the medcouple, a robust skewness statistic. Specifically, the upper whisker extends further for right-skewed data, and the lower whisker extends further for left-skewed data. This adjustment ensures a more accurate representation of the data’s spread while retaining the robustness of the standard boxplot.</p>
+</section>
+<section id="the-generalized-boxplot" class="level2">
+<h2 class="anchored" data-anchor-id="the-generalized-boxplot">The Generalized Boxplot</h2>
+<p>There is, however, a feature of this adjusted boxplot rule that should be mentioned. Imagine a distribution that is skewed to the right. Among the larger values, the adjusted boxplot rule might declare fewer points outliers, as intended, but among the lower values, it might declare points outliers that are not flagged as outliers by the boxplot rule. Bruffaerts et al.&nbsp;(2014) raise other concerns about this outlier detection method and suggest a more involved approach. The method suggested by Walker et al.&nbsp;(2018) suffers from similar problems.</p>
+</section>
+</div>
+
+
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
