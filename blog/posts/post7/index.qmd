@@ -1,6 +1,6 @@
 ---
-title: "Beyond Traditional Boxplot: The Adjusted and Generalized Boxplots"
-description: "Boxplots, also known as box-and-whisker plots, have been a cornerstone of data visualization since their introduction by John Tukey in the 1970s. Despite their enduring utility, boxplot assumes a symmetric distribution and might misrepresent datasets with skewness or heavy tails. Alternative approaches have been proposed to address these limitations."
+title: "Beyond Standard Boxplot: The Adjusted and Generalized Boxplots"
+description: "Boxplots, also known as box-and-whisker plots, have been a cornerstone of data visualization since their introduction by John Tukey in the late 1970s. Despite their enduring utility, boxplot assumes a symmetrical mesokurtic distribution and might misrepresent datasets with skewness or heavy tails. Alternative approaches have been proposed to address these limitations."
 author: "Christian L. Goueguel"
 date: "11/20/2023"
 image: "cover.png"
@@ -26,7 +26,7 @@ $$
 \end{aligned}
 $$
 
-The ends of the whiskers are called adjacent values. They are the smallest and largest values not flagged outliers. Moreover, since IQR has a breakdown point of 0.25, it takes more than 25% of the data to be contaminated by outliers for the masking effect to occur. For example, in Fig.1, we show how the quartiles and therefore IQR are significantly influenced by the outliers, highlighting the breakdown point. After replacing 25% of the data with extreme outliers, the IQR increased drastically, from 13 (clean data) to 136 (contaminated data). This demonstrates that with 25% contamination, the IQR becomes unreliable as a measure of spread.
+The ends of the whiskers are called adjacent values. They are the smallest and largest values not flagged outliers. Moreover, since IQR has a breakdown point of 0.25, it takes more than 25% of the data to be contaminated by outliers for the masking effect to occur. For example, in the Figure below, we show how the quartiles and therefore IQR are significantly influenced by the outliers, highlighting the breakdown point. After replacing 25% of the data with extreme outliers, the IQR increased drastically, from 13 (clean data) to 136 (contaminated data). This demonstrates that with 25% contamination, the IQR becomes unreliable as a measure of spread.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='left'}
 library(tidyverse)
@@ -81,7 +81,7 @@ ggplot(data, aes(x = Value, y = Dataset, fill = Dataset)) +
   )
 ```
 
-Meanwhile, as boxplot is a widely used tool for visualizing data distributions, especially when those distributions are symmetric. However, its effectiveness diminishes when dealing with skewed data. In such cases, the boxplot can misrepresent the dataset's nuances—most notably by classifying an excessive number of larger values as outliers when the distribution is skewed to the right. Recognizing this limitation, Hubert and Vandervieren \[2\] introduced a refined version of Tukey's boxplot rule. Their approach incorporates a robust measure of skewness, allowing for a more accurate depiction of asymmetrical distributions while preserving the simplicity and interpretability of the Tukey's boxplot.
+Meanwhile, as boxplot is a widely used tool for visualizing data distributions, especially when those distributions are symmetric. However, its effectiveness diminishes when dealing with skewed data. In such cases, the boxplot can misrepresent the dataset's nuances—most notably by classifying an excessive number of larger values as outliers when the distribution is skewed. Recognizing this limitation, Hubert and Vandervieren \[2\] introduced a refined version of Tukey's boxplot rule. Their approach incorporates a robust measure of skewness, allowing for a more accurate depiction of asymmetrical distributions while preserving the simplicity and interpretability of the Tukey's boxplot.
 
 ## The Adjusted Boxplot
 
@@ -95,14 +95,25 @@ where, $x_i$ and $x_j$ are data points from the sample, $m$ is the median of the
 
 To address the limitation of the Tukey's boxplot in handling skewed data, Hubert and Vandervieren \[2\] introduced the adjusted boxplot for skewed distribution. This method modifies the whisker length based on the MC. Specifically, the upper whisker extends further for right-skewed data, and the lower whisker extends further for left-skewed data. This new approch modifies the traditional boxplot fences to account for skewness in the data using the exponential function of MC as follows:
 
+When $\text{MC} \geq 0$:
+
 $$
 \begin{aligned}
-    \text{Lower Fence} &= Q_1 - k \cdot e^{-\text{MC}} \cdot \text{IQR} \\
-    \text{Upper Fence} &= Q_3 + k \cdot e^{\text{MC}} \cdot \text{IQR}
+    \text{Lower Fence} &= Q_1 - k \cdot e^{-4\text{MC}} \cdot \text{IQR} \\
+    \text{Upper Fence} &= Q_3 + k \cdot e^{3\text{MC}} \cdot \text{IQR}
 \end{aligned}
 $$
 
-where, $k$ is the fence factor. Hubert and Vandervieren \[2\] have optimized the adjusted boxplot for $k = 1.5$. In Fig.2, the adjusted boxplot shows fewer outliers for the skewed data, reflecting its ability to handle skewness better.
+When $\text{MC} \leq 0$:
+
+$$
+\begin{aligned}
+    \text{Lower Fence} &= Q_1 - k \cdot e^{-3\text{MC}} \cdot \text{IQR} \\
+    \text{Upper Fence} &= Q_3 + k \cdot e^{4\text{MC}} \cdot \text{IQR}
+\end{aligned}
+$$
+
+where, $k$ is the fence factor. Hubert and Vandervieren \[2\] have optimized the adjusted boxplot for $k = 1.5$. In the next Figure, we compare Tukey's Boxplot (left) with the adjusted Boxplot (right), applied to a skewed data. The adjusted boxplot shows fewer outliers for the skewed data, reflecting its ability to handle skewness better.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=4, fig.width=4, fig.align='center'}
 library(tidyverse)
@@ -145,7 +156,117 @@ p2 <- skewed_data |>
 p1 | p2
 ```
 
+The adjusted boxplot has garnered attention for its ability to handle skewed data, even earning a mention on platforms like Wikipedia. However, it is not without its critiques.
+
+For example, Bruffaerts et al. \[4\] pointed out that the whiskers in the adjusted boxplot are designed to achieve a fixed outlier detection rate of 0.7%. While this threshold may be suitable for some applications, the process becomes cumbersome if one wishes to adopt a different detection rate. It requires re-running the simulations to determine a new tuning constant or fence factor ($k$). Moreover, for datasets with heavy-tailed distributions, the adjusted boxplot may still misclassify observations, as the whisker adjustment relies solely on skewness and not on tail behavior. Another significant issue lies in its dependence on MC. While MC is effective for large samples, its estimation can be imprecise for small sample sizes.
+
+The Figure below illustrates the behavior of MC estimates for small and large sample sizes using density plots. To achieve this, we generated multiple random samples from a skewed Gamma distribution and examined the variability of the MC estimates across these sample sizes. For small sample sizes, the MC estimates exhibit significant variability, reflecting its reduced robustness in such cases. In contrast, as the sample size increases, the MC estimates stabilize and converge to a consistent value, demonstrating its improved precision and reliability with larger data.
+
+```{r echo=FALSE, fig.align='center',fig.width=6}
+library(robustbase)
+library(ggplot2)
+library(dplyr)
+
+calculate_MC <- function(sample_size, num_simulations = 1000) {
+  mc_values <- numeric(num_simulations)
+  for (i in 1:num_simulations) {
+    data <- rgamma(sample_size, shape = 2, scale = 2)  
+    mc_values[i] <- mc(data)                          
+  }
+  return(mc_values)
+}
+
+small_sample_size <- 30
+large_sample_size <- 1000
+
+set.seed(123)
+mc_small <- calculate_MC(small_sample_size)
+mc_large <- calculate_MC(large_sample_size)
+
+mc_data <- data.frame(
+  MC = c(mc_small, mc_large),
+  Sample_Size = rep(c("Small (n = 30)", "Large (n = 1 000)"), each = length(mc_small))
+)
+
+ggplot(mc_data, aes(x = MC, fill = Sample_Size)) +
+  geom_density(alpha = 0.5) +
+  labs(
+    title = "Medcouple (MC) Estimates for Small and Large Samples",
+    subtitle = "MC estimates are more variable for small samples",
+    x = "MC",
+    y = "Density",
+    fill = "Sample size"
+  ) +
+  scale_fill_manual(values = c("purple", "green")) +
+  theme_minimal()
+```
+
+In response to these shortcomings, Bruffaerts *et al*. \[4\] proposed an alternative method to address skewness and heavy-tailed distributions. Their approach introduces a rank-preserving transformation that allows the data to conform to a Tukey $g$-$h$ distribution.
+
 ## The Generalized Boxplot
 
-There is, however, a feature of this adjusted boxplot rule that should be mentioned. Imagine a distribution that is skewed to the right. Among the larger values, the adjusted boxplot rule might declare fewer points outliers, as intended, but among the lower values, it might declare points outliers that are not flagged as outliers by the boxplot rule. Bruffaerts et al. (2014) raise other concerns about this outlier detection method and suggest a more involved approach. The method suggested by Walker et al. (2018) suffers from similar problems.
+In 1977, Tukey introduced a family of distributions through two nonlinear transformations, giving rise to what is now known as the Tukey $g$-$h$ distributions. These distributions are widely used in robust statistics and flexible modeling due to their ability to accommodate a range of skewness and kurtosis levels. The Tukey $g$-$h$ distribution is defined by applying two transformations, $g$ (skewness) and $h$ (kurtosis), to a standard normal random variable $Z \sim \mathcal{N}(0, 1)$. The resulting transformation is expressed by:
+
+$$
+T_{g,h}(Z) = \frac{e^{gZ}-1}{g} \cdot e^{h\frac{Z^2}{2}} \quad \text{with} \quad g \neq 0, h \in \mathbb{R}
+$$
+
+By adjusting $g$ and $h$, the Tukey $g$-$h$ distribution can model a wide variety of distribution, from symmetric to skewed, and from light-tailed to heavy-tailed distributions.
+
+The constants $g$ and $h$, can be estimated from the empirical quantiles as follows \[5\]:
+
+$$
+\hat{g} = \frac{1}{z_p} \text{ln}\left(-\frac{Q_p(\{x_j\})}{Q_{1-p}(\{x_j\})}\right),
+\quad
+\hat{h} = \frac{2}{z_p^2} \text{ln}\left(-\hat{g}\frac{Q_p(\{x_j\}) \cdot Q_{1-p}(\{x_j\})}{Q_p(\{x_j\}) + Q_{1-p}(\{x_j\})}\right)
+$$where $z_p$ is the quantile of order $p$ of the standard normal distribution. $Q_p$ and $Q_{1-p}$ are the empirical quantiles of order $p$ ($0.5<p<1$) and $1-p$ of the univariate data $X = \{x_j\} = \{x_1, \cdots, x_n\}$.
+
+The generalized boxplot as proposed by Bruffaerts *et al*. \[4\] begins by applying a rank-preserving transformation to the data. This transformation maps the original observations onto the unit interval (0, 1), maintaining the order of the data points while capturing key distributional features like skewness and tail behavior. Then, an inverse normal transformation is applied, similar to rank-based approaches. This transformed distribution can be fine-tuned using the Tukey $g$-$h$ distribution, whose quantiles are used to set the boxplot whiskers.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=4, fig.width=4, fig.align='center'}
+library(tidyverse)
+library(patchwork)
+set.seed(123)
+skewed_data <- data.frame(y = rgamma(500, shape = 2, scale = 2))
+p1 <- skewed_data |> 
+  ggplot() +
+  aes(x = "", y = y, fill = "lightcoral") +
+  geom_boxplot(
+    width = 0.3, 
+    staplewidth = 0.5, 
+    outlier.fill = "lightcoral", 
+    outlier.shape = 21,
+    outlier.size = 3,
+    outlier.alpha = 1/3) +
+  ylim(0, 15) +
+  labs(
+    x = "Tukey's Boxplot", y = "") +
+  theme_bw() +
+  theme(
+    panel.grid = element_blank(),
+    legend.position = "none",
+    plot.margin = margin(r = 0)
+    )
+
+p2 <- skewed_data |> 
+  dplyr::select(y) |> 
+  specProc::adjusted_boxplot(box.width = 0.3, staplewidth = 0.5) +
+  ylim(0, 15) +
+  labs(x = "Adjusted Boxplot", y = " ") +
+  theme_bw() +
+  theme(
+    panel.grid = element_blank(),
+    legend.position = "none",
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+    plot.margin = margin(l = 0, r = 0)
+    )
+
+p1 | p2
+
+```
+
+## References
+
+1.  C. Bruffaerts, V. Verardi, C. Vermandele, (2014). A generalized boxplot for skewed and heavy-tailed distributions. Statistics & Probability Letters, 95, 110–117.
 :::
