@@ -233,11 +233,11 @@ window.Quarto = {
 \end{aligned}
 \]</span></p>
 <p>The ends of the whiskers are called adjacent values. They are the smallest and largest values not flagged outliers. Moreover, since IQR has a breakdown point of 0.25, it takes more than 25% of the data to be contaminated by outliers for the masking effect to occur. For example, in Fig.1, we show how the quartiles and therefore IQR are significantly influenced by the outliers, highlighting the breakdown point. After replacing 25% of the data with extreme outliers, the IQR increased drastically, from 13 (clean data) to 136 (contaminated data). This demonstrates that with 25% contamination, the IQR becomes unreliable as a measure of spread.</p>
-<div class="cell">
+<div class="cell" data-layout-align="left">
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-left">
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid quarto-figure quarto-figure-left figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -258,12 +258,12 @@ window.Quarto = {
     \text{Upper Fence} &amp;= Q_3 + k \cdot e^{\text{MC}} \cdot \text{IQR}
 \end{aligned}
 \]</span></p>
-<p>where, <span class="math inline">\(k\)</span> is the fence factor. Hubert and Vandervieren [2] have optimized the adjusted boxplot for <span class="math inline">\(k = 1.5\)</span>.</p>
-<div class="cell">
+<p>where, <span class="math inline">\(k\)</span> is the fence factor. Hubert and Vandervieren [2] have optimized the adjusted boxplot for <span class="math inline">\(k = 1.5\)</span>. In Fig.2, the adjusted boxplot shows fewer outliers for the skewed data, reflecting its ability to handle skewness better.</p>
+<div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="384"></p>
 </figure>
 </div>
 </div>
