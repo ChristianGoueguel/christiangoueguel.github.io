@@ -17,7 +17,16 @@ categories:
 
 ## Tukey's Boxplot
 
-Proposed by Tukey in 1977 \[1\], a boxplot is constructed using five key summary statistics: the minimum, first quartile (Q1), median, third quartile (Q3), and maximum. These elements are complemented by whiskers, which typically extend to 1.5 times the interquartile range (IQR = Q3 - Q1) beyond Q1 and Q3, respectively. Data points outside this range are flagged as potential outliers. The ends of the whiskers are called adjacent values. They are the smallest and largest values not flagged outliers. Because the interquartile range has a finite sample breakdown point of 0.25, it takes more than 25% of the data to be outliers before the problem of masking occurs. For example, Fig.1 shows how the quartiles and therefore IQR are significantly influenced by the outliers, highlighting the breakdown point. After replacing 25% of the data with extreme outliers, the IQR increased drastically, from 13 (clean data) to 136 (contaminated data). This demonstrates that with 25% contamination, the IQR becomes unreliable as a measure of spread.
+Proposed by Tukey in 1977 \[1\], a boxplot is constructed using five key summary statistics: the minimum, first quartile (Q1), median, third quartile (Q3), and maximum. These elements are complemented by whiskers, which typically extend to 1.5 times the interquartile range (IQR = Q3 - Q1) beyond Q1 and Q3, respectively. Data points outside this range are flagged as potential outliers.
+
+$$
+\begin{aligned}
+    \text{Lower Fence} &= Q_1 - 1.5 \cdot \text{IQR} \\
+    \text{Upper Fence} &= Q_3 + 1.5 \cdot \text{IQR}
+\end{aligned}
+$$
+
+The ends of the whiskers are called adjacent values. They are the smallest and largest values not flagged outliers. Moreover, since IQR has a breakdown point of 0.25, it takes more than 25% of the data to be contaminated by outliers for the masking effect to occur. For example, in Fig.1, we show how the quartiles and therefore IQR are significantly influenced by the outliers, highlighting the breakdown point. After replacing 25% of the data with extreme outliers, the IQR increased drastically, from 13 (clean data) to 136 (contaminated data). This demonstrates that with 25% contamination, the IQR becomes unreliable as a measure of spread.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -74,7 +83,7 @@ ggplot(data, aes(x = Value, y = Dataset, fill = Dataset)) +
   )
 ```
 
-While boxplot is a widely used tool for visualizing data distributions, especially when those distributions are symmetric. However, its effectiveness diminishes when dealing with skewed data. In such cases, the boxplot can misrepresent the dataset's nuances—most notably by classifying an excessive number of larger values as outliers when the distribution is skewed to the right. Recognizing this limitation, Hubert and Vandervieren \[2\] introduced a refined version of Tukey's boxplot rule. Their approach incorporates a robust measure of skewness, allowing for a more accurate depiction of asymmetrical distributions while preserving the simplicity and interpretability of the Tukey's boxplot.
+Meanwhile, as boxplot is a widely used tool for visualizing data distributions, especially when those distributions are symmetric. However, its effectiveness diminishes when dealing with skewed data. In such cases, the boxplot can misrepresent the dataset's nuances—most notably by classifying an excessive number of larger values as outliers when the distribution is skewed to the right. Recognizing this limitation, Hubert and Vandervieren \[2\] introduced a refined version of Tukey's boxplot rule. Their approach incorporates a robust measure of skewness, allowing for a more accurate depiction of asymmetrical distributions while preserving the simplicity and interpretability of the Tukey's boxplot.
 
 ## The Adjusted Boxplot
 
@@ -95,7 +104,7 @@ $$
 \end{aligned}
 $$
 
-where, $k$ is the fence factor. The adjusted boxplot is optimized for $k = 1.5$.
+where, $k$ is the fence factor. Hubert and Vandervieren \[2\] have optimized the adjusted boxplot for $k = 1.5$.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # Load required libraries
