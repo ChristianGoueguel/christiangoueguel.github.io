@@ -81,11 +81,11 @@ ggplot(data, aes(x = Value, y = Dataset, fill = Dataset)) +
   )
 ```
 
-Meanwhile, as boxplot is a widely used tool for visualizing data distributions, especially when those distributions are symmetric. However, its effectiveness diminishes when dealing with skewed data. In such cases, the boxplot can misrepresent the dataset's nuances—most notably by classifying an excessive number of larger values as outliers when the distribution is skewed. Recognizing this limitation, Hubert and Vandervieren \[2\] introduced a refined version of Tukey's boxplot rule. Their approach incorporates a robust measure of skewness, allowing for a more accurate depiction of asymmetrical distributions while preserving the simplicity and interpretability of the Tukey's boxplot.
+Boxplots are a widely used tool for visualizing data distributions, particularly when the data exhibit a symmetrical mesokurtic distribution. However, its effectiveness diminishes when dealing with skewed data. In such cases, the boxplot can misrepresent the dataset's nuances—most notably by classifying an excessive number of larger values as outliers when the distribution is skewed. Recognizing this limitation, Hubert and Vandervieren \[2\] introduced a refined version of Tukey's boxplot rule. Their approach incorporates a robust measure of skewness, allowing for a more accurate depiction of asymmetrical distributions while preserving the simplicity and interpretability of the Tukey's boxplot.
 
 ## The Adjusted Boxplot
 
-In 2004, Brys *et al*. \[3\] introduced the Medcouple (MC), which is a robust statistic used to measure the skewness of a distribution. Unlike traditional measures of skewness that are sensitive to outliers, MC focuses on the median and the IQR, making it less affected by extreme values. It is based on the difference between left and right data spreads relative to the median. MC is bounded between −1 and 1. A value of 0 indicates a perfectly symmetric distribution, while positive values signify a right-tailed (positively skewed) distribution, and negative values correspond to a left-tailed (negatively skewed) distribution. Importantly, this measure is most effective for moderately skewed distributions, particularly when the absolute value of MC is less than or equal to 0.6 ($|\text{MC}| \leq 0.6$). MC is given by:
+In 2004, Brys *et al*. \[3\] introduced the medcouple (MC), which is a robust statistic used to measure the skewness of a distribution. Unlike traditional measures of skewness that are sensitive to outliers, MC focuses on the median and the IQR, making it less affected by extreme values. It is based on the difference between left and right data spreads relative to the median. MC is bounded between −1 and 1. A value of 0 indicates a perfectly symmetric distribution, while positive values signify a right-tailed (positively skewed) distribution, and negative values correspond to a left-tailed (negatively skewed) distribution. Importantly, this measure is most effective for moderately skewed distributions, particularly when the absolute value of MC is less than or equal to 0.6 ($|\text{MC}| \leq 0.6$). MC is given by:
 
 $$
 \text{MC} = \text{med} \left\{ \frac{(x_i - m) - (m - x_j)}{x_i - x_j} \, \middle| \, x_i \geq m \geq x_j \right\}
@@ -113,7 +113,7 @@ $$
 \end{aligned}
 $$
 
-where, $k$ is the fence factor. Hubert and Vandervieren \[2\] have optimized the adjusted boxplot for $k = 1.5$. In the next Figure, we compare Tukey's Boxplot (left) with the adjusted Boxplot (right), applied to a skewed data. The adjusted boxplot shows fewer outliers for the skewed data, reflecting its ability to handle skewness better.
+where, $k$ is the fence factor. Hubert and Vandervieren \[2\] have optimized the adjusted boxplot for $k = 1.5$. In the next Figure, we compare Tukey's boxplot (left) with the adjusted boxplot (right), applied to a skewed data. The adjusted boxplot shows fewer outliers for the skewed data, reflecting its ability to handle skewness better.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=4, fig.width=4, fig.align='center'}
 library(tidyverse)
@@ -159,7 +159,7 @@ p1 | p2
 
 The adjusted boxplot has garnered attention for its ability to handle skewed data, even earning a mention on platforms like Wikipedia. However, it is not without its critiques.
 
-For example, Bruffaerts et al. \[4\] pointed out that the whiskers in the adjusted boxplot are designed to achieve a fixed outlier detection rate of 0.7%. While this threshold may be suitable for some applications, the process becomes cumbersome if one wishes to adopt a different detection rate. It requires re-running the simulations to determine a new tuning constant or fence factor ($k$). Moreover, for datasets with heavy-tailed distributions, the adjusted boxplot may still misclassify observations, as the whisker adjustment relies solely on skewness and not on tail behavior. Another significant issue lies in its dependence on MC. While MC is effective for large samples, its estimation can be imprecise for small sample sizes.
+For example, Bruffaerts *et al*. \[4\] pointed out that the whiskers in the adjusted boxplot are designed to achieve a fixed outlier detection rate of 0.7%. While this threshold may be suitable for some applications, the process becomes cumbersome if one wishes to adopt a different detection rate. It requires re-running the simulations to determine a new tuning constant or fence factor ($k$). Moreover, for datasets with heavy-tailed distributions, the adjusted boxplot may still misclassify observations, as the whisker adjustment relies solely on skewness and not on tail behavior. Another significant issue lies in its dependence on MC. While MC is effective for large samples, its estimation can be imprecise for small sample sizes.
 
 The Figure below illustrates the behavior of MC estimates for small and large sample sizes using density plots. To achieve this, we generated multiple random samples from a skewed Gamma distribution and examined the variability of the MC estimates across these sample sizes. For small sample sizes, the MC estimates exhibit significant variability, reflecting its reduced robustness in such cases. In contrast, as the sample size increases, the MC estimates stabilize and converge to a consistent value, demonstrating its improved precision and reliability with larger data.
 
@@ -206,7 +206,7 @@ In response to these shortcomings, Bruffaerts *et al*. \[4\] proposed an alterna
 
 ## The Generalized Boxplot
 
-In 1977, Tukey introduced a family of distributions through two nonlinear transformations, giving rise to what is now known as the Tukey $g$-$h$ distributions. These distributions are widely used in robust statistics and flexible modeling due to their ability to accommodate a range of skewness and kurtosis levels. The Tukey $g$-$h$ distribution is defined by applying two transformations, $g$ (skewness) and $h$ (kurtosis), to a standard normal random variable $Z \sim \mathcal{N}(0, 1)$. The resulting transformation is expressed by:
+In 1977, Tukey introduced a family of distributions through two nonlinear transformations, giving rise to what is now known as the Tukey $g$-$h$ distributions \[5,6\]. These distributions are widely used in robust statistics and flexible modeling due to their ability to accommodate a range of skewness and kurtosis levels. The Tukey $g$-$h$ distribution is defined by applying two transformations, $g$ (skewness) and $h$ (kurtosis), to a standard normal random variable $Z \sim \mathcal{N}(0, 1)$. The resulting transformation is expressed by:
 
 $$
 T_{g,h}(Z) = \frac{e^{gZ}-1}{g} \cdot e^{h\frac{Z^2}{2}} \quad \text{with} \quad g \neq 0, h \in \mathbb{R}
@@ -214,7 +214,7 @@ $$
 
 By adjusting $g$ and $h$, the Tukey $g$-$h$ distribution can model a wide variety of distribution, from symmetric to skewed, and from light-tailed to heavy-tailed distributions.
 
-The constants $g$ and $h$, can be estimated from the empirical quantiles as follows \[5\]:
+The constants $g$ and $h$, can be estimated from the empirical quantiles as follows:
 
 $$
 \hat{g} = \frac{1}{z_p} \text{ln}\left(-\frac{Q_p(\{x_j\})}{Q_{1-p}(\{x_j\})}\right),
@@ -224,7 +224,7 @@ $$where $z_p$ is the quantile of order $p$ of the standard normal distribution. 
 
 The generalized boxplot as proposed by Bruffaerts *et al*. \[4\] begins by applying a rank-preserving transformation to the data. This transformation maps the original observations onto the unit interval (0, 1), maintaining the order of the data points while capturing key distributional features like skewness and tail behavior. Then, an inverse normal transformation is applied, similar to rank-based approaches. This transformed distribution can be fine-tuned using the Tukey $g$-$h$ distribution, whose quantiles are used to set the boxplot whiskers.
 
-The figures below illustrate a comparison of Tukey's boxplot, the Adjusted boxplot, and the Generalized boxplot across three distinct types of data distributions: (*i*) a normal distribution, (*ii*) a right-skewed distribution, and (*iii*) a heavy-tailed distribution. This side-by-side comparison highlights how each method performs in identifying outliers and adapting to the unique characteristics of these distributions.
+The Figures below illustrate a comparison of Tukey's boxplot, the adjusted boxplot, and the generalized boxplot across three distinct types of data distributions: (*i*) a normal distribution, (*ii*) a right-skewed distribution, and (*iii*) a heavy-tailed distribution. The Figures show how each method performs and adapts to the specific characteristics of these distributions, effectively balancing sensitivity to outliers without over-identifying them.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=10, fig.width=6, fig.align='center'}
 library(tidyverse)
@@ -381,27 +381,39 @@ p9 <- tbl |>
     )
 ```
 
-**Case 1:** Normal distribution
+For a symmetric distribution, all three boxplots produce similar results as expected.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=3, fig.width=6, fig.align='center'}
-p1 | p2 | p3
+patchwork::wrap_plots(p1 + ggtitle("Normal distribution"), p2, p3)
 ```
 
-**Case 2:** Right-skewed distribution
+For a right-skewed distribution, the Tukey's boxplot overestimates the number of outliers, while the adjusted and generalized boxplots provide a better representation of the underlying data distribution. The generalized boxplot, in particular, offers the most flexible approach by accommodating skewness.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=3, fig.width=6, fig.align='center'}
-p4 | p5 | p6
-
+patchwork::wrap_plots(p4 + ggtitle("Right-skewed distribution"), p5, p6)
 ```
 
-**Case 3:** Heavy-tailed distribution
+For a heavy-tailed distribution, the Tukey's boxplot inaccurately identifies an excessive number of outliers due to its assumption of symmetry and limited adaptability to extreme tails. The adjusted boxplot improved upon Tukey's boxplot by accounting for skewness in the data, yet it still struggles to effectively handle the variability and extreme values inherent in heavy-tailed distributions. In contrast, the generalized boxplot proves to be a more robust and versatile method. Its whiskers and overall box structure more accurately reflect the underlying data distribution, demonstrating its ability to adapt to both skewness and tail heaviness more effectively than the other two methods.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=3, fig.width=6, fig.align='center'}
-p7 | p8 | p9
-
+patchwork::wrap_plots(p7 + ggtitle("Heavy-tailed distribution"), p8, p9)
 ```
+
+## Conclusions
+
+By comparing the three boxplot approaches, we show the limitations of Tukey's boxplot when applied to skewed or heavy-tailed data. While Tukey's method assumes symmetry and often flags excessive outliers in such cases, the adjusted boxplot improves this by incorporating a skewness measure (medcouple). The generalized boxplot provides the most robust solution by flexibly adapting to both skewness and tail heaviness through the Tukey $g$-$h$ distribution. Overall, the adjusted and generalized boxplots are better suited for non-symmetric data, with the generalized boxplot offering the most robust approach.
 
 ## References
 
-1.  C. Bruffaerts, V. Verardi, C. Vermandele, (2014). A generalized boxplot for skewed and heavy-tailed distributions. Statistics & Probability Letters, 95, 110–117.
+1.  Tukey, J.W., (1977). Exploratory Data Analysis, Pearson, 1st edition, page 39.
+
+2.  Hubert, M., Vandervieren, E., (2008). An adjusted boxplot for skewed distributions. *Computational Statistics and Data Analysis*, 52, 5186-5201.
+
+3.  Brys, G., Hubert, M., Struyf, A., (2004). A robust measure of skewness. J*ournal of Computational and Graphical Statistics*, 13, 996-1017.
+
+4.  Bruffaerts, C., Verardi, V., Vermandele, C., (2014). A generalized boxplot for skewed and heavy-tailed distributions. *Statistics & Probability Letters*, 95, 110–117.
+
+5.  Tukey, J.W., (1977). Modern techniques in data analysis. NSF‐sponsored regional research conference at Southeastern Massachusetts University, North Dartmouth, MA.
+
+6.  Martinez, J., Iglewicz, B., (1984). Some properties of the Tukey g and h family of distributions. *Communications in Statistics: Theory and Methods*, 13, 353–369.
 :::
