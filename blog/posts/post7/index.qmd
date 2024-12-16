@@ -143,6 +143,7 @@ p1 <- skewed_data |>
 p2 <- skewed_data |> 
   dplyr::select(y) |> 
   specProc::adjusted_boxplot(box.width = 0.3, staplewidth = 0.5) +
+  scale_fill_manual(values = "lightblue") +
   ylim(0, 15) +
   labs(x = "Adjusted Boxplot", y = " ") +
   theme_bw() +
@@ -223,14 +224,22 @@ $$where $z_p$ is the quantile of order $p$ of the standard normal distribution. 
 
 The generalized boxplot as proposed by Bruffaerts *et al*. \[4\] begins by applying a rank-preserving transformation to the data. This transformation maps the original observations onto the unit interval (0, 1), maintaining the order of the data points while capturing key distributional features like skewness and tail behavior. Then, an inverse normal transformation is applied, similar to rank-based approaches. This transformed distribution can be fine-tuned using the Tukey $g$-$h$ distribution, whose quantiles are used to set the boxplot whiskers.
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=4, fig.width=4, fig.align='center'}
+The figures below illustrate a comparison of Tukey's boxplot, the Adjusted boxplot, and the Generalized boxplot across three distinct types of data distributions: (*i*) a normal distribution, (*ii*) a right-skewed distribution, and (*iii*) a heavy-tailed distribution. This side-by-side comparison highlights how each method performs in identifying outliers and adapting to the unique characteristics of these distributions.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=10, fig.width=6, fig.align='center'}
 library(tidyverse)
 library(patchwork)
-set.seed(123)
-skewed_data <- data.frame(y = rgamma(500, shape = 2, scale = 2))
-p1 <- skewed_data |> 
+set.seed(101)
+tbl <- data.frame(
+    normal = stats::rnorm(100),
+    skewed = stats::rgamma(100, shape = 2, scale = 1),
+    heavy_tailed = stats::rcauchy(100, location = 0, scale = 1)
+)
+
+p1 <- tbl |>
+  select(normal) |>
   ggplot() +
-  aes(x = "", y = y, fill = "lightcoral") +
+  aes(x = "", y = normal, fill = "lightcoral") +
   geom_boxplot(
     width = 0.3, 
     staplewidth = 0.5, 
@@ -238,7 +247,6 @@ p1 <- skewed_data |>
     outlier.shape = 21,
     outlier.size = 3,
     outlier.alpha = 1/3) +
-  ylim(0, 15) +
   labs(
     x = "Tukey's Boxplot", y = "") +
   theme_bw() +
@@ -248,10 +256,10 @@ p1 <- skewed_data |>
     plot.margin = margin(r = 0)
     )
 
-p2 <- skewed_data |> 
-  dplyr::select(y) |> 
+p2 <- tbl |>
+  select(normal) |> 
   specProc::adjusted_boxplot(box.width = 0.3, staplewidth = 0.5) +
-  ylim(0, 15) +
+  scale_fill_manual(values = "lightblue") +
   labs(x = "Adjusted Boxplot", y = " ") +
   theme_bw() +
   theme(
@@ -259,10 +267,137 @@ p2 <- skewed_data |>
     legend.position = "none",
     axis.text.x = element_blank(),
     axis.text.y = element_blank(),
-    plot.margin = margin(l = 0, r = 0)
+    plot.margin = margin(l = 0)
     )
 
-p1 | p2
+p3 <- tbl |>
+  select(normal) |>
+  specProc::generalized_boxplot(box.width = 0.3, staplewidth = 0.5) +
+  scale_fill_manual(values = "lightgreen") +
+  labs(x = "Generalized Boxplot", y = " ") +
+  theme_bw() +
+  theme(
+    panel.grid = element_blank(),
+    legend.position = "none",
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+    plot.margin = margin(l = 0)
+    )
+
+p4 <- tbl |>
+  select(skewed) |>
+  ggplot() +
+  aes(x = "", y = skewed, fill = "lightcoral") +
+  geom_boxplot(
+    width = 0.3, 
+    staplewidth = 0.5, 
+    outlier.fill = "lightcoral", 
+    outlier.shape = 21,
+    outlier.size = 3,
+    outlier.alpha = 1/3) +
+  labs(
+    x = "Tukey's Boxplot", y = "") +
+  theme_bw() +
+  theme(
+    panel.grid = element_blank(),
+    legend.position = "none",
+    plot.margin = margin(r = 0)
+    )
+
+p5 <- tbl |>
+  select(skewed) |> 
+  specProc::adjusted_boxplot(box.width = 0.3, staplewidth = 0.5) +
+  scale_fill_manual(values = "lightblue") +
+  labs(x = "Adjusted Boxplot", y = " ") +
+  theme_bw() +
+  theme(
+    panel.grid = element_blank(),
+    legend.position = "none",
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+    plot.margin = margin(l = 0)
+    )
+
+p6 <- tbl |>
+  select(skewed) |>
+  specProc::generalized_boxplot(box.width = 0.3, staplewidth = 0.5) +
+  scale_fill_manual(values = "lightgreen") +
+  labs(x = "Generalized Boxplot", y = " ") +
+  theme_bw() +
+  theme(
+    panel.grid = element_blank(),
+    legend.position = "none",
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+    plot.margin = margin(l = 0)
+    )
+
+p7 <- tbl |>
+  select(heavy_tailed) |>
+  ggplot() +
+  aes(x = "", y = heavy_tailed, fill = "lightcoral") +
+  geom_boxplot(
+    width = 0.3, 
+    staplewidth = 0.5, 
+    outlier.fill = "lightcoral", 
+    outlier.shape = 21,
+    outlier.size = 3,
+    outlier.alpha = 1/3) +
+  labs(
+    x = "Tukey's Boxplot", y = "") +
+  theme_bw() +
+  theme(
+    panel.grid = element_blank(),
+    legend.position = "none",
+    plot.margin = margin(r = 0)
+    )
+
+p8 <- tbl |>
+  select(heavy_tailed) |> 
+  specProc::adjusted_boxplot(box.width = 0.3, staplewidth = 0.5) +
+  scale_fill_manual(values = "lightblue") +
+  labs(x = "Adjusted Boxplot", y = " ") +
+  theme_bw() +
+  theme(
+    panel.grid = element_blank(),
+    legend.position = "none",
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+    plot.margin = margin(l = 0)
+    )
+
+p9 <- tbl |>
+  select(heavy_tailed) |>
+  specProc::generalized_boxplot(box.width = 0.3, staplewidth = 0.5) +
+  scale_fill_manual(values = "lightgreen") +
+  labs(x = "Generalized Boxplot", y = " ") +
+  theme_bw() +
+  theme(
+    panel.grid = element_blank(),
+    legend.position = "none",
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+    plot.margin = margin(l = 0)
+    )
+```
+
+**Case 1:** Normal distribution
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=3, fig.width=6, fig.align='center'}
+p1 | p2 | p3
+```
+
+**Case 2:** Right-skewed distribution
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=3, fig.width=6, fig.align='center'}
+p4 | p5 | p6
+
+```
+
+**Case 3:** Heavy-tailed distribution
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=3, fig.width=6, fig.align='center'}
+p7 | p8 | p9
 
 ```
 

@@ -304,11 +304,33 @@ T_{g,h}(Z) = \frac{e^{gZ}-1}{g} \cdot e^{h\frac{Z^2}{2}} \quad \text{with} \quad
 \hat{h} = \frac{2}{z_p^2} \text{ln}\left(-\hat{g}\frac{Q_p(\{x_j\}) \cdot Q_{1-p}(\{x_j\})}{Q_p(\{x_j\}) + Q_{1-p}(\{x_j\})}\right)
 \]</span>where <span class="math inline">\(z_p\)</span> is the quantile of order <span class="math inline">\(p\)</span> of the standard normal distribution. <span class="math inline">\(Q_p\)</span> and <span class="math inline">\(Q_{1-p}\)</span> are the empirical quantiles of order <span class="math inline">\(p\)</span> (<span class="math inline">\(0.5&lt;p&lt;1\)</span>) and <span class="math inline">\(1-p\)</span> of the univariate data <span class="math inline">\(X = \{x_j\} = \{x_1, \cdots, x_n\}\)</span>.</p>
 <p>The generalized boxplot as proposed by Bruffaerts <em>et al</em>. [4] begins by applying a rank-preserving transformation to the data. This transformation maps the original observations onto the unit interval (0, 1), maintaining the order of the data points while capturing key distributional features like skewness and tail behavior. Then, an inverse normal transformation is applied, similar to rank-based approaches. This transformed distribution can be fine-tuned using the Tukey <span class="math inline">\(g\)</span>-<span class="math inline">\(h\)</span> distribution, whose quantiles are used to set the boxplot whiskers.</p>
+<p>The figures below illustrate a comparison of Tukey’s boxplot, the Adjusted boxplot, and the Generalized boxplot across three distinct types of data distributions: (<em>i</em>) a normal distribution, (<em>ii</em>) a right-skewed distribution, and (<em>iii</em>) a heavy-tailed distribution. This side-by-side comparison highlights how each method performs in identifying outliers and adapting to the unique characteristics of these distributions.</p>
+<p><strong>Case 1:</strong> Normal distribution</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="384"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Case 2:</strong> Right-skewed distribution</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Case 3:</strong> Heavy-tailed distribution</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
 </figure>
 </div>
 </div>
