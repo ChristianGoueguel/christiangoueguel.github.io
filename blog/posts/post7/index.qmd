@@ -28,10 +28,15 @@ $$
 
 The ends of the whiskers are called adjacent values. They are the smallest and largest values not flagged outliers. Moreover, since IQR has a breakdown point of 0.25, it takes more than 25% of the data to be contaminated by outliers for the masking effect to occur. For example, in the Figure below, we show how the quartiles and therefore IQR are significantly influenced by the outliers, highlighting the breakdown point. After replacing 25% of the data with extreme outliers, the IQR increased drastically, from 13 (clean data) to 136 (contaminated data). This demonstrates that with 25% contamination, the IQR becomes unreliable as a measure of spread.
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='left'}
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+library(tidyverse)
+library(patchwork)
+library(robustbase)
+```
+
+```{r message=FALSE, warning=FALSE, fig.align='left'}
 #| code-fold: true
 #| code-summary: "Show the code"
-library(tidyverse)
 set.seed(42)
 data_clean <- rnorm(100, mean = 50, sd = 10)
 n_outliers <- floor(length(data_clean) * 0.25)
@@ -116,11 +121,9 @@ $$
 
 where, $k$ is the fence factor. Hubert and Vandervieren \[2\] have optimized the adjusted boxplot for $k = 1.5$. In the next Figure, we compare Tukey's boxplot (left) with the adjusted boxplot (right), applied to a skewed data. The adjusted boxplot shows fewer outliers for the skewed data, reflecting its ability to handle skewness better.
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=4, fig.width=4, fig.align='center'}
+```{r message=FALSE, warning=FALSE, fig.height=4, fig.width=4, fig.align='center'}
 #| code-fold: true
 #| code-summary: "Show the code"
-library(tidyverse)
-library(patchwork)
 set.seed(123)
 skewed_data <- data.frame(y = rgamma(500, shape = 2, scale = 2))
 p1 <- skewed_data |> 
@@ -166,12 +169,9 @@ For example, Bruffaerts *et al*. \[4\] pointed out that the whiskers in the adju
 
 The Figure below illustrates the behavior of MC estimates for small and large sample sizes using density plots. To achieve this, we generated multiple random samples from a skewed Gamma distribution and examined the variability of the MC estimates across these sample sizes. For small sample sizes, the MC estimates exhibit significant variability, reflecting its reduced robustness in such cases. In contrast, as the sample size increases, the MC estimates stabilize and converge to a consistent value, demonstrating its improved precision and reliability with larger data.
 
-```{r echo=FALSE, fig.align='center',fig.width=6}
+```{r fig.align='center',fig.width=6}
 #| code-fold: true
 #| code-summary: "Show the code"
-library(robustbase)
-library(ggplot2)
-library(dplyr)
 set.seed(123)
 calculate_MC <- function(sample_size, num_simulations = 1000) {
   mc_values <- numeric(num_simulations)
@@ -230,8 +230,6 @@ The generalized boxplot as proposed by Bruffaerts *et al*. \[4\] begins by apply
 The Figures below illustrate a comparison of Tukey's boxplot, the adjusted boxplot, and the generalized boxplot across three distinct types of data distributions: (*i*) a normal distribution, (*ii*) a right-skewed distribution, and (*iii*) a heavy-tailed distribution. The Figures show how each method performs and adapts to the specific characteristics of these distributions, effectively balancing sensitivity to outliers without over-identifying them.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=10, fig.width=6, fig.align='center'}
-library(tidyverse)
-library(patchwork)
 set.seed(101)
 tbl <- data.frame(
     normal = stats::rnorm(100),
