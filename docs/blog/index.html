@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
     const options = {
       valueNames: ['listing-image','listing-date','listing-title','listing-subtitle','listing-description','listing-author','listing-reading-time',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] }],
       
-      searchColumns: ["listing-title","listing-date"],
+      searchColumns: ["listing-date","listing-title"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -215,14 +215,14 @@ window.Quarto = {
      <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
        <option value="" disabled="" selected="" hidden="">Order By</option>
        <option value="index" data-direction="asc">Default</option>
-         <option value="listing-title" data-direction="asc">
-          Title
-        </option>
          <option value="listing-date-sort" data-direction="asc">
           Date - Oldest
         </option>
          <option value="listing-date-sort" data-direction="desc">
           Date - Newest
+        </option>
+         <option value="listing-title" data-direction="asc">
+          Title
         </option>
      </select>
   </div>
@@ -263,7 +263,7 @@ Christian L. Goueguel
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-categories="UHJlcHJvY2Vzc2luZyUyQ0NoZW1vbWV0cmljcyUyQ01hY2hpbmUlMjBMZWFybmluZyUyQ091dGxpZXJzJTJDRGF0YSUyMFZpc3VhbGl6YXRpb24=" data-listing-date-sort="1700456400000" data-listing-file-modified-sort="1734393498365" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="16" data-listing-word-count-sort="3008">
+<div class="quarto-post image-right" data-index="1" data-categories="UHJlcHJvY2Vzc2luZyUyQ0NoZW1vbWV0cmljcyUyQ01hY2hpbmUlMjBMZWFybmluZyUyQ091dGxpZXJzJTJDRGF0YSUyMFZpc3VhbGl6YXRpb24=" data-listing-date-sort="1733806800000" data-listing-file-modified-sort="1734394589004" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="16" data-listing-word-count-sort="3023">
 <div class="thumbnail">
 <p><a href="../blog/posts/post7/index.html" class="no-external"></a></p><a href="../blog/posts/post7/index.html" class="no-external">
 <p><img loading="lazy" src="../blog/posts/post7/cover.png" class="thumbnail-image"></p>
@@ -283,7 +283,7 @@ Christian L. Goueguel
 <div class="metadata">
 <a href="../blog/posts/post7/index.html" class="no-external">
 <div class="listing-date">
-Nov 20, 2023
+Dec 10, 2024
 </div>
 <div class="listing-author">
 Christian L. Goueguel

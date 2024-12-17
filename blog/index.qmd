@@ -4,8 +4,8 @@ listing:
   contents: posts
   categories: true
   feed: false
-  sort-ui: [title, date]
-  filter-ui: [title, date]
+  sort-ui: [date, title]
+  filter-ui: [date, title]
   page-size: 25
   fields: [image, date, title, subtitle, description, author, reading-time]
 ---

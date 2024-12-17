@@ -2,7 +2,7 @@
 title: "Beyond Standard Boxplot: The Adjusted and Generalized Boxplots"
 description: "Boxplots, also known as box-and-whisker plots, have been a cornerstone of data visualization since their introduction by John Tukey in the late 1970s. Despite their enduring utility, boxplot assumes a symmetrical mesokurtic distribution and might misrepresent datasets with skewness or heavy tails. Alternative approaches have been proposed to address these limitations."
 author: "Christian L. Goueguel"
-date: "11/20/2023"
+date: "12/10/2024"
 image: "cover.png"
 categories:
   - Preprocessing
@@ -29,9 +29,10 @@ $$
 The ends of the whiskers are called adjacent values. They are the smallest and largest values not flagged outliers. Moreover, since IQR has a breakdown point of 0.25, it takes more than 25% of the data to be contaminated by outliers for the masking effect to occur. For example, in the Figure below, we show how the quartiles and therefore IQR are significantly influenced by the outliers, highlighting the breakdown point. After replacing 25% of the data with extreme outliers, the IQR increased drastically, from 13 (clean data) to 136 (contaminated data). This demonstrates that with 25% contamination, the IQR becomes unreliable as a measure of spread.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='left'}
+#| code-fold: true
+#| code-summary: "Show the code"
 library(tidyverse)
 set.seed(42)
-
 data_clean <- rnorm(100, mean = 50, sd = 10)
 n_outliers <- floor(length(data_clean) * 0.25)
 data_contaminated <- data_clean
@@ -116,6 +117,8 @@ $$
 where, $k$ is the fence factor. Hubert and Vandervieren \[2\] have optimized the adjusted boxplot for $k = 1.5$. In the next Figure, we compare Tukey's boxplot (left) with the adjusted boxplot (right), applied to a skewed data. The adjusted boxplot shows fewer outliers for the skewed data, reflecting its ability to handle skewness better.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=4, fig.width=4, fig.align='center'}
+#| code-fold: true
+#| code-summary: "Show the code"
 library(tidyverse)
 library(patchwork)
 set.seed(123)
@@ -141,7 +144,7 @@ p1 <- skewed_data |>
     )
 
 p2 <- skewed_data |> 
-  dplyr::select(y) |> 
+  select(y) |> 
   specProc::adjusted_boxplot(box.width = 0.3, staplewidth = 0.5) +
   scale_fill_manual(values = "lightblue") +
   ylim(0, 15) +
@@ -164,10 +167,12 @@ For example, Bruffaerts *et al*. \[4\] pointed out that the whiskers in the adju
 The Figure below illustrates the behavior of MC estimates for small and large sample sizes using density plots. To achieve this, we generated multiple random samples from a skewed Gamma distribution and examined the variability of the MC estimates across these sample sizes. For small sample sizes, the MC estimates exhibit significant variability, reflecting its reduced robustness in such cases. In contrast, as the sample size increases, the MC estimates stabilize and converge to a consistent value, demonstrating its improved precision and reliability with larger data.
 
 ```{r echo=FALSE, fig.align='center',fig.width=6}
+#| code-fold: true
+#| code-summary: "Show the code"
 library(robustbase)
 library(ggplot2)
 library(dplyr)
-
+set.seed(123)
 calculate_MC <- function(sample_size, num_simulations = 1000) {
   mc_values <- numeric(num_simulations)
   for (i in 1:num_simulations) {
@@ -179,8 +184,6 @@ calculate_MC <- function(sample_size, num_simulations = 1000) {
 
 small_sample_size <- 30
 large_sample_size <- 1000
-
-set.seed(123)
 mc_small <- calculate_MC(small_sample_size)
 mc_large <- calculate_MC(large_sample_size)
 
@@ -401,7 +404,7 @@ patchwork::wrap_plots(p7 + ggtitle("Heavy-tailed distribution"), p8, p9)
 
 ## Conclusions
 
-By comparing the three boxplot approaches, we show the limitations of Tukey's boxplot when applied to skewed or heavy-tailed data. While Tukey's method assumes symmetry and often flags excessive outliers in such cases, the adjusted boxplot improves this by incorporating a skewness measure (medcouple). The generalized boxplot provides the most robust solution by flexibly adapting to both skewness and tail heaviness through the Tukey $g$-$h$ distribution. Overall, the adjusted and generalized boxplots are better suited for non-symmetric data, with the generalized boxplot offering the most robust approach.
+By comparing the three boxplot approaches, we show the limitations of Tukey's boxplot when applied to skewed or heavy-tailed data. While Tukey's method assumes symmetry and often flags excessive outliers, the adjusted boxplot improves this by incorporating a skewness measure (medcouple). The generalized boxplot provides the most robust solution by flexibly adapting to both skewness and tail heaviness through the Tukey $g$-$h$ distribution. Overall, the adjusted and generalized boxplots are better suited for non-symmetric data, with the generalized boxplot offering the most robust approach.
 
 ## References
 
