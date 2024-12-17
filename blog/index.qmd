@@ -4,6 +4,7 @@ listing:
   contents: posts
   categories: true
   feed: false
+  sort: date desc
   sort-ui: [date, title]
   filter-ui: [date, title]
   page-size: 25
