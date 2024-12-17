@@ -62,7 +62,7 @@ We set a custom theme with a clean white background and adjusted sizes for all `
 
 ```{r}
 base_size = 15 
-ggplot2::theme_bw(
+theme_bw(
   base_size = base_size,
   base_line_size = base_size / 22,
   base_rect_size = base_size / 15
@@ -81,11 +81,11 @@ wavelength <- beer_data %>% select(starts_with("xtrain")) %>% names()
 
 Previewing the first rows of the dataset helps us ensure its integrity and understand its structure.
 
-```{r}
-beer_data %>% head()
+```{r fig.align='center'}
+beer_data %>% head(5) %>% DT::datatable()
 ```
 
-```{r}
+```{r fig.align='center'}
 #| code-fold: true
 #| code-summary: "Show the code"
 p <- beer_data %>% mutate(spectra_id = paste0("s", 1:80)) %>%
@@ -143,7 +143,7 @@ cv_folds <- vfold_cv(train_data, v = 5, repeats = 3)
 
 Interestingly, the `vfold_cv` function provides a powerful way to visualize the distribution of data across folds, allowing us to confirm that the stratification and splits are evenly balanced. This ensures that each fold accurately represents the overall dataset, enhancing the reliability of cross-validation results.
 
-```{r, fig.width=12, fig.height=6}
+```{r, fig.align='center', fig.width=12, fig.height=6}
 #| code-fold: true
 #| code-summary: "Show the code"
 cv_folds %>%
@@ -223,8 +223,8 @@ wflowSet <- workflow_set(
 
 As mentionned earlier, we opted to train each model using both the base preprocessing approach and the PCA-transformed data. This strategy results in a total of eight unique training models as follows:
 
-```{r}
-wflowSet 
+```{r fig.align='center'}
+wflowSet
 ```
 
 
@@ -265,13 +265,15 @@ parallel::stopCluster(cl)
 
 Next, we utilize the `rank_results` function to systematically rank the training models based on key performance metrics such as the root mean squared error (RMSE), the mean absolute error (MAE), and the coefficient of determination $(R^2)$. Following this, we visualize the model performance with error bars, providing a clear and insightful comparison of their predictive capabilities.
 
-```{r}
+```{r fig.align='center'}
 wflowSet %>%
   rank_results(rank_metric = "rmse") %>%
-  relocate(c(rank, mean, std_err, model), .before = wflow_id)
+  relocate(c(rank, model, .metric, mean, std_err), .before = wflow_id) %>%
+  mutate(mean = round(mean, 4), std_err = round(std_err, 4)) %>%
+  DT::datatable(rownames = FALSE, filter ="top")
 ```
 
-```{r, fig.width=10,fig.height=7}
+```{r, fig.align='center', fig.width=10,fig.height=7}
 wflowSet %>% autoplot(std_errs = qnorm(0.95), type = "wflow_id") +
   ggsci::scale_color_lancet() +
   theme(legend.position = "bottom") +
@@ -281,7 +283,7 @@ wflowSet %>% autoplot(std_errs = qnorm(0.95), type = "wflow_id") +
 
 By configuring the `autoplot` function with the argument `select_best = TRUE`, we rank the training models while visually emphasizing the best-performing model, making it easy to identify the optimal choice for further evaluation.
 
-```{r, fig.width=9,fig.height=5}
+```{r, fig.align='center', fig.width=9,fig.height=5}
 wflowSet %>% autoplot(select_best = TRUE, std_errs = qnorm(0.95), type = "wflow_id") +
   geom_point(size = 3) +
   ggsci::scale_color_lancet() +
@@ -290,7 +292,7 @@ wflowSet %>% autoplot(select_best = TRUE, std_errs = qnorm(0.95), type = "wflow_
 ```
 The `extract_workflow_set_result` function retrieves the optimized hyperparameter values for the best-performing model, as determined by the lowest RMSE. In this analysis, it determines the optimal settings for `base_spls`, specifically identifying the optimized number of latent variables (`num_comp`) and the proportion of predictors (`predictor_prop`) allowed to have non-zero coefficients. 
 
-```{r}
+```{r fig.align='center'}
 best_model <- wflowSet %>% 
   extract_workflow_set_result("base_spls") %>% 
   select_best(metric = "rmse") %>%
@@ -302,11 +304,21 @@ We use the `collect_predictions` function to gather the best-performing model's 
 train_results <- wflowSet %>% 
   collect_predictions() %>% 
   filter(wflow_id == "base_spls" & .config == best_model %>% pull(.config)) %>%
-  select(-.row) %>%
-  print()
+  select(-.row)
 ```
 
-```{r}
+```{r fig.align='center'}
+train_results %>% 
+  mutate(
+    .pred = round(.pred, 2), 
+    originalGravity = round(originalGravity, 4),
+    residuals = round((originalGravity - .pred)/sd((originalGravity - .pred)), 2)
+    ) %>%
+  relocate(c(.pred, originalGravity, residuals, model), .before = wflow_id) %>%
+  DT::datatable(rownames = FALSE)
+```
+
+```{r echo=FALSE}
 #| code-fold: true
 #| code-summary: "Show the code"
 p1 <- train_results %>% 
@@ -318,7 +330,7 @@ p1 <- train_results %>%
   labs(x = "Actual Original Gravity", y = "Predicted Original Gravity")
 ```
 
-```{r}
+```{r echo=FALSE}
 #| code-fold: true
 #| code-summary: "Show the code"
 p2 <- train_results %>% 
@@ -330,7 +342,7 @@ p2 <- train_results %>%
   labs(x = "Predicted Original Gravity", y = "Standardized Residuals")
 ```
 
-```{r, message=FALSE}
+```{r, echo=FALSE, message=FALSE, fig.align='center'}
 #| code-fold: true
 #| code-summary: "Show the code"
 p1 | p2
@@ -350,10 +362,24 @@ test_results <- wflowSet %>%
 ```
 
 ```{r}
-test_results %>% collect_metrics()
+test_results$.predictions[[1]] %>%
+  mutate(
+    .pred = round(.pred, 2), 
+    originalGravity = round(originalGravity, 4),
+    residuals = round((originalGravity - .pred)/sd((originalGravity - .pred)), 2)
+    ) %>%
+  relocate(residuals, .before = .config) %>%
+  DT::datatable(rownames = FALSE, width = 400)
 ```
 
-```{r}
+```{r fig.align='center'}
+test_results %>% 
+  collect_metrics() %>%
+  mutate(.estimate = round(.estimate, 4)) %>%
+  DT::datatable(rownames = FALSE, width = 400)
+```
+
+```{r echo=FALSE}
 #| code-fold: true
 #| code-summary: "Show the code"
 p3 <- test_results %>% 
@@ -366,7 +392,7 @@ p3 <- test_results %>%
   labs(x = "Actual Original Gravity", y = "Predicted Original Gravity")
 ```
 
-```{r}
+```{r echo=FALSE}
 #| code-fold: true
 #| code-summary: "Show the code"
 p4 <- test_results %>% 
@@ -379,7 +405,7 @@ p4 <- test_results %>%
   labs(x = "Predicted Original Gravity", y = "Standardized Residuals")
 ```
 
-```{r, message=FALSE}
+```{r, echo=FALSE, message=FALSE, fig.align='center', fig.height=7}
 #| code-fold: true
 #| code-summary: "Show the code"
 p3 | p4
