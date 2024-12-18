@@ -104,6 +104,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../../styles.scss">
 <meta property="og:title" content="Robust Measures of Tail Weight in Distributions – Christian L. Goueguel">
@@ -229,12 +258,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 <p>In the world of data analysis, understanding the tail behavior of a distribution is critical for identifying potential outliers. Traditional measures like kurtosis have long been used to capture the weight of the tails of a distribution. However, kurtosis comes with limitations, particularly its sensitivity to outliers and lack of robustness. In this blog post, we will explore two robust measures for tail weight:</p>
-<ol type="1">
+<ul>
 <li>Quantile tail weight measure</li>
 <li>Medcouple tail weight measure</li>
-</ol>
-<p>Both measures were proposed in the work of Brys, Hubert, and Struyf (2006), who introduced these methods to provide a more stable and reliable way of analyzing tail weight.</p>
-<p>Let’s begin with why tail weight matters and examine the limitations of traditional kurtosis. Light-tailed distributions (e.g., Normal distribution) have very few extreme values, whereas heavy-tailed distributions (e.g., Cauchy, Student’s t-distribution) contain more extreme values, and outliers occur more frequently. If a measure of tail weight is unreliable or sensitive to extreme observations, the analysis can be skewed, leading to poor decisions.</p>
+</ul>
+<p>Let’s begin with why tail weight matters and examine the limitations of traditional kurtosis. Light-tailed distributions (e.g., normal distribution) have very few extreme values, whereas heavy-tailed distributions (e.g., Cauchy, Student’s t-distribution) contain more extreme values, and outliers occur more frequently. If a measure of tail weight is unreliable or sensitive to extreme observations, the analysis of the underlying data distribution would be inacurrate.</p>
 <section id="kurtosis-measure" class="level2">
 <h2 class="anchored" data-anchor-id="kurtosis-measure"><strong>Kurtosis measure</strong></h2>
 <p>Kurtosis measures the degree of peakedness and tail heaviness relative to a normal distribution. For a normal distribution, kurtosis = 3. Excess kurtosis (kurtosis - 3) is often used to center the normal reference value at 0. However, kurtosis has a significant weakness: it is highly sensitive to outliers. Even a single extreme observation can disproportionately inflate kurtosis, leading to misleading conclusions.</p>
@@ -247,22 +275,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>kurtosis_normal <span class="ot">&lt;-</span> <span class="fu">kurtosis</span>(normal_data)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>kurtosis_outlier <span class="ot">&lt;-</span> <span class="fu">kurtosis</span>(outlier_data)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">data_frame</span>(</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Value =</span> <span class="fu">c</span>(normal_data, outlier_data),</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">Type =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Normal Data"</span>, <span class="st">"With Outliers"</span>), <span class="fu">c</span>(<span class="dv">1000</span>, <span class="dv">1005</span>))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">c</span>(normal_data, outlier_data),</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"normal"</span>, <span class="st">"with outliers"</span>), <span class="fu">c</span>(<span class="dv">1000</span>, <span class="dv">1005</span>))</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Value, <span class="at">fill =</span> Type)) <span class="sc">+</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">fill =</span> type)) <span class="sc">+</span></span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Impact of Outliers on Kurtosis"</span>,</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">paste</span>(</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Kurtosis (Normal):"</span>, <span class="fu">round</span>(kurtosis_normal, <span class="dv">2</span>), </span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>      <span class="st">"| Kurtosis (Outliers):"</span>, <span class="fu">round</span>(kurtosis_outlier, <span class="dv">2</span>)</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>      ), </span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">""</span>, </span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Count"</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(type)) <span class="sc">+</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  ggsci<span class="sc">::</span><span class="fu">scale_fill_jco</span>() <span class="sc">+</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Impact of Outliers on Kurtosis"</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">paste</span>(<span class="st">"Kurtosis (Normal):"</span>, <span class="fu">round</span>(kurtosis_normal, <span class="dv">2</span>), <span class="st">"| Kurtosis (Outliers):"</span>, <span class="fu">round</span>(kurtosis_outlier, <span class="dv">2</span>)), </span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">""</span>, </span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Count"</span>,</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Distribution"</span>,</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text.x =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -272,26 +304,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Notice how adding a few extreme outliers significantly increases the kurtosis value. This demonstrates the lack of robustness of kurtosis. To overcome the sensitivity of kurtosis, Brys et al.&nbsp;(2006) introduced two robust measures: quantile weight (QW) and medcouple weight (MW). Both rely on robust statistical properties and are less affected by outliers.</p>
+<p>Notice how adding a few extreme outliers significantly increases the kurtosis value. This demonstrates the lack of robustness of kurtosis. To overcome the sensitivity of kurtosis, Brys <em>et al.</em> (2006) introduced two robust measures: quantile weight (QW) and medcouple weight (MW). Both rely on robust statistical properties and are less affected by outliers.</p>
 <section id="quantile-tail-weight-measure" class="level3">
 <h3 class="anchored" data-anchor-id="quantile-tail-weight-measure"><strong>Quantile tail weight measure</strong></h3>
-<p>The QW measure evaluates the weight of the tails using quantiles. It is based on the interquartile range (IQR) and extreme quantiles. The numerator focuses on extreme quantiles (tail behavior). The denominator normalizes using the IQR, making the measure robust to outliers. The quantile weights, comprising the left quantile weight (LQW) and the right quantile weight (RQW). They have a breakdown value of 0.125, meaning that they are resistant to the influence of up to 12.5% of outliers or contaminated data.</p>
-<p>The concept of quantile weights is derived from quartile skewness, introduced by D.V. Hinkley in 1975. Quartile skewness measures the skewness or asymmetry of a distribution by comparing the differences between the quartiles, which are robust measures of location and scale. Specifically, the quantile weights are calculated when applying quartile skewness to either the left half or the right half of the probability mass, divided at the median of the univariate distribution. The left quantile weight (LQW) is the proportion of the data below the median, divided by the expected proportion (0.5) if the data were normally distributed. The right quantile weight (RQW) is the proportion of the data above the median, divided by 0.5.</p>
-<ul>
-<li>Values closer to 0 indicate lighter tails compared to the normal distribution.</li>
-<li>Values closer to 1 signify heavier tails compared to the normal distribution.</li>
-<li>Values significantly greater than 1 suggest the presence of outliers or extreme values in the respective tail.</li>
-</ul>
+<p>The QW measure evaluates the weight of the tails using quantiles. It is based on the interquartile range (IQR) and extreme quantiles. The numerator focuses on extreme quantiles (tail behavior). The denominator normalizes using the IQR, making the measure robust to outliers. The quantile weights, comprising the left quantile weight (LQW) and the right quantile weight (RQW), and are given by:</p>
+<p><span class="math display">\[
+LQW(p) = -\frac{Q_{\frac{1-p}{2}} + Q_{\frac{p}{2}} - 2Q_{0.25}}{Q_{\frac{1-p}{2}} - Q_{\frac{p}{2}}}, \quad
+RQW(q) = -\frac{Q_{\frac{1+q}{2}} + Q_{1-\frac{q}{2}} - 2Q_{0.75}}{Q_{\frac{1+q}{2}} - Q_{1-\frac{q}{2}}}
+\]</span></p>
+<p>with <span class="math inline">\(0&lt;p&lt;\frac{1}{2}\)</span> and <span class="math inline">\(\frac{1}{2}&lt;q&lt;1\)</span>, which define the degree of robustness one is willing to attain.</p>
+<p>They have a breakdown value of 0.125, meaning that they are resistant to the influence of up to 12.5% of outliers or contaminated data. The concept of quantile weights is derived from quartile skewness, introduced by D.V. Hinkley in 1975. Quartile skewness measures the skewness or asymmetry of a distribution by comparing the differences between the quartiles, which are robust measures of location and scale. Specifically, the quantile weights are calculated when applying quartile skewness to either the left half or the right half of the probability mass, divided at the median of the univariate distribution. The left quantile weight (LQW) is the proportion of the data below the median, divided by the expected proportion (0.5) if the data were normally distributed. The right quantile weight (RQW) is the proportion of the data above the median, divided by 0.5. Values closer to 0 indicate lighter tails compared to the normal distribution, values closer to 1 signify heavier tails compared to the normal distribution, whereas values significantly greater than 1 suggest the presence of outliers or extreme values in the respective tail.</p>
 </section>
 <section id="medcouple-tail-weight-measure" class="level3">
 <h3 class="anchored" data-anchor-id="medcouple-tail-weight-measure"><strong>Medcouple tail weight measure</strong></h3>
 <p>The MW measure uses the medcouple statistic, which is a robust measure of skewness. It focuses on tail asymmetry and provides information about the heaviness of each tail. The medcouple is defined as a scaled median of all pairwise slopes between data points. It is robust to extreme observations and does not require a predefined model. The resulting MW measure evaluates the extent of tail heaviness in a distribution, particularly useful when the data is skewed.</p>
-<p>The left and right medcouples are a robust measure of tail weight based on the median and the medcouple (Brys <em>et al.</em> 2004), which is a kernel estimator of the cumulative distribution function (CDF). The left and right medcouples are robust to outliers and have a breakdown value of 25%. Specifically, the left medcouple (LMC) measures the skewness in the lower tail of the distribution, while the right medcouple (RMC) measures the skewness in the upper tail.</p>
-<ol type="1">
-<li>Values close to 0 indicate a symmetric distribution or light tails.</li>
-<li>Positive values indicate right-skewness or a heavier right tail.</li>
-<li>Negative values indicate left-skewness or a heavier left tail.</li>
-</ol>
+<p>The left and right medcouples are a robust measure of tail weight based on the median and the medcouple (Brys <em>et al.</em> 2004), which is a kernel estimator of the cumulative distribution function (CDF). The left and right medcouples are robust to outliers and have a breakdown value of 25%. Specifically, the left medcouple (LMC) measures the skewness in the lower tail of the distribution, while the right medcouple (RMC) measures the skewness in the upper tail. LMC and RMC, are defined as:</p>
+<p><span class="math display">\[
+LMC = -MC(x &lt; m), \quad RMC = MC(x &gt; m)
+\]</span></p>
+<p>with <span class="math inline">\(m\)</span> the median value. LMC and MC close to 0 indicate a symmetric distribution or light tails. Positive values indicate right-skewness or a heavier right tail, whereas negative values indicate left-skewness or a heavier left tail.</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Show the code</summary>
@@ -301,29 +332,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>kurt_heavy <span class="ot">&lt;-</span> <span class="fu">kurtosis</span>(heavy_tail_data)</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>kurt_light <span class="ot">&lt;-</span> <span class="fu">kurtosis</span>(light_tail_data)</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>qtw <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  (<span class="fu">quantile</span>(x, <span class="fl">0.975</span>) <span class="sc">-</span> <span class="fu">quantile</span>(x, <span class="fl">0.025</span>)) <span class="sc">/</span> (<span class="fu">quantile</span>(x, <span class="fl">0.75</span>) <span class="sc">-</span> <span class="fu">quantile</span>(x, <span class="fl">0.25</span>))</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>qtw_heavy <span class="ot">&lt;-</span> <span class="fu">qtw</span>(heavy_tail_data)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>qtw_light <span class="ot">&lt;-</span> <span class="fu">qtw</span>(light_tail_data)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>qtw_heavy <span class="ot">&lt;-</span> specProc<span class="sc">::</span><span class="fu">quantile_weight</span>(heavy_tail_data)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>qtw_light <span class="ot">&lt;-</span> specProc<span class="sc">::</span><span class="fu">quantile_weight</span>(light_tail_data)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>mtw_heavy <span class="ot">&lt;-</span> specProc<span class="sc">::</span><span class="fu">medcouple_weight</span>(heavy_tail_data)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>mtw_light <span class="ot">&lt;-</span> specProc<span class="sc">::</span><span class="fu">medcouple_weight</span>(light_tail_data)</span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">data_frame</span>(</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">Value =</span> <span class="fu">c</span>(heavy_tail_data, light_tail_data),</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">Type =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Heavy Tails"</span>, <span class="st">"Light Tails"</span>), <span class="at">each =</span> <span class="dv">1000</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">c</span>(heavy_tail_data, light_tail_data),</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Heavy tails"</span>, <span class="st">"Light tails"</span>), <span class="at">each =</span> <span class="dv">1000</span>)</span>
 <span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Value, <span class="at">fill =</span> Type)) <span class="sc">+</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">fill =</span> type)) <span class="sc">+</span></span>
 <span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Comparing Heavy-Tailed and Light-Tailed Distributions"</span>,</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">paste</span>(</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Kurtosis (Heavy):"</span>, <span class="fu">round</span>(kurt_heavy, <span class="dv">2</span>),</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>      <span class="st">"| Kurtosis (Light):"</span>, <span class="fu">round</span>(kurt_light, <span class="dv">2</span>),</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>      <span class="st">"| QTW (Heavy):"</span>, <span class="fu">round</span>(qtw_heavy, <span class="dv">2</span>),</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>      <span class="st">"| QTW (Light):"</span>, <span class="fu">round</span>(qtw_light, <span class="dv">2</span>)),</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">""</span>, </span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Count"</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(type)) <span class="sc">+</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  ggsci<span class="sc">::</span><span class="fu">scale_fill_aaas</span>() <span class="sc">+</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Impact of heavy-tailed on Kurtosis"</span>,</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">paste</span>(<span class="st">"Kurtosis (Light tail):"</span>, <span class="fu">round</span>(kurt_light, <span class="dv">2</span>), <span class="st">"| Kurtosis (Heavy tail):"</span>, <span class="fu">round</span>(kurt_heavy, <span class="dv">2</span>)),</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">"Count"</span>, <span class="at">fill =</span> <span class="st">"Distribution"</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text.x =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -333,11 +365,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>From the above plot, we obtain the following results:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Methods</th>
+<th>Light tails</th>
+<th>Heavy tails</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Kurtosis</td>
+<td>2.99</td>
+<td>10.03</td>
+</tr>
+<tr class="even">
+<td>Quantile weight</td>
+<td>[0.10; 0.21]</td>
+<td>[0.34; 0.17]</td>
+</tr>
+<tr class="odd">
+<td>Medcouple weight</td>
+<td>[0.22; 0.22]</td>
+<td>[0.30; 0.34]</td>
+</tr>
+</tbody>
+</table>
 </section>
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion"><strong>Conclusion</strong></h2>
-<p>Kurtosis, while popular, is not always the best measure of tail weight due to its sensitivity to outliers. Robust alternatives like the Quantile Tail Weight and Medcouple Tail Weight measures provide more reliable insights, particularly in the presence of heavy-tailed or skewed data.</p>
+<p>Kurtosis, while popular, is not always the best measure of tail weight due to its sensitivity to outliers. Robust alternatives like the quantile tail weight and medcouple tail weight measures provide more reliable insights, particularly in the presence of heavy-tailed or skewed data. Moreover, the LMC and RMC measure do not require the choice of any additional parameter, whereas for the LQW and RQW measures required tuning <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> parameters.</p>
 </section>
 <section id="reference" class="level2">
 <h2 class="anchored" data-anchor-id="reference">Reference</h2>
