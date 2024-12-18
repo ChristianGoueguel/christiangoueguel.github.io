@@ -87,7 +87,7 @@ ggplot(data, aes(x = Value, y = Dataset, fill = Dataset)) +
   )
 ```
 
-Boxplots are a widely used tool for visualizing data distributions, particularly when the data exhibit a symmetrical mesokurtic distribution. However, its effectiveness diminishes when dealing with skewed data. In such cases, the boxplot can misrepresent the dataset's nuances—most notably by classifying an excessive number of larger values as outliers when the distribution is skewed. Recognizing this limitation, Hubert and Vandervieren \[2\] introduced a refined version of Tukey's boxplot rule. Their approach incorporates a robust measure of skewness, allowing for a more accurate depiction of asymmetrical distributions while preserving the simplicity and interpretability of the Tukey's boxplot.
+Boxplots are a widely used tool for visualizing data distributions, particularly when the data exhibit a symmetrical mesokurtic distribution. However, its effectiveness diminishes when dealing with skewed data. In such cases, the boxplot can misrepresent the dataset's nuances—most notably by classifying an excessive number of larger values as outliers when the distribution is skewed. Recognizing this limitation, Hubert and Vandervieren \[2\] introduced a refined version of Tukey's boxplot rule. Their approach incorporates a robust measure of skewness, allowing for a more accurate depiction of asymmetrical distributions while preserving the simplicity and interpretability of Tukey's boxplot.
 
 ## The Adjusted Boxplot
 
@@ -99,7 +99,7 @@ $$
 
 where, $x_i$ and $x_j$ are data points from the sample, $m$ is the median of the sample, and $\text{med}\{\cdot\}$ denotes the median operator.
 
-To address the limitation of the Tukey's boxplot in handling skewed data, Hubert and Vandervieren \[2\] introduced the adjusted boxplot for skewed distribution. This method modifies the whisker length based on the MC. Specifically, the upper whisker extends further for right-skewed data, and the lower whisker extends further for left-skewed data. This new approch modifies the traditional boxplot fences to account for skewness in the data using the exponential function of MC as follows:
+To address the limitation of Tukey's boxplot in handling skewed data, Hubert and Vandervieren \[2\] introduced the adjusted boxplot for skewed distribution. This method modifies the whisker length based on the MC. Specifically, the upper whisker extends further for right-skewed data, and the lower whisker extends further for left-skewed data. This new approch modifies the traditional boxplot fences to account for skewness in the data using the exponential function of MC as follows:
 
 When $\text{MC} \geq 0$:
 
@@ -209,7 +209,7 @@ In response to these shortcomings, Bruffaerts *et al*. \[4\] proposed an alterna
 
 ## The Generalized Boxplot
 
-In 1977, Tukey introduced a family of distributions through two nonlinear transformations, giving rise to what is now known as the Tukey $g$-$h$ distributions \[5,6\]. These distributions are widely used in robust statistics and flexible modeling due to their ability to accommodate a range of skewness and kurtosis levels. The Tukey $g$-$h$ distribution is defined by applying two transformations, $g$ (skewness) and $h$ (kurtosis), to a standard normal random variable $Z \sim \mathcal{N}(0, 1)$. The resulting transformation is expressed by:
+In 1977, Tukey introduced a family of distributions through two nonlinear transformations, giving rise to what is now known as Tukey $g$-$h$ distributions \[5,6\]. These distributions are widely used in robust statistics and flexible modeling due to their ability to accommodate a range of skewness and kurtosis levels. Tukey $g$-$h$ distribution is defined by applying two transformations, $g$ (skewness) and $h$ (kurtosis), to a standard normal random variable $Z \sim \mathcal{N}(0, 1)$. The resulting transformation is expressed by:
 
 $$
 T_{g,h}(Z) = \frac{e^{gZ}-1}{g} \cdot e^{h\frac{Z^2}{2}} \quad \text{with} \quad g \neq 0, h \in \mathbb{R}
@@ -388,13 +388,13 @@ For a symmetric distribution, all three boxplots produce similar results as expe
 patchwork::wrap_plots(p1 + ggtitle("Normal distribution"), p2, p3)
 ```
 
-For a right-skewed distribution, the Tukey's boxplot overestimates the number of outliers, while the adjusted and generalized boxplots provide a better representation of the underlying data distribution. The generalized boxplot, in particular, offers the most flexible approach by accommodating skewness.
+For a right-skewed distribution, Tukey's boxplot overestimates the number of outliers, while the adjusted and generalized boxplots provide a better representation of the underlying data distribution. The generalized boxplot, in particular, offers the most flexible approach by accommodating skewness.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=3, fig.width=6, fig.align='center'}
 patchwork::wrap_plots(p4 + ggtitle("Right-skewed distribution"), p5, p6)
 ```
 
-For a heavy-tailed distribution, the Tukey's boxplot inaccurately identifies an excessive number of outliers due to its assumption of symmetry and limited adaptability to extreme tails. The adjusted boxplot improved upon Tukey's boxplot by accounting for skewness in the data, yet it still struggles to effectively handle the variability and extreme values inherent in heavy-tailed distributions. In contrast, the generalized boxplot proves to be a more robust and versatile method. Its whiskers and overall box structure more accurately reflect the underlying data distribution, demonstrating its ability to adapt to both skewness and tail heaviness more effectively than the other two methods.
+For a heavy-tailed distribution, Tukey's boxplot inaccurately identifies an excessive number of outliers due to its assumption of symmetry and limited adaptability to extreme tails. The adjusted boxplot improved upon Tukey's boxplot by accounting for skewness in the data, yet it still struggles to effectively handle the variability and extreme values inherent in heavy-tailed distributions. In contrast, the generalized boxplot proves to be a more robust and versatile method. Its whiskers and overall box structure more accurately reflect the underlying data distribution, demonstrating its ability to adapt to both skewness and tail heaviness more effectively than the other two methods.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=3, fig.width=6, fig.align='center'}
 patchwork::wrap_plots(p7 + ggtitle("Heavy-tailed distribution"), p8, p9)

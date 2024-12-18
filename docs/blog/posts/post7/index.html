@@ -327,7 +327,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>Boxplots are a widely used tool for visualizing data distributions, particularly when the data exhibit a symmetrical mesokurtic distribution. However, its effectiveness diminishes when dealing with skewed data. In such cases, the boxplot can misrepresent the dataset’s nuances—most notably by classifying an excessive number of larger values as outliers when the distribution is skewed. Recognizing this limitation, Hubert and Vandervieren [2] introduced a refined version of Tukey’s boxplot rule. Their approach incorporates a robust measure of skewness, allowing for a more accurate depiction of asymmetrical distributions while preserving the simplicity and interpretability of the Tukey’s boxplot.</p>
+<p>Boxplots are a widely used tool for visualizing data distributions, particularly when the data exhibit a symmetrical mesokurtic distribution. However, its effectiveness diminishes when dealing with skewed data. In such cases, the boxplot can misrepresent the dataset’s nuances—most notably by classifying an excessive number of larger values as outliers when the distribution is skewed. Recognizing this limitation, Hubert and Vandervieren [2] introduced a refined version of Tukey’s boxplot rule. Their approach incorporates a robust measure of skewness, allowing for a more accurate depiction of asymmetrical distributions while preserving the simplicity and interpretability of Tukey’s boxplot.</p>
 </section>
 <section id="the-adjusted-boxplot" class="level2">
 <h2 class="anchored" data-anchor-id="the-adjusted-boxplot">The Adjusted Boxplot</h2>
@@ -336,7 +336,7 @@ window.Quarto = {
 \text{MC} = \text{med} \left\{ \frac{(x_i - m) - (m - x_j)}{x_i - x_j} \, \middle| \, x_i \geq m \geq x_j \right\}
 \]</span></p>
 <p>where, <span class="math inline">\(x_i\)</span> and <span class="math inline">\(x_j\)</span> are data points from the sample, <span class="math inline">\(m\)</span> is the median of the sample, and <span class="math inline">\(\text{med}\{\cdot\}\)</span> denotes the median operator.</p>
-<p>To address the limitation of the Tukey’s boxplot in handling skewed data, Hubert and Vandervieren [2] introduced the adjusted boxplot for skewed distribution. This method modifies the whisker length based on the MC. Specifically, the upper whisker extends further for right-skewed data, and the lower whisker extends further for left-skewed data. This new approch modifies the traditional boxplot fences to account for skewness in the data using the exponential function of MC as follows:</p>
+<p>To address the limitation of Tukey’s boxplot in handling skewed data, Hubert and Vandervieren [2] introduced the adjusted boxplot for skewed distribution. This method modifies the whisker length based on the MC. Specifically, the upper whisker extends further for right-skewed data, and the lower whisker extends further for left-skewed data. This new approch modifies the traditional boxplot fences to account for skewness in the data using the exponential function of MC as follows:</p>
 <p>When <span class="math inline">\(\text{MC} \geq 0\)</span>:</p>
 <p><span class="math display">\[
 \begin{aligned}
@@ -451,7 +451,7 @@ window.Quarto = {
 </section>
 <section id="the-generalized-boxplot" class="level2">
 <h2 class="anchored" data-anchor-id="the-generalized-boxplot">The Generalized Boxplot</h2>
-<p>In 1977, Tukey introduced a family of distributions through two nonlinear transformations, giving rise to what is now known as the Tukey <span class="math inline">\(g\)</span>-<span class="math inline">\(h\)</span> distributions [5,6]. These distributions are widely used in robust statistics and flexible modeling due to their ability to accommodate a range of skewness and kurtosis levels. The Tukey <span class="math inline">\(g\)</span>-<span class="math inline">\(h\)</span> distribution is defined by applying two transformations, <span class="math inline">\(g\)</span> (skewness) and <span class="math inline">\(h\)</span> (kurtosis), to a standard normal random variable <span class="math inline">\(Z \sim \mathcal{N}(0, 1)\)</span>. The resulting transformation is expressed by:</p>
+<p>In 1977, Tukey introduced a family of distributions through two nonlinear transformations, giving rise to what is now known as Tukey <span class="math inline">\(g\)</span>-<span class="math inline">\(h\)</span> distributions [5,6]. These distributions are widely used in robust statistics and flexible modeling due to their ability to accommodate a range of skewness and kurtosis levels. Tukey <span class="math inline">\(g\)</span>-<span class="math inline">\(h\)</span> distribution is defined by applying two transformations, <span class="math inline">\(g\)</span> (skewness) and <span class="math inline">\(h\)</span> (kurtosis), to a standard normal random variable <span class="math inline">\(Z \sim \mathcal{N}(0, 1)\)</span>. The resulting transformation is expressed by:</p>
 <p><span class="math display">\[
 T_{g,h}(Z) = \frac{e^{gZ}-1}{g} \cdot e^{h\frac{Z^2}{2}} \quad \text{with} \quad g \neq 0, h \in \mathbb{R}
 \]</span></p>
@@ -474,7 +474,7 @@ T_{g,h}(Z) = \frac{e^{gZ}-1}{g} \cdot e^{h\frac{Z^2}{2}} \quad \text{with} \quad
 </div>
 </div>
 </div>
-<p>For a right-skewed distribution, the Tukey’s boxplot overestimates the number of outliers, while the adjusted and generalized boxplots provide a better representation of the underlying data distribution. The generalized boxplot, in particular, offers the most flexible approach by accommodating skewness.</p>
+<p>For a right-skewed distribution, Tukey’s boxplot overestimates the number of outliers, while the adjusted and generalized boxplots provide a better representation of the underlying data distribution. The generalized boxplot, in particular, offers the most flexible approach by accommodating skewness.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -484,7 +484,7 @@ T_{g,h}(Z) = \frac{e^{gZ}-1}{g} \cdot e^{h\frac{Z^2}{2}} \quad \text{with} \quad
 </div>
 </div>
 </div>
-<p>For a heavy-tailed distribution, the Tukey’s boxplot inaccurately identifies an excessive number of outliers due to its assumption of symmetry and limited adaptability to extreme tails. The adjusted boxplot improved upon Tukey’s boxplot by accounting for skewness in the data, yet it still struggles to effectively handle the variability and extreme values inherent in heavy-tailed distributions. In contrast, the generalized boxplot proves to be a more robust and versatile method. Its whiskers and overall box structure more accurately reflect the underlying data distribution, demonstrating its ability to adapt to both skewness and tail heaviness more effectively than the other two methods.</p>
+<p>For a heavy-tailed distribution, Tukey’s boxplot inaccurately identifies an excessive number of outliers due to its assumption of symmetry and limited adaptability to extreme tails. The adjusted boxplot improved upon Tukey’s boxplot by accounting for skewness in the data, yet it still struggles to effectively handle the variability and extreme values inherent in heavy-tailed distributions. In contrast, the generalized boxplot proves to be a more robust and versatile method. Its whiskers and overall box structure more accurately reflect the underlying data distribution, demonstrating its ability to adapt to both skewness and tail heaviness more effectively than the other two methods.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
