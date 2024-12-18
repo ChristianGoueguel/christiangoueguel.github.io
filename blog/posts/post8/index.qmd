@@ -16,25 +16,27 @@ categories:
 ::: justified
 ![Photo by [Oliver Plattner](https://unsplash.com/photos/photography-of-bridge-WY302kitn7U?utm_content=creditShareLink&utm_medium=referral&utm_source=unsplash).](cover.png){fig-align="center"}
 
-In the world of spectrochemical data analysis, understanding the tail behavior of a distribution is critical for identifying outliers. Traditional measures like kurtosis have long been used to capture the weight of the tails of a distribution. However, kurtosis comes with limitations, particularly its sensitivity to outliers and lack of robustness. In this blog post, we will explore two robust measures for tail weight:
+In the world of data analysis, understanding the tail behavior of a distribution is critical for identifying potential outliers. Traditional measures like kurtosis have long been used to capture the weight of the tails of a distribution. However, kurtosis comes with limitations, particularly its sensitivity to outliers and lack of robustness. In this blog post, we will explore two robust measures for tail weight:
 
-1.  Quantile Tail Weight (QTW) Measure
-
-2.  Medcouple Tail Weight (MTW) Measure
+1.  Quantile tail weight measure
+2.  Medcouple tail weight measure
 
 Both measures were proposed in the work of Brys, Hubert, and Struyf (2006), who introduced these methods to provide a more stable and reliable way of analyzing tail weight.
 
 Let's begin with why tail weight matters and examine the limitations of traditional kurtosis. Light-tailed distributions (e.g., Normal distribution) have very few extreme values, whereas heavy-tailed distributions (e.g., Cauchy, Student's t-distribution) contain more extreme values, and outliers occur more frequently. If a measure of tail weight is unreliable or sensitive to extreme observations, the analysis can be skewed, leading to poor decisions.
 
-## **Kurtosis**
+## **Kurtosis measure**
 
-Kurtosis measures the degree of peakedness and tail heaviness relative to a Normal distribution. For a normal distribution, kurtosis = 3. Excess kurtosis (kurtosis - 3) is often used to center the normal reference value at 0. However, kurtosis has a significant weakness: it is highly sensitive to outliers. Even a single extreme observation can disproportionately inflate kurtosis, leading to misleading conclusions.
+Kurtosis measures the degree of peakedness and tail heaviness relative to a normal distribution. For a normal distribution, kurtosis = 3. Excess kurtosis (kurtosis - 3) is often used to center the normal reference value at 0. However, kurtosis has a significant weakness: it is highly sensitive to outliers. Even a single extreme observation can disproportionately inflate kurtosis, leading to misleading conclusions.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(moments)
+```
 
 ```{r message=FALSE, warning=FALSE, fig.align='center'}
 #| code-fold: true
 #| code-summary: "Show the code"
-library(tidyverse)
-library(moments)
 set.seed(123)
 normal_data <- rnorm(1000)
 outlier_data <- c(normal_data, rep(10, 5))
@@ -59,15 +61,27 @@ data_frame(
     )
 ```
 
-Notice how adding a few extreme outliers significantly increases the kurtosis value. This demonstrates the lack of robustness of kurtosis. To overcome the sensitivity of kurtosis, Brys et al. (2006) introduced two robust measures: Quantile Tail Weight (QTW) and Medcouple Tail Weight (MTW). Both rely on robust statistical properties and are less affected by outliers.
+Notice how adding a few extreme outliers significantly increases the kurtosis value. This demonstrates the lack of robustness of kurtosis. To overcome the sensitivity of kurtosis, Brys et al. (2006) introduced two robust measures: quantile weight (QW) and medcouple weight (MW). Both rely on robust statistical properties and are less affected by outliers.
 
-### **Quantile Tail Weight (QTW) Measure**
+### **Quantile tail weight measure**
 
-The QTW measure evaluates the weight of the tails using quantiles. It is based on the interquartile range (IQR) and extreme quantiles. The numerator focuses on extreme quantiles (tail behavior). The denominator normalizes using the IQR, making the measure robust to outliers.
+The QW measure evaluates the weight of the tails using quantiles. It is based on the interquartile range (IQR) and extreme quantiles. The numerator focuses on extreme quantiles (tail behavior). The denominator normalizes using the IQR, making the measure robust to outliers. The quantile weights, comprising the left quantile weight (LQW) and the right quantile weight (RQW). They have a breakdown value of 0.125, meaning that they are resistant to the influence of up to 12.5% of outliers or contaminated data.
 
-### **Medcouple Tail Weight (MTW) Measure**
+The concept of quantile weights is derived from quartile skewness, introduced by D.V. Hinkley in 1975. Quartile skewness measures the skewness or asymmetry of a distribution by comparing the differences between the quartiles, which are robust measures of location and scale. Specifically, the quantile weights are calculated when applying quartile skewness to either the left half or the right half of the probability mass, divided at the median of the univariate distribution. The left quantile weight (LQW) is the proportion of the data below the median, divided by the expected proportion (0.5) if the data were normally distributed. The right quantile weight (RQW) is the proportion of the data above the median, divided by 0.5.
 
-The MTW measure uses the **Medcouple** statistic, which is a robust measure of skewness. It focuses on tail asymmetry and provides information about the heaviness of each tail. The Medcouple is defined as a scaled median of all pairwise slopes between data points. It is robust to extreme observations and does not require a predefined model. The resulting MTW measure evaluates the extent of tail heaviness in a distribution, particularly useful when the data is skewed.
+-   Values closer to 0 indicate lighter tails compared to the normal distribution.
+-   Values closer to 1 signify heavier tails compared to the normal distribution.
+-   Values significantly greater than 1 suggest the presence of outliers or extreme values in the respective tail.
+
+### **Medcouple tail weight measure**
+
+The MW measure uses the medcouple statistic, which is a robust measure of skewness. It focuses on tail asymmetry and provides information about the heaviness of each tail. The medcouple is defined as a scaled median of all pairwise slopes between data points. It is robust to extreme observations and does not require a predefined model. The resulting MW measure evaluates the extent of tail heaviness in a distribution, particularly useful when the data is skewed.
+
+The left and right medcouples are a robust measure of tail weight based on the median and the medcouple (Brys *et al.* 2004), which is a kernel estimator of the cumulative distribution function (CDF). The left and right medcouples are robust to outliers and have a breakdown value of 25%. Specifically, the left medcouple (LMC) measures the skewness in the lower tail of the distribution, while the right medcouple (RMC) measures the skewness in the upper tail.
+
+1.  Values close to 0 indicate a symmetric distribution or light tails.
+2.  Positive values indicate right-skewness or a heavier right tail.
+3.  Negative values indicate left-skewness or a heavier left tail.
 
 ```{r message=FALSE, warning=FALSE, fig.align='center'}
 #| code-fold: true
@@ -106,4 +120,9 @@ data_frame(
 ## **Conclusion**
 
 Kurtosis, while popular, is not always the best measure of tail weight due to its sensitivity to outliers. Robust alternatives like the Quantile Tail Weight and Medcouple Tail Weight measures provide more reliable insights, particularly in the presence of heavy-tailed or skewed data.
+
+## Reference
+
+1.  Brys, G., Hubert, M., and Struyf, A. (2006). Robust measures of tail weight. *Computational Statistics & Data Analysis*, 50, 733-759.
+2.  Hinkley, D.V., (1975). On power transformations to symmetry. *Biometrika*, 62, 101–111.
 :::
