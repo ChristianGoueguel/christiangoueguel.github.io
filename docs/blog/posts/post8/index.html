@@ -262,10 +262,15 @@ window.Quarto = {
 <li>Quantile tail weight measure</li>
 <li>Medcouple tail weight measure</li>
 </ul>
-<p>Let’s begin with why tail weight matters and examine the limitations of traditional kurtosis. Light-tailed distributions (e.g., normal distribution) have very few extreme values, whereas heavy-tailed distributions (e.g., Cauchy, Student’s t-distribution) contain more extreme values, and outliers occur more frequently. If a measure of tail weight is unreliable or sensitive to extreme observations, the analysis of the underlying data distribution would be inacurrate.</p>
+<p>Let’s begin with why tail weight matters and examine the limitations of traditional kurtosis. Light-tailed distributions (e.g., normal distribution) have very few extreme values, whereas heavy-tailed distributions (e.g., Cauchy, Student’s t-distribution) contain more extreme values, and outliers occur more frequently. If a measure of tail weight is unreliable or sensitive to extreme observations, the analysis of the underlying data distribution would be inaccurate.</p>
 <section id="kurtosis-measure" class="level2">
 <h2 class="anchored" data-anchor-id="kurtosis-measure"><strong>Kurtosis measure</strong></h2>
-<p>Kurtosis measures the degree of peakedness and tail heaviness relative to a normal distribution. For a normal distribution, kurtosis = 3. Excess kurtosis (kurtosis - 3) is often used to center the normal reference value at 0. However, kurtosis has a significant weakness: it is highly sensitive to outliers. Even a single extreme observation can disproportionately inflate kurtosis, leading to misleading conclusions.</p>
+<p>Kurtosis (denoted <span class="math inline">\(\beta_2\)</span>), which is derived from the 4th moment of a distribution, measures the degree of peakedness and tail heaviness relative to a normal distribution. For a normal distribution, <span class="math inline">\(\beta_2 = 3\)</span>, however excess kurtosis (<span class="math inline">\(\gamma_2\)</span>) is often used to center the normal reference value at 0.</p>
+<p><span class="math display">\[
+\gamma_2 = \beta_2 - 3 = \frac{\mu_4}{\mu^2_2} - 3 = \frac{\mathbb{E}[(X-\mu)^4]}{\sigma^4} - 3
+\]</span></p>
+<p>where, <span class="math inline">\(\mu\)</span> is the mean of <span class="math inline">\(X\)</span>, and <span class="math inline">\(\sigma^2\)</span> is its variance.</p>
+<p>The concept of kurtosis was first introduced by Karl Pearson in the early 1900s as a measure to characterize the shape of probability distributions, particularly their “peakedness” and tail behavior. Pearson later coined the terms platykurtic (<span class="math inline">\(\gamma_2 &lt; 0\)</span>), mesokurtic (<span class="math inline">\(\gamma_2 = 0\)</span>), and leptokurtic (<span class="math inline">\(\gamma_2 &gt; 0\)</span>) to classify distributions based on their kurtosis levels. Despite its usefulness, kurtosis has a notable limitation: it is highly sensitive to outliers. Even a single extreme value can disproportionately inflate the kurtosis, potentially leading to distorted interpretations and misleading conclusions about the data’s underlying distribution.</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Show the code</summary>
@@ -307,22 +312,26 @@ window.Quarto = {
 <p>Notice how adding a few extreme outliers significantly increases the kurtosis value. This demonstrates the lack of robustness of kurtosis. To overcome the sensitivity of kurtosis, Brys <em>et al.</em> (2006) introduced two robust measures: quantile weight (QW) and medcouple weight (MW). Both rely on robust statistical properties and are less affected by outliers.</p>
 <section id="quantile-tail-weight-measure" class="level3">
 <h3 class="anchored" data-anchor-id="quantile-tail-weight-measure"><strong>Quantile tail weight measure</strong></h3>
-<p>The QW measure evaluates the weight of the tails using quantiles. It is based on the interquartile range (IQR) and extreme quantiles. The numerator focuses on extreme quantiles (tail behavior). The denominator normalizes using the IQR, making the measure robust to outliers. The quantile weights, comprising the left quantile weight (LQW) and the right quantile weight (RQW), and are given by:</p>
+<p>QW measure evaluates the weight of the tails using quantiles. It is based on the interquartile range (IQR) and extreme quantiles. The numerator focuses on extreme quantiles (tail behavior). The denominator normalizes using the IQR, making the measure robust to outliers. The quantile weights, comprising the left quantile weight (LQW) and the right quantile weight (RQW), and are given by:</p>
 <p><span class="math display">\[
-LQW(p) = -\frac{Q_{\frac{1-p}{2}} + Q_{\frac{p}{2}} - 2Q_{0.25}}{Q_{\frac{1-p}{2}} - Q_{\frac{p}{2}}}, \quad
-RQW(q) = -\frac{Q_{\frac{1+q}{2}} + Q_{1-\frac{q}{2}} - 2Q_{0.75}}{Q_{\frac{1+q}{2}} - Q_{1-\frac{q}{2}}}
+\text{LQW}(p) = -\frac{Q_{\frac{1-p}{2}} + Q_{\frac{p}{2}} - 2Q_{0.25}}{Q_{\frac{1-p}{2}} - Q_{\frac{p}{2}}}, \quad
+\text{RQW}(q) = -\frac{Q_{\frac{1+q}{2}} + Q_{1-\frac{q}{2}} - 2Q_{0.75}}{Q_{\frac{1+q}{2}} - Q_{1-\frac{q}{2}}}
 \]</span></p>
 <p>with <span class="math inline">\(0&lt;p&lt;\frac{1}{2}\)</span> and <span class="math inline">\(\frac{1}{2}&lt;q&lt;1\)</span>, which define the degree of robustness one is willing to attain.</p>
 <p>They have a breakdown value of 0.125, meaning that they are resistant to the influence of up to 12.5% of outliers or contaminated data. The concept of quantile weights is derived from quartile skewness, introduced by D.V. Hinkley in 1975. Quartile skewness measures the skewness or asymmetry of a distribution by comparing the differences between the quartiles, which are robust measures of location and scale. Specifically, the quantile weights are calculated when applying quartile skewness to either the left half or the right half of the probability mass, divided at the median of the univariate distribution. The left quantile weight (LQW) is the proportion of the data below the median, divided by the expected proportion (0.5) if the data were normally distributed. The right quantile weight (RQW) is the proportion of the data above the median, divided by 0.5. Values closer to 0 indicate lighter tails compared to the normal distribution, values closer to 1 signify heavier tails compared to the normal distribution, whereas values significantly greater than 1 suggest the presence of outliers or extreme values in the respective tail.</p>
 </section>
 <section id="medcouple-tail-weight-measure" class="level3">
 <h3 class="anchored" data-anchor-id="medcouple-tail-weight-measure"><strong>Medcouple tail weight measure</strong></h3>
-<p>The MW measure uses the medcouple statistic, which is a robust measure of skewness. It focuses on tail asymmetry and provides information about the heaviness of each tail. The medcouple is defined as a scaled median of all pairwise slopes between data points. It is robust to extreme observations and does not require a predefined model. The resulting MW measure evaluates the extent of tail heaviness in a distribution, particularly useful when the data is skewed.</p>
+<p>MW measure uses the medcouple statistic (MC), which is a robust measure of skewness. It focuses on tail asymmetry and provides information about the heaviness of each tail. The medcouple is defined as a scaled median of all pairwise slopes between data points. It is robust to extreme observations and does not require a predefined model. The resulting MW measure evaluates the extent of tail heaviness in a distribution, particularly useful when the data is skewed.</p>
 <p>The left and right medcouples are a robust measure of tail weight based on the median and the medcouple (Brys <em>et al.</em> 2004), which is a kernel estimator of the cumulative distribution function (CDF). The left and right medcouples are robust to outliers and have a breakdown value of 25%. Specifically, the left medcouple (LMC) measures the skewness in the lower tail of the distribution, while the right medcouple (RMC) measures the skewness in the upper tail. LMC and RMC, are defined as:</p>
 <p><span class="math display">\[
-LMC = -MC(x &lt; m), \quad RMC = MC(x &gt; m)
+\text{LMC} = -\text{MC}(x &lt; m), \quad \text{RMC} = \text{MC}(x &gt; m)
 \]</span></p>
-<p>with <span class="math inline">\(m\)</span> the median value. LMC and MC close to 0 indicate a symmetric distribution or light tails. Positive values indicate right-skewness or a heavier right tail, whereas negative values indicate left-skewness or a heavier left tail.</p>
+<p><span class="math display">\[
+\text{with,} \quad
+\text{MC} = \text{med} \left\{ \frac{(x_i - m) - (m - x_j)}{x_i - x_j} \, \middle| \, x_i \geq m \geq x_j \right\}
+\]</span></p>
+<p>with <span class="math inline">\(m\)</span> the median of <span class="math inline">\(X\)</span>. LMC and MC close to 0 indicate a symmetric distribution or light tails. Positive values indicate right-skewness or a heavier right tail, whereas negative values indicate left-skewness or a heavier left tail.</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Show the code</summary>
@@ -365,7 +374,7 @@ LMC = -MC(x &lt; m), \quad RMC = MC(x &gt; m)
 </div>
 </div>
 </div>
-<p>From the above plot, we obtain the following results:</p>
+<p>The plot above highlights the results, demonstrating the effectiveness of the QW and MW methods in handling heavy-tailed distributions. In particular, these methods prove to be robust and efficient when analyzing data characterized by extreme values or pronounced tail behavior.</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -376,19 +385,19 @@ LMC = -MC(x &lt; m), \quad RMC = MC(x &gt; m)
 </thead>
 <tbody>
 <tr class="odd">
-<td>Kurtosis</td>
-<td>2.99</td>
-<td>10.03</td>
+<td><span class="math inline">\(\gamma_2\)</span></td>
+<td>0.01</td>
+<td>7.03</td>
 </tr>
 <tr class="even">
-<td>Quantile weight</td>
-<td>[0.10; 0.21]</td>
-<td>[0.34; 0.17]</td>
+<td>LQW/RQW</td>
+<td>0.10/ 0.21</td>
+<td>0.34/ 0.17</td>
 </tr>
 <tr class="odd">
-<td>Medcouple weight</td>
-<td>[0.22; 0.22]</td>
-<td>[0.30; 0.34]</td>
+<td>LMC/RMC</td>
+<td>0.22/ 0.22</td>
+<td>0.30/ 0.34</td>
 </tr>
 </tbody>
 </table>

@@ -21,11 +21,19 @@ In the world of data analysis, understanding the tail behavior of a distribution
 -   Quantile tail weight measure
 -   Medcouple tail weight measure
 
-Let's begin with why tail weight matters and examine the limitations of traditional kurtosis. Light-tailed distributions (e.g., normal distribution) have very few extreme values, whereas heavy-tailed distributions (e.g., Cauchy, Student's t-distribution) contain more extreme values, and outliers occur more frequently. If a measure of tail weight is unreliable or sensitive to extreme observations, the analysis of the underlying data distribution would be inacurrate.
+Let's begin with why tail weight matters and examine the limitations of traditional kurtosis. Light-tailed distributions (e.g., normal distribution) have very few extreme values, whereas heavy-tailed distributions (e.g., Cauchy, Student's t-distribution) contain more extreme values, and outliers occur more frequently. If a measure of tail weight is unreliable or sensitive to extreme observations, the analysis of the underlying data distribution would be inaccurate.
 
 ## **Kurtosis measure**
 
-Kurtosis measures the degree of peakedness and tail heaviness relative to a normal distribution. For a normal distribution, kurtosis = 3. Excess kurtosis (kurtosis - 3) is often used to center the normal reference value at 0. However, kurtosis has a significant weakness: it is highly sensitive to outliers. Even a single extreme observation can disproportionately inflate kurtosis, leading to misleading conclusions.
+Kurtosis (denoted $\beta_2$), which is derived from the 4th moment of a distribution, measures the degree of peakedness and tail heaviness relative to a normal distribution. For a normal distribution, $\beta_2 = 3$, however excess kurtosis ($\gamma_2$) is often used to center the normal reference value at 0.
+
+$$
+\gamma_2 = \beta_2 - 3 = \frac{\mu_4}{\mu^2_2} - 3 = \frac{\mathbb{E}[(X-\mu)^4]}{\sigma^4} - 3
+$$
+
+where, $\mu$ is the mean of $X$, and $\sigma^2$ is its variance.
+
+The concept of kurtosis was first introduced by Karl Pearson in the early 1900s as a measure to characterize the shape of probability distributions, particularly their "peakedness" and tail behavior. Pearson later coined the terms platykurtic ($\gamma_2 < 0$), mesokurtic ($\gamma_2 = 0$), and leptokurtic ($\gamma_2 > 0$) to classify distributions based on their kurtosis levels. Despite its usefulness, kurtosis has a notable limitation: it is highly sensitive to outliers. Even a single extreme value can disproportionately inflate the kurtosis, potentially leading to distorted interpretations and misleading conclusions about the data's underlying distribution.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -67,11 +75,11 @@ Notice how adding a few extreme outliers significantly increases the kurtosis va
 
 ### **Quantile tail weight measure**
 
-The QW measure evaluates the weight of the tails using quantiles. It is based on the interquartile range (IQR) and extreme quantiles. The numerator focuses on extreme quantiles (tail behavior). The denominator normalizes using the IQR, making the measure robust to outliers. The quantile weights, comprising the left quantile weight (LQW) and the right quantile weight (RQW), and are given by:
+QW measure evaluates the weight of the tails using quantiles. It is based on the interquartile range (IQR) and extreme quantiles. The numerator focuses on extreme quantiles (tail behavior). The denominator normalizes using the IQR, making the measure robust to outliers. The quantile weights, comprising the left quantile weight (LQW) and the right quantile weight (RQW), and are given by:
 
 $$
-LQW(p) = -\frac{Q_{\frac{1-p}{2}} + Q_{\frac{p}{2}} - 2Q_{0.25}}{Q_{\frac{1-p}{2}} - Q_{\frac{p}{2}}}, \quad 
-RQW(q) = -\frac{Q_{\frac{1+q}{2}} + Q_{1-\frac{q}{2}} - 2Q_{0.75}}{Q_{\frac{1+q}{2}} - Q_{1-\frac{q}{2}}} 
+\text{LQW}(p) = -\frac{Q_{\frac{1-p}{2}} + Q_{\frac{p}{2}} - 2Q_{0.25}}{Q_{\frac{1-p}{2}} - Q_{\frac{p}{2}}}, \quad 
+\text{RQW}(q) = -\frac{Q_{\frac{1+q}{2}} + Q_{1-\frac{q}{2}} - 2Q_{0.75}}{Q_{\frac{1+q}{2}} - Q_{1-\frac{q}{2}}} 
 $$
 
 with $0<p<\frac{1}{2}$ and $\frac{1}{2}<q<1$, which define the degree of robustness one is willing to attain.
@@ -80,15 +88,20 @@ They have a breakdown value of 0.125, meaning that they are resistant to the inf
 
 ### **Medcouple tail weight measure**
 
-The MW measure uses the medcouple statistic, which is a robust measure of skewness. It focuses on tail asymmetry and provides information about the heaviness of each tail. The medcouple is defined as a scaled median of all pairwise slopes between data points. It is robust to extreme observations and does not require a predefined model. The resulting MW measure evaluates the extent of tail heaviness in a distribution, particularly useful when the data is skewed.
+MW measure uses the medcouple statistic (MC), which is a robust measure of skewness. It focuses on tail asymmetry and provides information about the heaviness of each tail. The medcouple is defined as a scaled median of all pairwise slopes between data points. It is robust to extreme observations and does not require a predefined model. The resulting MW measure evaluates the extent of tail heaviness in a distribution, particularly useful when the data is skewed.
 
 The left and right medcouples are a robust measure of tail weight based on the median and the medcouple (Brys *et al.* 2004), which is a kernel estimator of the cumulative distribution function (CDF). The left and right medcouples are robust to outliers and have a breakdown value of 25%. Specifically, the left medcouple (LMC) measures the skewness in the lower tail of the distribution, while the right medcouple (RMC) measures the skewness in the upper tail. LMC and RMC, are defined as:
 
 $$
-LMC = -MC(x < m), \quad RMC = MC(x > m)
+\text{LMC} = -\text{MC}(x < m), \quad \text{RMC} = \text{MC}(x > m)
 $$
 
-with $m$ the median value. LMC and MC close to 0 indicate a symmetric distribution or light tails. Positive values indicate right-skewness or a heavier right tail, whereas negative values indicate left-skewness or a heavier left tail.
+$$
+\text{with,} \quad
+\text{MC} = \text{med} \left\{ \frac{(x_i - m) - (m - x_j)}{x_i - x_j} \, \middle| \, x_i \geq m \geq x_j \right\}
+$$
+
+with $m$ the median of $X$. LMC and MC close to 0 indicate a symmetric distribution or light tails. Positive values indicate right-skewness or a heavier right tail, whereas negative values indicate left-skewness or a heavier left tail.
 
 ```{r message=FALSE, warning=FALSE, fig.align='center'}
 #| code-fold: true
@@ -125,13 +138,13 @@ data_frame(
   )
 ```
 
-From the above plot, we obtain the following results:
+The plot above highlights the results, demonstrating the effectiveness of the QW and MW methods in handling heavy-tailed distributions. In particular, these methods prove to be robust and efficient when analyzing data characterized by extreme values or pronounced tail behavior.
 
-| Methods          | Light tails    | Heavy tails    |
-|------------------|----------------|----------------|
-| Kurtosis         | 2.99           | 10.03          |
-| Quantile weight  | \[0.10; 0.21\] | \[0.34; 0.17\] |
-| Medcouple weight | \[0.22; 0.22\] | \[0.30; 0.34\] |
+| Methods    | Light tails | Heavy tails |
+|------------|-------------|-------------|
+| $\gamma_2$ | 0.01        | 7.03        |
+| LQW/RQW    | 0.10/ 0.21  | 0.34/ 0.17  |
+| LMC/RMC    | 0.22/ 0.22  | 0.30/ 0.34  |
 
 ## **Conclusion**
 
