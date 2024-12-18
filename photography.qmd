@@ -77,7 +77,7 @@ title: " "
 ::: portfolio-section
 <!-- <h1 class="styled-heading">Black & White</h1> -->
 
-<p><a href="https://www.flickr.com/photos/101817117@N08/albums/72177720322650101" target="_blank">Black and White</a></p>
+<p><a href="https://www.flickr.com/photos/101817117@N08/albums/72177720322650101" target="_blank">Black and White Photography</a></p>
 
 <a 
     data-flickr-embed="true" data-footer="true" href="https://www.flickr.com/photos/101817117@N08/albums/72177720322650101" title="Black and White"> <img src="https://live.staticflickr.com/65535/52994192132_e3f2838ee6_h.jpg" alt="Black and White" width="1200" height="1600"/> </a>
