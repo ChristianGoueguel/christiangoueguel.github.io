@@ -42,6 +42,8 @@ Developed a compact, robust LIBS sensor for in-situ monitoring of CCS activities
 
 ![LIBS for CCS: Signal-to-noise ratio for key emission lines.](images/clipboard-3093143834.png){fig-align="center"}
 
+![NETL Team: During my time at NETL, I had the privilege of collaborating with a group of exceptional, experienced researchers. Pictured from left to right in the second row are Dustin McIntyre, Harry Edenborn, Jinesh Jain, and Christian Goueguel.](images/IMG_0434.png){fig-align="center"}
+
 ------------------------------------------------------------------------
 
 ### Wavelength-Selective Excitation Approaches in Laser-produced plasma
