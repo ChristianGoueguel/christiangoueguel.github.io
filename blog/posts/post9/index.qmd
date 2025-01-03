@@ -1,0 +1,22 @@
+---
+title: "Classification Models Based on LIBS Spectra Using Neural Network"
+description: "In this post, we developed a classification model using laser-induced breakdown spectroscopy (LIBS) combined with neural networks for identifying asbestos in cement samples."
+author: "Christian L. Goueguel"
+date: "3/15/2021"
+image: "cover.png"
+draft: true
+editor: visual
+categories:
+  - Chemometrics
+  - Deep Learning
+  - Classification
+  - Neural Network
+---
+
+::: justified
+![Photo by [CHUTTERSNAP](https://unsplash.com/photos/green-and-white-mixer-truck-at-the-construction-site-PF1daJne7lA?utm_content=creditShareLink&utm_medium=referral&utm_source=unsplash).](cover.png){fig-align="center" width="800"}
+
+## Introduction
+
+Asbestos has been extensively utilized, especially in construction, due to its strength, flexibility, and resistance to chemical and thermal degradation. It is now understood that breathing in high concentrations of asbestos increases the risk of diseases such as asbestosis, lung cancer, and mesothelioma. As a result, asbestos is regarded as a health hazard, and its use is strongly discouraged. There are several proven methods for detecting asbestos, including transmission electron microscopy (TEM), scanning electron microscopy (SEM), and polarized light microscopy (PLM). Among these, PLM is the most commonly employed due to its cost-effectiveness and speed.
+:::

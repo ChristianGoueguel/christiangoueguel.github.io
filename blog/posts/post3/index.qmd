@@ -110,17 +110,16 @@ p <- beer_data %>% mutate(spectra_id = paste0("s", 1:80)) %>%
 plotly::ggplotly(p)
 ```
 
-
 ### **Supervised Learning Techniques**
 
 For this analysis, we'll evaluate and compare the performance of four supervised learning algorithms, categorized by their linearity or modeling approach (parametric vs. non-parametric):
 
-| **Algorithm**                            | **Acronym** | **Approach** | 
-|------------------------------------------|-------------|--------------|
-| sparse Partial Least Squares             | `sPLS`      | Linear       |
-| Elastic Net                              | `ENet`      | Linear       |
-| k-Nearest Neighbors                      | `KNN`       | Non-linear   |
-| Random Forests                           | `RF`        | Non-linear   |
+| **Algorithm**                | **Acronym** | **Approach** |
+|------------------------------|-------------|--------------|
+| sparse Partial Least Squares | `sPLS`      | Linear       |
+| Elastic Net                  | `ENet`      | Linear       |
+| k-Nearest Neighbors          | `KNN`       | Non-linear   |
+| Random Forests               | `RF`        | Non-linear   |
 
 ### **Step 1: Data Splitting**
 
@@ -177,7 +176,7 @@ pca_recipe <- base_recipe %>%
 
 ### **Step 4: Model Specifications**
 
-We now define model specifications for each algorithm, incorporating hyperparameter tuning within the `tidymodels` framework. Notably, the `tune` function is used to specify hyperparameters that require optimization during the tuning process. For parameters with predefined values, these can be directly assigned within their allowable range. 
+We now define model specifications for each algorithm, incorporating hyperparameter tuning within the `tidymodels` framework. Notably, the `tune` function is used to specify hyperparameters that require optimization during the tuning process. For parameters with predefined values, these can be directly assigned within their allowable range.
 
 ```{r}
 # k-Nearest Neighbors (KNN)
@@ -226,7 +225,6 @@ As mentionned earlier, we opted to train each model using both the base preproce
 ```{r fig.align='center'}
 wflowSet
 ```
-
 
 ```{r}
 ctrl_grid <- control_grid(
@@ -279,6 +277,7 @@ wflowSet %>% autoplot(std_errs = qnorm(0.95), type = "wflow_id") +
   theme(legend.position = "bottom") +
   ylab("")
 ```
+
 ### **Step 6:** Model Selection
 
 By configuring the `autoplot` function with the argument `select_best = TRUE`, we rank the training models while visually emphasizing the best-performing model, making it easy to identify the optimal choice for further evaluation.
@@ -290,7 +289,8 @@ wflowSet %>% autoplot(select_best = TRUE, std_errs = qnorm(0.95), type = "wflow_
   theme(legend.position = "bottom") +
   ylab("")
 ```
-The `extract_workflow_set_result` function retrieves the optimized hyperparameter values for the best-performing model, as determined by the lowest RMSE. In this analysis, it determines the optimal settings for `base_spls`, specifically identifying the optimized number of latent variables (`num_comp`) and the proportion of predictors (`predictor_prop`) allowed to have non-zero coefficients. 
+
+The `extract_workflow_set_result` function retrieves the optimized hyperparameter values for the best-performing model, as determined by the lowest RMSE. In this analysis, it determines the optimal settings for `base_spls`, specifically identifying the optimized number of latent variables (`num_comp`) and the proportion of predictors (`predictor_prop`) allowed to have non-zero coefficients.
 
 ```{r fig.align='center'}
 best_model <- wflowSet %>% 
@@ -298,6 +298,7 @@ best_model <- wflowSet %>%
   select_best(metric = "rmse") %>%
   print()
 ```
+
 We use the `collect_predictions` function to gather the best-performing model's training data and visualize the relationship between the actual and predicted values. This allows us to assess the model's predictive accuracy. Additionally, we perform a residual analysis using standardized residuals to further evaluate the model's performance and identify any potential areas for improvement.
 
 ```{r}
@@ -410,6 +411,7 @@ p4 <- test_results %>%
 #| code-summary: "Show the code"
 p3 | p4
 ```
+
 ### **Conclusion**
 
 This tutorial showcased the versatility of the Tidymodels framework for chemometric applications. By leveraging its modular and tidy design, you can implement robust spectroscopic models tailored to your dataset, ensuring both accuracy and reproducibility.

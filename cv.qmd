@@ -1,5 +1,6 @@
 ---
 title: "Curriculum Vitae"
+comments: false
 ---
 
 ::: {style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px;"}
