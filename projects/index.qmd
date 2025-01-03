@@ -1,5 +1,6 @@
 ---
 title: R Packages
+comments: false
 listing:
   contents: projects.yml
   type: grid

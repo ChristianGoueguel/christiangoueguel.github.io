@@ -49,6 +49,11 @@ website:
       - icon: envelope-at
         aria-label: email
         href: "mailto:christian.goueguel@gmail.com"
+  comments:
+    giscus:
+      repo: ChristianGoueguel/christiangoueguel.github.io
+      theme:
+        light: light
 
 format:
   html:

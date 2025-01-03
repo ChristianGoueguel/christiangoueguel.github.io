@@ -4,6 +4,7 @@ description: "Have you ever heard of Orthogonal Partial Least-Squares (OPLS)? Th
 author: "Christian L. Goueguel"
 date: "12/20/2019"
 image: "cover.png"
+draft: false
 categories:
   - Chemometrics
   - Machine Learning
