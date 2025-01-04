@@ -4,7 +4,7 @@ comments: false
 ---
 
 ::: justified
-![Photo by Christian L. Goueguel.](images/IMG_1985.png){fig-align="center" width="900"}
+![](images/IMG_1985.png){fig-align="center" width="900"}
 
 ## About
 

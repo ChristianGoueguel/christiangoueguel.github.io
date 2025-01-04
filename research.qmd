@@ -7,15 +7,19 @@ ditor:
 ---
 
 ::: justified
-![Photo by Christian L. Goueguel.](images/IMG_4742.png){fig-align="center" width="750"}Welcome to an overview of my research projects, from current initiatives to notable past projects in laser spectroscopy and analytical instrumentation. Feel free to reach out if you’d like to collaborate or learn more about my work.
+![](images/IMG_4742.png){fig-align="center" width="950"}
 
 ## Current Research
 
-### Soil Analysis Using LIBS
+### Development of Laser-based Gas Detection System
 
-Leading research to enhance quantitative analysis of agricultural soils, with a focus on mitigating matrix interference through LIBS combined with advanced chemometric modeling. This work aims to support sustainable agricultural practices.
+Designing a highly compact, long-path tunable mid-infrared diode laser system for the detection and quantification of trace gases, with applications in environmental monitoring.
 
 ## Past Research
+
+### Soil Analysis Using LIBS
+
+Led research to enhance quantitative analysis of agricultural soils, with a focus on mitigating matrix interference through LIBS combined with advanced chemometric modeling. This work aims to support sustainable agricultural practices.
 
 ### Development of a High-Throughput LIBS System
 
