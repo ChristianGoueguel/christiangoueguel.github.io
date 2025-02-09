@@ -6,8 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Christian L. Goueguel">
+<meta name="dcterms.date" content="2020-04-20">
+<meta name="description" content="This post describes the Allan deviation as a method for analyzing frequency stability. The Allan deviation is widely regarded as the most prevalent time-domain measure of frequency stability. Similar to standard deviation, it quantifies fractional frequency fluctuations; however, it possesses the distinct advantage of convergence for the majority of noise types. This makes the Allan deviation particularly valuable in the evaluation of frequency stability across various applications in laser spectroscopy.">
 
-<title>index – Christian L. Goueguel</title>
+<title>A Gentle Introduction to Allan Deviation Measure – Christian L. Goueguel</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,24 +26,22 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<script src="../site_libs/quarto-listing/list.min.js"></script>
-<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-15f1a39ebb5dcc0ab50acfe4fcc0315b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<script src="../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-15f1a39ebb5dcc0ab50acfe4fcc0315b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -68,35 +69,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-image','listing-date','listing-title','listing-subtitle','listing-description','listing-author','listing-reading-time',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
+<meta name="quarto:status" content="draft">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -128,20 +101,21 @@ window.Quarto = {
 };
 </script>
 
-<link rel="stylesheet" href="../styles.scss">
-<meta property="og:title" content="– Christian L. Goueguel">
-<meta property="og:image" content="../blog/posts/post7/cover.png">
+<link rel="stylesheet" href="../../../styles.scss">
+<meta property="og:title" content="A Gentle Introduction to Allan Deviation Measure – Christian L. Goueguel">
+<meta property="og:description" content="This post describes the Allan deviation as a method for analyzing frequency stability. The Allan deviation is widely regarded as the most prevalent time-domain measure of frequency stability. Similar to standard deviation, it quantifies fractional frequency fluctuations; however, it possesses the distinct advantage of convergence for the majority of noise types. This makes the Allan deviation particularly valuable in the evaluation of frequency stability across various applications in laser spectroscopy.">
+<meta property="og:image" content="cover.png">
 <meta property="og:site_name" content="Christian L. Goueguel">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
+  <header id="quarto-header" class="headroom fixed-top"><div id="quarto-draft-alert" class="alert alert-warning"><i class="bi bi-pencil-square"></i>Draft</div>
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../../index.html">
     <span class="navbar-title">Christian L. Goueguel</span>
     </a>
   </div>
@@ -152,31 +126,31 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../bio.html"> 
+    <a class="nav-link" href="../../../bio.html"> 
 <span class="menu-text">ABOUT</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../research.html"> 
+    <a class="nav-link" href="../../../research.html"> 
 <span class="menu-text">RESEARCH</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../publications.html"> 
+    <a class="nav-link" href="../../../publications.html"> 
 <span class="menu-text">PUBLICATIONS</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../talks.html"> 
+    <a class="nav-link" href="../../../talks.html"> 
 <span class="menu-text">TALKS</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../projects/index.html"> 
+    <a class="nav-link" href="../../../projects/index.html"> 
 <span class="menu-text">PROJECTS</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../photography.html"> 
+    <a class="nav-link" href="../../../photography.html"> 
 <span class="menu-text">PHOTOGRAPHY</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../blog/index.html" aria-current="page"> 
+    <a class="nav-link" href="../../../blog/index.html"> 
 <span class="menu-text">BLOG</span></a>
   </li>  
 </ul>
@@ -196,295 +170,254 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(8)</span></div><div class="category" data-category="Q2hlbW9tZXRyaWNz">Chemometrics <span class="quarto-category-count">(6)</span></div><div class="category" data-category="RGF0YSUyMFZpc3VhbGl6YXRpb24=">Data Visualization <span class="quarto-category-count">(2)</span></div><div class="category" data-category="TGFzZXI=">Laser <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TWFjaGluZSUyMExlYXJuaW5n">Machine Learning <span class="quarto-category-count">(6)</span></div><div class="category" data-category="TWF0aHM=">Maths <span class="quarto-category-count">(1)</span></div><div class="category" data-category="T3V0bGllcnM=">Outliers <span class="quarto-category-count">(3)</span></div><div class="category" data-category="UHJlcHJvY2Vzc2luZw==">Preprocessing <span class="quarto-category-count">(4)</span></div><div class="category" data-category="Ug==">R <span class="quarto-category-count">(2)</span></div><div class="category" data-category="U2NpZW5jZQ==">Science <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U3BlY3Ryb3Njb3B5">Spectroscopy <span class="quarto-category-count">(6)</span></div><div class="category" data-category="VGlkeW1vZGVscw==">Tidymodels <span class="quarto-category-count">(1)</span></div></div></div>
+    
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
 
-
-
-
-
-
-
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="listing-actions-group">
-   <div class="input-group input-group-sm quarto-listing-sort">
-     <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-     <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
-       <option value="" disabled="" selected="" hidden="">Order By</option>
-       <option value="index" data-direction="asc">Default</option>
-         <option value="listing-date-sort" data-direction="asc">
-          Date - Oldest
-        </option>
-         <option value="listing-date-sort" data-direction="desc">
-          Date - Newest
-        </option>
-         <option value="listing-title" data-direction="asc">
-          Title
-        </option>
-     </select>
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">A Gentle Introduction to Allan Deviation Measure</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Noise</div>
+    <div class="quarto-category">Measurements</div>
+    <div class="quarto-category">Statistics</div>
   </div>
-    <div class="input-group input-group-sm quarto-listing-filter">
-      <span class="input-group-text"><i class="bi bi-search"></i></span>
-      <input type="text" class="search form-control" placeholder="Filter">
+  </div>
+
+<div>
+  <div class="description">
+    This post describes the Allan deviation as a method for analyzing frequency stability. The Allan deviation is widely regarded as the most prevalent time-domain measure of frequency stability. Similar to standard deviation, it quantifies fractional frequency fluctuations; however, it possesses the distinct advantage of convergence for the majority of noise types. This makes the Allan deviation particularly valuable in the evaluation of frequency stability across various applications in laser spectroscopy.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Christian L. Goueguel </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">April 20, 2020</p>
     </div>
-</div>
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="UHJlcHJvY2Vzc2luZyUyQ0NoZW1vbWV0cmljcyUyQ01hY2hpbmUlMjBMZWFybmluZyUyQ091dGxpZXJzJTJDRGF0YSUyMFZpc3VhbGl6YXRpb24=" data-listing-date-sort="1733817600000" data-listing-file-modified-sort="1734554406092" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="16" data-listing-word-count-sort="3016">
-<div class="thumbnail">
-<p><a href="../blog/posts/post7/index.html" class="no-external"></a></p><a href="../blog/posts/post7/index.html" class="no-external">
-<p><img loading="lazy" src="../blog/posts/post7/cover.png" class="thumbnail-image"></p>
-</a><p><a href="../blog/posts/post7/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../blog/posts/post7/index.html" class="no-external">Beyond Standard Boxplot: The Adjusted and Generalized Boxplots</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../blog/posts/post7/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="../blog/posts/post7/index.html" class="no-external">Boxplots, also known as box-and-whisker plots, have been a cornerstone of data visualization since their introduction by John Tukey in the late 1970s. Despite their enduring utility, boxplot assumes a symmetrical mesokurtic distribution and might misrepresent datasets with skewness or heavy tails. Alternative approaches have been proposed to address these limitations.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../blog/posts/post7/index.html" class="no-external">
-<div class="listing-date">
-Dec 10, 2024
-</div>
-<div class="listing-author">
-Christian L. Goueguel
-</div>
-<div class="listing-reading-time">
-16 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="UHJlcHJvY2Vzc2luZyUyQ0NoZW1vbWV0cmljcyUyQ01hY2hpbmUlMjBMZWFybmluZyUyQ091dGxpZXJzJTJDRGF0YSUyMFZpc3VhbGl6YXRpb24=" data-listing-date-sort="1697785200000" data-listing-file-modified-sort="1734559100093" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7" data-listing-word-count-sort="1339">
-<div class="thumbnail">
-<p><a href="../blog/posts/post8/index.html" class="no-external"></a></p><a href="../blog/posts/post8/index.html" class="no-external">
-<p><img loading="lazy" src="../blog/posts/post8/cover.png" class="thumbnail-image"></p>
-</a><p><a href="../blog/posts/post8/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../blog/posts/post8/index.html" class="no-external">Robust Measures of Tail Weight in Distributions</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../blog/posts/post8/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="../blog/posts/post8/index.html" class="no-external">Traditional measures like kurtosis have long been used to capture the weight of the tails of a distribution. However, kurtosis comes with limitations, particularly its sensitivity to outliers and lack of robustness. In this blog post, we will explore two robust measures for tail weight.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../blog/posts/post8/index.html" class="no-external">
-<div class="listing-date">
-Oct 20, 2023
-</div>
-<div class="listing-author">
-Christian L. Goueguel
-</div>
-<div class="listing-reading-time">
-7 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-categories="UiUyQ1ByZXByb2Nlc3NpbmclMkNDaGVtb21ldHJpY3MlMkNNYWNoaW5lJTIwTGVhcm5pbmclMkNTcGVjdHJvc2NvcHk=" data-listing-date-sort="1684998000000" data-listing-file-modified-sort="1734247856749" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="19" data-listing-word-count-sort="3725">
-<div class="thumbnail">
-<p><a href="../blog/posts/post4/index.html" class="no-external"></a></p><a href="../blog/posts/post4/index.html" class="no-external">
-<p><img loading="lazy" src="../blog/posts/post4/cover.png" class="thumbnail-image"></p>
-</a><p><a href="../blog/posts/post4/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../blog/posts/post4/index.html" class="no-external">Exploring Three Orthogonal Signal Correction (OSC) Algorithms</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../blog/posts/post4/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="../blog/posts/post4/index.html" class="no-external">Orthogonal signal correction (OSC) is a powerful preprocessing technique frequently used to remove variation in spectral data that is orthogonal to the property of interest. Over the years, several implementations of OSC have emerged, with the most notable being those by Wold et al., Sjöblom et al., and Fearn. This post compares these three methods, exploring their algorithmic approaches and practical implications.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../blog/posts/post4/index.html" class="no-external">
-<div class="listing-date">
-May 25, 2023
-</div>
-<div class="listing-author">
-Christian L. Goueguel
-</div>
-<div class="listing-reading-time">
-19 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-categories="U2NpZW5jZSUyQ0xhc2VyJTJDU3BlY3Ryb3Njb3B5" data-listing-date-sort="1662534000000" data-listing-file-modified-sort="1733940832464" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1588">
-<div class="thumbnail">
-<p><a href="../blog/posts/post5/index.html" class="no-external"></a></p><a href="../blog/posts/post5/index.html" class="no-external">
-<p><img loading="lazy" src="../blog/posts/post5/cover.png" class="thumbnail-image"></p>
-</a><p><a href="../blog/posts/post5/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../blog/posts/post5/index.html" class="no-external">Optical Breakdown Threshold in Water</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../blog/posts/post5/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="../blog/posts/post5/index.html" class="no-external">Cascade (or avalanche) ionization and multiphoton ionization are the two primary mechanisms responsible for laser-induced plasma (LIP) formation in water. These absorption processes are influenced by the intensity of the laser pulse and the physical and chemical properties of the water itself. This post focuses on providing a concise overview of these key mechanisms.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../blog/posts/post5/index.html" class="no-external">
-<div class="listing-date">
-Sep 7, 2022
-</div>
-<div class="listing-author">
-Christian L. Goueguel
-</div>
-<div class="listing-reading-time">
-8 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="4" data-categories="UiUyQ1RpZHltb2RlbHMlMkNDaGVtb21ldHJpY3MlMkNNYWNoaW5lJTIwTGVhcm5pbmclMkNTcGVjdHJvc2NvcHk=" data-listing-date-sort="1650178800000" data-listing-file-modified-sort="1735946042663" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2082">
-<div class="thumbnail">
-<p><a href="../blog/posts/post3/index.html" class="no-external"></a></p><a href="../blog/posts/post3/index.html" class="no-external">
-<p><img loading="lazy" src="../blog/posts/post3/cover.png" class="thumbnail-image"></p>
-</a><p><a href="../blog/posts/post3/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../blog/posts/post3/index.html" class="no-external">Chemometric Modeling with Tidymodels: A Tutorial for Spectroscopic Data</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../blog/posts/post3/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="../blog/posts/post3/index.html" class="no-external">In this post, we demonstrate how to build robust chemometric models for spectroscopic data using the Tidymodels framework in R. This workflow is designed to cater to beginners and advanced practitioners alike, offering an end-to-end guide from data preprocessing to model evaluation and interpretation.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../blog/posts/post3/index.html" class="no-external">
-<div class="listing-date">
-Apr 17, 2022
-</div>
-<div class="listing-author">
-Christian L. Goueguel
-</div>
-<div class="listing-reading-time">
-11 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="5" data-categories="Q2hlbW9tZXRyaWNzJTJDTWFjaGluZSUyMExlYXJuaW5nJTJDT3V0bGllcnMlMkNTcGVjdHJvc2NvcHk=" data-listing-date-sort="1578384000000" data-listing-file-modified-sort="1733674722604" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1791">
-<div class="thumbnail">
-<p><a href="../blog/posts/post2/index.html" class="no-external"></a></p><a href="../blog/posts/post2/index.html" class="no-external">
-<p><img loading="lazy" src="../blog/posts/post2/cover.png" class="thumbnail-image"></p>
-</a><p><a href="../blog/posts/post2/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../blog/posts/post2/index.html" class="no-external">Multivariate Outlier Detection in High-Dimensional Spectral Data</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../blog/posts/post2/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="../blog/posts/post2/index.html" class="no-external">High-dimensional data are particularly challenging for outlier detection. Robust PCA methods have been developed to build models that are unaffected by outliers in high dimensions. These outliers are generally characterized by their deviation from the PCA subspace.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../blog/posts/post2/index.html" class="no-external">
-<div class="listing-date">
-Jan 7, 2020
-</div>
-<div class="listing-author">
-Christian L. Goueguel
-</div>
-<div class="listing-reading-time">
-9 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="6" data-categories="Q2hlbW9tZXRyaWNzJTJDTWFjaGluZSUyMExlYXJuaW5nJTJDU3BlY3Ryb3Njb3B5" data-listing-date-sort="1576828800000" data-listing-file-modified-sort="1735945743598" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1051">
-<div class="thumbnail">
-<p><a href="../blog/posts/post1/index.html" class="no-external"></a></p><a href="../blog/posts/post1/index.html" class="no-external">
-<p><img loading="lazy" src="../blog/posts/post1/cover.png" class="thumbnail-image"></p>
-</a><p><a href="../blog/posts/post1/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../blog/posts/post1/index.html" class="no-external">An Overview of Orthogonal Partial Least Squares</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../blog/posts/post1/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="../blog/posts/post1/index.html" class="no-external">Have you ever heard of Orthogonal Partial Least-Squares (OPLS)? This article aims to give you a clear and concise overview of OPLS and its advantages in the development of more efficient predictive models.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../blog/posts/post1/index.html" class="no-external">
-<div class="listing-date">
-Dec 20, 2019
-</div>
-<div class="listing-author">
-Christian L. Goueguel
-</div>
-<div class="listing-reading-time">
-6 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="7" data-categories="TWF0aHMlMkNQcmVwcm9jZXNzaW5nJTJDU3BlY3Ryb3Njb3B5" data-listing-date-sort="1554447600000" data-listing-file-modified-sort="1734247188604" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2645">
-<div class="thumbnail">
-<p><a href="../blog/posts/post6/index.html" class="no-external"></a></p><a href="../blog/posts/post6/index.html" class="no-external">
-<p><img loading="lazy" src="../blog/posts/post6/cover.png" class="thumbnail-image"></p>
-</a><p><a href="../blog/posts/post6/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../blog/posts/post6/index.html" class="no-external">The Pseudo-Voigt Function</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../blog/posts/post6/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="../blog/posts/post6/index.html" class="no-external">In spectroscopy, especially laser spectroscopy, accurate modeling of spectral line shapes is essential for analyzing the physical and chemical properties of matter. A commonly used approximation is the pseudo-Voigt function, which serves as a simplified representation of the Voigt profile. The Voigt profile, defined as the convolution of a Gaussian function and a Lorentzian function, accurately describes the line shapes, but its calculation is often time consuming.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../blog/posts/post6/index.html" class="no-external">
-<div class="listing-date">
-Apr 5, 2019
-</div>
-<div class="listing-author">
-Christian L. Goueguel
-</div>
-<div class="listing-reading-time">
-14 min
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="justified">
+<div class="quarto-figure quarto-figure-left">
+<figure class="figure">
+<p><img src="cover.png" class="img-fluid figure-img" width="900"></p>
+<figcaption>Photo by <a href="https://unsplash.com/photos/green-grass-field-near-lake-under-blue-sky-during-daytime-KgGCnroEB0o?utm_content=creditShareLink&amp;utm_medium=referral&amp;utm_source=unsplash">Maxwell Ingham</a>.</figcaption>
+</figure>
+</div>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Traditional second-moment measures of dispersion like standard deviation are often inadequate for quantifying stability over varying time intervals, particularly for non-stationary time series data in which noise processes that change over time. This limitation led to the development of the Allan deviation in the 1960s by David Allan, then working at the National Bureau of Standards (now NIST). His work was driven by the need to compare and improve the stability of atomic clocks and frequency standards, crucial for navigation, telecommunications, and fundamental physics experiments.</p>
+<p>The standard deviation, <span class="math inline">\(s\)</span>, is given by:</p>
+<p><span class="math display">\[
+s = \sqrt{s^2}
+\]</span></p>
+<p>where <span class="math inline">\(s^2\)</span> is the standard variance and is defined as:</p>
+<p><span class="math display">\[
+s^2 = \frac{1}{N-1}\sum_{i=1}^N(y_i-\bar{y})^2
+\]</span></p>
+<p>with <span class="math inline">\(y_i\)</span> are the <span class="math inline">\(N\)</span> fractional frequency values, and <span class="math inline">\(\bar{y} = \frac{1}{N}\sum_{i=1}^N y_i\)</span> is the average frequency.</p>
+<p>The use of standard deviation as a measure of dispersion in non-stationary noises, such as flicker FM noise, reveals significant limitations, as shown in the figure below.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can see that standard deviation increases with sample size. This phenomenon arises because standard deviation relies on deviations from the mean, which is inadequate for non-stationary time series. In contrast, employing Allan variance mitigates these issues by utilizing first differences of fractional frequency values, thus providing a more reliable metric for frequency stability.</p>
+<p>Allan variance serves as a robust tool for assessing frequency stability across varying averaging times, effectively distinguishing between different noise processes. Its square root, known as Allan deviation, is particularly valued for its interpretability and ease of comparison, making it a foundational measure in fields such as metrology, geophysics, and laser spectroscopy.</p>
+<section id="power-law-noise" class="level3">
+<h3 class="anchored" data-anchor-id="power-law-noise">Power Law Noise</h3>
+<p>The phase and frequency fluctuations of a frequency source can often be well-described by one or more power law noise processes having a spectral characteristic of <span class="math inline">\(S(f) \approx f^{\alpha}\)</span> where <span class="math inline">\(f\)</span> is the Fourier or sideband frequency in hertz and <span class="math inline">\(\alpha\)</span> is the power law exponent. Note that power law noise doesn’t necessarily have to have an integer <span class="math inline">\(\alpha\)</span>, mixtures of noise types are possible.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Noise</th>
+<th style="text-align: center;">Color</th>
+<th style="text-align: center;"><span class="math inline">\(\alpha\)</span> (Phase)</th>
+<th style="text-align: center;"><span class="math inline">\(\alpha\)</span> (Frequency)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">White</td>
+<td style="text-align: center;">White</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Flicker</td>
+<td style="text-align: center;">Pink</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">-1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Random Walk</td>
+<td style="text-align: center;">Brown</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">-2</td>
+</tr>
+</tbody>
+</table>
+<p>The more divergent noise types are sometimes referred to by their color. White noise has a flat spectral density (by analogy to white light). Flicker noise has an <span class="math inline">\(f^{-1}\)</span> spectral density, and is called pink or red (more energy toward lower frequencies). Random walk has <span class="math inline">\(f^{-2}\)</span> spectral density is called brown, and <span class="math inline">\(f^{-3}\)</span> (flicker walk) noise is called black. Because the white, flicker, and random walk noise types can apply to either phase or frequency data, these three noise types, along with phase-frequency conversions, will cover all five common noises. Note that those conversions change the exponent by 2, and that white frequency noise is the same as random walk phase noise, since both have <span class="math inline">\(\alpha = 0\)</span>.</p>
+<ul>
+<li><strong>White frequency noise</strong>: This noise arises from random fluctuations in the frequency and is common in many physical systems.</li>
+<li><strong>Flicker frequency noise</strong>: Steady noise level independent of the averaging time.</li>
+<li><strong>Random walk frequency noise</strong>: This type of noise often results from cumulative effects, such as thermal expansion or mechanical drift, that grow over time.</li>
+<li><strong>White phase noise</strong>: Very short-term fluctuations in the phase.</li>
+<li><strong>Flicker phase noise</strong>: This noise has a slower decrease with averaging time compared to white phase noise.</li>
+</ul>
+</section>
+<section id="examples-of-noise-generation" class="level3">
+<h3 class="anchored" data-anchor-id="examples-of-noise-generation"><strong>Examples of Noise Generation</strong></h3>
+<p>Examples of the four most common of these noises (i.e., <span class="math inline">\(\alpha = 0, 1, 2\)</span> and <span class="math inline">\(3\)</span>) are shown below.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="1920"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="allan-variance" class="level2">
+<h2 class="anchored" data-anchor-id="allan-variance">Allan Variance</h2>
+<p>Each type of noise dominates at different time scales and affects the stability of a frequency source differently. The Allan variance is uniquely suited to distinguish these noise types because it analyzes stability as a function of the averaging time <span class="math inline">\(\tau\)</span>. Mathematically, the Allan variance, <span class="math inline">\(\sigma_y^2(\tau)\)</span>, is defined as:</p>
+<p><span class="math display">\[
+\sigma_y^2(\tau) = \frac{1}{2(N-1)}\sum_{i=1}^{N-1}(\bar{y}_{i+1}-\bar{y}_i)^2
+\]</span></p>
+<p>where, <span class="math inline">\(\bar{y}_i\)</span> is the time-series of fractional frequency at averaging time, and <span class="math inline">\(N\)</span> is the total number of averaging intervals.</p>
+<p>In terms of time-series of phase data, the Allan variance is calculated as:</p>
+<p><span class="math display">\[
+\sigma_y^2(\tau = m\tau_0) = \frac{1}{2(m\tau_0)^2(N-2)}\sum_{i=1}^{N-2}(x_{i+2}-2x_{i+1}+x_i)^2
+\]</span></p>
+<p>where <span class="math inline">\(x_i\)</span> is the <span class="math inline">\(i\)</span>-th of the <span class="math inline">\(N\)</span> phase values spaced by the measurement interval <span class="math inline">\(\tau\)</span>, <span class="math inline">\(m\)</span> is the averaging factor and <span class="math inline">\(\tau_0\)</span> is the basic measurement interval.</p>
+<p>Just as with standard deviation, the Allan deviation, <span class="math inline">\(\sigma_y(\tau)\)</span>, is defined as the squared root of the Allan variance and is given by:</p>
+<p><span class="math display">\[
+\sigma_y(\tau) = \sqrt{\sigma^2_y(\tau)}
+\]</span></p>
+<p>It computes the variance between consecutive overlapping time intervals in the time series, with each pair of adjacent intervals contributing a single term to the computation. Although it is well suited for characterizing white noise and random walk frequency noise, it does not use all available data because it relies on non-overlapping intervals. This results in reduced statistical efficiency for longer time series. For white FM noise, the Allan variance is equivalent to the ordinary variance. However, it has the advantage of converging to a finite value for more divergent types of noise, such as flicker noise, regardless of the number of samples. The confidence interval of an estimate of the Allan variance depends on the type of noise and is typically estimated as <span class="math inline">\(±\frac{\sigma_y(\tau)}{\sqrt{N}}\)</span>.</p>
+<section id="overlapping-allan-variance" class="level3">
+<h3 class="anchored" data-anchor-id="overlapping-allan-variance">Overlapping Allan Variance</h3>
+<p>The maximal overlap Allan deviation is a refinement of the classical Allan deviation that uses all possible overlapping pairs of adjacent intervals for the computation. It maximizes the overlap by considering every possible pair of adjacent intervals of duration <span class="math inline">\(\tau\)</span>, rather than restricting to non-overlapping intervals. Consequently, the maximal overlap Allan deviation increases statistical efficiency since it uses the entire dataset for each <span class="math inline">\(\tau\)</span> while providing smoother and more reliable results, especially for longer datasets or when the signal has non-white noise components. The overlapped Allan deviation is the most common measure of time-domain frequency stability. The accronym AVAR has come to be used mainly for this form of the Allan variance, and ADEV for its square root.</p>
+<p>The maximal overlap Allan variance is given by:</p>
+<p><span class="math display">\[
+\sigma_y^2 = \frac{1}{2m^2(N-2m+1)}\sum_{j=1}^{N-2m+1} \left( \sum_{i=j}^{j+m-1}(\bar{y}_{i+m}-\bar{y}_i) \right )^2
+\]</span></p>
+<p>In terms of phase data, the overlapping Allan variance can be estimated from a set of <span class="math inline">\(N\)</span> time measurements as:</p>
+<p><span class="math display">\[
+\sigma^2_y(m\tau_0) = { 1 \over 2 (m \tau_0 )^2 (N-2m) }
+\sum_{n=1}^{N-2m} ( {x}_{n+2m} - 2x_{n+1m} + x_{n} )^2
+\]</span></p>
+</section>
+<section id="modified-allan-variance" class="level3">
+<h3 class="anchored" data-anchor-id="modified-allan-variance">Modified Allan variance</h3>
+<p>The modified Allan variance is another common time domain measure of frequency stability that address the inability to separate white phase modulation from flicker phase modulation using traditional Allan variance. It is estimated from a set of <span class="math inline">\(N\)</span> frequency measurements for averaging time <span class="math inline">\(\tau = m\tau_0\)</span>, by the expression:</p>
+<p><span class="math display">\[
+\sigma_y^2(\tau) = \frac{1}{2m^4(N-3m+2)}\sum_{j=1}^{N-3m+2} \left[ \sum_{i=j}^{i+m-1} \left( \sum_{k=i}^{i+m-1}(y_{k+m} - y_k) \right) \right]^2
+\]</span></p>
+<p>In terms of phase data,</p>
+<p><span class="math display">\[
+\sigma^2_y(m\tau_0) = { 1 \over 2 (m \tau_0 )^2 (N-3m+1) }
+\sum_{j=1}^{N-3m+1} \left[
+\sum_{i=j}^{j+m-1} {x}_{i+2m} - 2x_{i+m} + x_{i} \right]^2
+\]</span> The modified Allan variance is the same as the normal Allan variance for <span class="math inline">\(m\)</span> = 1. It includes an additional phase averaging operation, and has the advantage of being able to distinguish between white and flicker PM noise. It offers the highest statistical efficiency of the three methods, capturing long-range correlations in the data, making it more robust for non-stationary or highly correlated signals. However, the computational complexity is higher due to the extensive overlap and inclusion of all interval combinations.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Feature</th>
+<th>Allan variance</th>
+<th>Overlapping Allan variance</th>
+<th>Modified Allan variance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Overlap</strong></td>
+<td>No</td>
+<td>Adjacent intervals only</td>
+<td>All intervals of length <span class="math inline">\(\tau\)</span></td>
+</tr>
+<tr class="even">
+<td><strong>Efficiency</strong></td>
+<td>Low</td>
+<td>Higher than classical</td>
+<td>Highest</td>
+</tr>
+<tr class="odd">
+<td><strong>Complexity</strong></td>
+<td>Low</td>
+<td>Moderate</td>
+<td>High</td>
+</tr>
+<tr class="even">
+<td><strong>Noise Sensitivity</strong></td>
+<td>Good for simple noise models</td>
+<td>Better for colored noise</td>
+<td>Best for complex noise structures</td>
+</tr>
+<tr class="odd">
+<td><strong>Use Cases</strong></td>
+<td>Simple analysis</td>
+<td>Reliable characterization</td>
+<td>Advanced analysis with long-range correlations</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="examples" class="level3">
+<h3 class="anchored" data-anchor-id="examples">Examples</h3>
+<p>Below, we demonstrate how to plot the Allan deviation for three common noise types: white noise, flicker noise, and random walk noise.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The plotted Allan deviations allow for a direct comparison of the stability characteristics of these noise types. Each noise type has a distinct slope and pattern, providing valuable insights into the underlying system dynamics:</p>
+<ul>
+<li><p><strong>White Noise</strong>: Characterized by a slope of <span class="math inline">\(\sigma_y(\tau) \propto \tau^{-1/2}​\)</span>. This rapid decrease reflects uncorrelated, short-term fluctuations. White noise is often the baseline noise type for many systems.</p></li>
+<li><p><strong>Flicker Noise</strong>: Exhibits a slope of <span class="math inline">\(\sigma_y(\tau) \propto \tau^0\)</span>, meaning the Allan deviation is constant regardless of averaging time. This indicates long-term correlated instability, which is common in clocks and oscillators.</p></li>
+<li><p><strong>Random Walk Noise</strong>: Displays a slope of <span class="math inline">\(\sigma_y(\tau) \propto \tau^{+1/2}\)</span>. The increase in Allan deviation with <span class="math inline">\(\tau\)</span> reflects cumulative drift over time, which is characteristic of systems with strong correlations or random-walk-like behavior.</p></li>
+</ul>
+</section>
+</section>
+</div>
+
+
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -902,6 +835,10 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
+<script src="https://giscus.app/client.js" data-repo="ChristianGoueguel/christiangoueguel.github.io" data-repo-id="R_kgDONaeuNQ" data-category="General" data-category-id="" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
+</script>
+<input type="hidden" id="giscus-base-theme" value="light">
+<input type="hidden" id="giscus-alt-theme" value="dark">
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
