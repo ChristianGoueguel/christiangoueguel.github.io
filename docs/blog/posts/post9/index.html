@@ -257,7 +257,7 @@ window.Quarto = {
 </div>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>When performing Principal Component Analysis (PCA), one must decide whether to apply it to the covariance matrix or the correlation matrix. This decision affects how variables with different scales contribute to the principal components. This post offers a technical explanation with a mathematical derivation to show why the covariance matrix of standardized data equals the correlation matrix of the original data. We’ll back this up with an example in R.</p>
+<p>Principal Component Analysis (PCA) is a linear dimensionality reduction technique that identifies orthogonal directions (principal components) in the data along which variance is maximized. It projects high-dimensional data into a lower-dimensional space while preserving as much variability (information) as possible. Mathematically, PCA solves an eigenvalue problem on the covariance (or correlation) matrix of the data. When performing PCA, one must decide whether to apply it to the covariance matrix or the correlation matrix. This decision affects how variables with different scales contribute to the principal components. This post offers a technical explanation with a mathematical derivation to show why the covariance matrix of standardized data equals the correlation matrix of the original data. We’ll back this up with an example in R.</p>
 </section>
 <section id="definitions" class="level2">
 <h2 class="anchored" data-anchor-id="definitions">Definitions</h2>
@@ -269,52 +269,54 @@ window.Quarto = {
 <p>The centered data matrix is <span class="math inline">\(\tilde{\mathbf{X}} = \mathbf{X} - \mathbf{1}_n \mu^T\)</span> where <span class="math inline">\(\mu \in \mathbb{R}^p\)</span> is the vector of column means.</p>
 <p>The <strong>covariance matrix</strong> of <span class="math inline">\(\mathbf{X}\)</span> is defined as:</p>
 <p><span class="math display">\[
-\Sigma = \frac{1}{n-1} \tilde{\mathbf{X}}^T \tilde{\mathbf{X}}
+\textbf{Cov}(\mathbf{X}) = \frac{1}{n-1} \tilde{\mathbf{X}}^T \tilde{\mathbf{X}}
 \]</span></p>
-<p>The <strong>standardized data</strong> (i.e., mean = 0, variance = 1) is given by <span class="math inline">\(Z_{ij} = \frac{X_{ij} - \mu_j}{\sigma_j} \quad \text{or} \quad \mathbf{Z} = \tilde{\mathbf{X}} \mathbf{D}^{-1}\)</span> where <span class="math inline">\(\mathbf{D} = \text{diag}(\sigma_1, \dots, \sigma_p)\)</span>.</p>
+<p>The <strong>standardized data</strong> (i.e., <span class="math inline">\(\mu = 0\)</span>, <span class="math inline">\(\sigma = 1\)</span>) is given by:</p>
+<p><span class="math display">\[
+Z_{ij} = \frac{X_{ij} - \mu_j}{\sigma_j} = \frac{\tilde{\mathbf{X}}}{\sigma_j} \quad \text{or} \quad \mathbf{Z} = \tilde{\mathbf{X}} \mathbf{D}^{-1}
+\]</span></p>
+<p>where <span class="math inline">\(\mathbf{D} = \text{diag}(\sigma_1, \dots, \sigma_p)\)</span></p>
 <p>Then,</p>
 <p><span class="math display">\[
-\text{Cov}(\mathbf{Z}) = \frac{1}{n-1} \mathbf{Z}^T \mathbf{Z} = \mathbf{D}^{-1} \Sigma \mathbf{D}^{-1}
+\begin{align*} \textbf{Cov}(\mathbf{Z}) &amp;= \frac{1}{n-1} \mathbf{Z}^T \mathbf{Z} \\
+&amp;= \frac{1}{n-1} \left[\tilde{\mathbf{X}} \mathbf{D}^{-1}\right]^T \tilde{\mathbf{X}} \mathbf{D}^{-1}\\
+&amp;= \mathbf{D}^{-1}\frac{1}{n-1}\tilde{\mathbf{X}}^T \tilde{\mathbf{X}} \mathbf{D}^{-1}\\
+&amp;= \mathbf{D}^{-1} \textbf{Cov}(\tilde{\mathbf{X}}) \mathbf{D}^{-1}\\
+\end{align*}
 \]</span></p>
-<p>This is precisely the <strong>correlation matrix</strong> of <span class="math inline">\(\mathbf{X}\)</span>:</p>
+<p>Now, to compute the <strong>correlation matrix</strong> of <span class="math inline">\(\mathbf{X}\)</span>, we normalize each covariance term by the product of the standard deviations of variables <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>:</p>
 <p><span class="math display">\[
-\text{Cor}(\mathbf{X}) = \left[ \rho_{ij} \right] = \mathbf{D}^{-1} \Sigma \mathbf{D}^{-1}
+\begin{align*}
+\textbf{Cor}(\mathbf{X})_{ij} &amp;= \frac{\textbf{Cov}(\tilde{\mathbf{X}})_{ij}}{\sigma_i\sigma_j} \\ &amp;= \mathbf{D}^{-1} \textbf{Cov}(\tilde{\mathbf{X}}) \mathbf{D}^{-1}
+\end{align*}
 \]</span></p>
-<p>Thus: <span class="math inline">\(\boxed{\text{Cov}(\text{Standardized data}) = \text{Correlation matrix of raw data}}\)</span></p>
+<p>Thus: <span class="math inline">\(\boxed{\textbf{Cov}(\mathbf{Z}) = \textbf{Cor}(\mathbf{X})}\)</span></p>
+<p>This demonstrates that standardizing the data transforms the covariance matrix into the correlation matrix of the original variables.</p>
 <p>PCA seeks directions (<span class="math inline">\(\mathbf{v}\)</span>) that maximize the variance of the projected data:</p>
 <p><span class="math display">\[
-\max\_{\mathbf{v} \in \mathbb{R}^p} \quad \mathbf{v}^T \Sigma \mathbf{v} \quad \text{subject to } \|\mathbf{v}\| = 1
+\max_{\mathbf{v} \in \mathbb{R}^p} \quad \mathbf{v}^T \Sigma \mathbf{v} \quad \text{subject to } \|\mathbf{v}\| = 1
 \]</span></p>
-<p>If <span class="math inline">\(\Sigma\)</span> is the covariance matrix of <span class="math inline">\(\mathbf{X}\)</span>, this favors variables with large variance (and large units). If <span class="math inline">\(\Sigma\)</span> is the correlation matrix (or covariance of standardized data), all variables contribute equally in unitless form. Consequently, correlation-based PCA (or standardize data first) is used when variable scales differ.</p>
-<hr>
+<p>If <span class="math inline">\(\Sigma\)</span> is the covariance matrix of <span class="math inline">\(\mathbf{X}\)</span>, this favors variables with large variance. If <span class="math inline">\(\Sigma\)</span> is the correlation matrix (i.e., the covariance of standardized <span class="math inline">\(\mathbf{X}\)</span>), all variables contribute equally in unitless form. Consequently, correlation-based PCA (or standardize data first) is used when variable scales differ.</p>
 </section>
 <section id="example" class="level2">
 <h2 class="anchored" data-anchor-id="example">Example</h2>
+<p>Simulate correlated variables with different scales:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate correlated variables with different scales</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> x1 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">5</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>x3 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">2</span> <span class="sc">*</span> x1 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span> <span class="dv">3</span>, <span class="at">sd =</span> <span class="dv">15</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>x4 <span class="ot">&lt;-</span> <span class="dv">3</span><span class="sc">/</span><span class="dv">2</span> <span class="sc">*</span> x2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">3</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x1, x2, x3, x4)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Covariance and correlation of raw data</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>cov_raw <span class="ot">&lt;-</span> <span class="fu">cov</span>(data)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>cor_raw <span class="ot">&lt;-</span> <span class="fu">cor</span>(data)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Standardize the data</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>Z <span class="ot">&lt;-</span> <span class="fu">scale</span>(data)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Covariance of standardized data</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>cov_std <span class="ot">&lt;-</span> <span class="fu">cov</span>(Z)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Covariance of standardized data =</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Covariance of standardized data =</code></pre>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> x1 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">5</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>x3 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">2</span> <span class="sc">*</span> x1 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span> <span class="dv">3</span>, <span class="at">sd =</span> <span class="dv">15</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>x4 <span class="ot">&lt;-</span> <span class="dv">3</span><span class="sc">/</span><span class="dv">2</span> <span class="sc">*</span> x2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">3</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x1, x2, x3, x4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cov_std)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Standardize the data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Z <span class="ot">&lt;-</span> <span class="fu">scale</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Covariance matrix of the standardized data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cov_std <span class="ot">&lt;-</span> <span class="fu">cov</span>(Z)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cov_std)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          x1        x2        x3        x4
 x1 1.0000000 0.9659070 0.1892815 0.9584484
@@ -322,12 +324,11 @@ x2 0.9659070 1.0000000 0.1890348 0.9938171
 x3 0.1892815 0.1890348 1.0000000 0.1820451
 x4 0.9584484 0.9938171 0.1820451 1.0000000</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Correlation of raw data =</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Correlation of raw data =</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cor_raw)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Correlation matrix of the raw data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cor_raw <span class="ot">&lt;-</span> <span class="fu">cor</span>(data)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cor_raw)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          x1        x2        x3        x4
 x1 1.0000000 0.9659070 0.1892815 0.9584484
@@ -335,8 +336,10 @@ x2 0.9659070 1.0000000 0.1890348 0.9938171
 x3 0.1892815 0.1890348 1.0000000 0.1820451
 x4 0.9584484 0.9938171 0.1820451 1.0000000</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Are they equal?</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(cov_std, cor_raw)  <span class="co"># Should return TRUE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Are they equal?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(cov_std, cor_raw)  <span class="co"># Should return TRUE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] TRUE</code></pre>
 </div>

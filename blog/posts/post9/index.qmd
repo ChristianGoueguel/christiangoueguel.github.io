@@ -17,7 +17,7 @@ categories:
 
 ## Introduction
 
-When performing Principal Component Analysis (PCA), one must decide whether to apply it to the covariance matrix or the correlation matrix. This decision affects how variables with different scales contribute to the principal components. This post offers a technical explanation with a mathematical derivation to show why the covariance matrix of standardized data equals the correlation matrix of the original data. We’ll back this up with an example in R.
+Principal Component Analysis (PCA) is a linear dimensionality reduction technique that identifies orthogonal directions (principal components) in the data along which variance is maximized. It projects high-dimensional data into a lower-dimensional space while preserving as much variability (information) as possible. Mathematically, PCA solves an eigenvalue problem on the covariance (or correlation) matrix of the data. When performing PCA, one must decide whether to apply it to the covariance matrix or the correlation matrix. This decision affects how variables with different scales contribute to the principal components. This post offers a technical explanation with a mathematical derivation to show why the covariance matrix of standardized data equals the correlation matrix of the original data. We’ll back this up with an example in R.
 
 ## Definitions
 
@@ -31,64 +31,83 @@ The centered data matrix is $\tilde{\mathbf{X}} = \mathbf{X} - \mathbf{1}_n \mu^
 The **covariance matrix** of $\mathbf{X}$ is defined as:
 
 $$
-\Sigma = \frac{1}{n-1} \tilde{\mathbf{X}}^T \tilde{\mathbf{X}}
+\textbf{Cov}(\mathbf{X}) = \frac{1}{n-1} \tilde{\mathbf{X}}^T \tilde{\mathbf{X}}
 $$
 
-The **standardized data** (i.e., mean = 0, variance = 1) is given by $Z_{ij} = \frac{X_{ij} - \mu_j}{\sigma_j} \quad \text{or} \quad \mathbf{Z} = \tilde{\mathbf{X}} \mathbf{D}^{-1}$ where $\mathbf{D} = \text{diag}(\sigma_1, \dots, \sigma_p)$.
+The **standardized data** (i.e., $\mu = 0$, $\sigma = 1$) is given by:
+
+$$
+Z_{ij} = \frac{X_{ij} - \mu_j}{\sigma_j} = \frac{\tilde{\mathbf{X}}}{\sigma_j} \quad \text{or} \quad \mathbf{Z} = \tilde{\mathbf{X}} \mathbf{D}^{-1}
+$$
+
+where $\mathbf{D} = \text{diag}(\sigma_1, \dots, \sigma_p)$
 
 Then,
 
 $$
-\text{Cov}(\mathbf{Z}) = \frac{1}{n-1} \mathbf{Z}^T \mathbf{Z} = \mathbf{D}^{-1} \Sigma \mathbf{D}^{-1}
+\begin{align*} \textbf{Cov}(\mathbf{Z}) &= \frac{1}{n-1} \mathbf{Z}^T \mathbf{Z} \\
+&= \frac{1}{n-1} \left[\tilde{\mathbf{X}} \mathbf{D}^{-1}\right]^T \tilde{\mathbf{X}} \mathbf{D}^{-1}\\
+&= \mathbf{D}^{-1}\frac{1}{n-1}\tilde{\mathbf{X}}^T \tilde{\mathbf{X}} \mathbf{D}^{-1}\\
+&= \mathbf{D}^{-1} \textbf{Cov}(\tilde{\mathbf{X}}) \mathbf{D}^{-1}\\
+\end{align*}
 $$
 
-This is precisely the **correlation matrix** of $\mathbf{X}$:
+Now, to compute the **correlation matrix** of $\mathbf{X}$, we normalize each covariance term by the product of the standard deviations of variables $i$ and $j$:
 
 $$
-\text{Cor}(\mathbf{X}) = \left[ \rho_{ij} \right] = \mathbf{D}^{-1} \Sigma \mathbf{D}^{-1}
+\begin{align*}
+\textbf{Cor}(\mathbf{X})_{ij} &= \frac{\textbf{Cov}(\tilde{\mathbf{X}})_{ij}}{\sigma_i\sigma_j} \\ &= \mathbf{D}^{-1} \textbf{Cov}(\tilde{\mathbf{X}}) \mathbf{D}^{-1}
+\end{align*}
 $$
 
-Thus: $\boxed{\text{Cov}(\text{Standardized data}) = \text{Correlation matrix of raw data}}$
+Thus: $\boxed{\textbf{Cov}(\mathbf{Z}) = \textbf{Cor}(\mathbf{X})}$
+
+This demonstrates that standardizing the data transforms the covariance matrix into the correlation matrix of the original variables.
 
 PCA seeks directions ($\mathbf{v}$) that maximize the variance of the projected data:
 
 $$
-\max\_{\mathbf{v} \in \mathbb{R}^p} \quad \mathbf{v}^T \Sigma \mathbf{v} \quad \text{subject to } \|\mathbf{v}\| = 1
+\max_{\mathbf{v} \in \mathbb{R}^p} \quad \mathbf{v}^T \Sigma \mathbf{v} \quad \text{subject to } \|\mathbf{v}\| = 1
 $$
 
-If $\Sigma$ is the covariance matrix of $\mathbf{X}$, this favors variables with large variance (and large units). If $\Sigma$ is the correlation matrix (or covariance of standardized data), all variables contribute equally in unitless form. Consequently, correlation-based PCA (or standardize data first) is used when variable scales differ.
-
-------------------------------------------------------------------------
+If $\Sigma$ is the covariance matrix of $\mathbf{X}$, this favors variables with large variance. If $\Sigma$ is the correlation matrix (i.e., the covariance of standardized $\mathbf{X}$), all variables contribute equally in unitless form. Consequently, correlation-based PCA (or standardize data first) is used when variable scales differ.
 
 ## Example
 
+Simulate correlated variables with different scales:
+
 ```{r}
-# Simulate correlated variables with different scales
 set.seed(123)
 x1 <- rnorm(100, mean = 50, sd = 10)
 x2 <- 2 * x1 + rnorm(100, mean = 0, sd = 5)
 x3 <- 1/2 * x1 + rnorm(100, mean = 3, sd = 15)
 x4 <- 3/2 * x2 + rnorm(100, mean = 0, sd = 3)
 data <- data.frame(x1, x2, x3, x4)
+```
 
-# Covariance and correlation of raw data
-cov_raw <- cov(data)
-cor_raw <- cor(data)
+Standardize the data:
 
-# Standardize the data
+```{r}
 Z <- scale(data)
+```
 
-# Covariance of standardized data
+Covariance matrix of the standardized data:
+
+```{r}
 cov_std <- cov(Z)
-
-# Compare
-cat("Covariance of standardized data =\n")
 print(cov_std)
+```
 
-cat("\nCorrelation of raw data =\n")
+Correlation matrix of the raw data:
+
+```{r}
+cor_raw <- cor(data)
 print(cor_raw)
+```
 
-# Are they equal?
+Are they equal?
+
+```{r}
 all.equal(cov_std, cor_raw)  # Should return TRUE
 ```
 
