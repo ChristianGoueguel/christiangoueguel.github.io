@@ -1,22 +1,100 @@
 ---
-title: "Classification Models Based on LIBS Spectra Using Neural Network"
-description: "In this post, we developed a classification model using laser-induced breakdown spectroscopy (LIBS) combined with neural networks for identifying asbestos in cement samples."
+title: "Covariance vs Correlation in PCA: What's the Difference?"
+description: "Principal Component Analysis can use either correlation or covariance matrices, but when should you use which? This post walks through the fundamental differences between these two approaches."
 author: "Christian L. Goueguel"
 date: "3/15/2021"
 image: "cover.png"
-draft: true
+#draft: true
 editor: visual
 categories:
-  - Chemometrics
-  - Deep Learning
-  - Classification
-  - Neural Network
+  - Principal Component Analysis
+  - Correlation Matrix
+  - Covariance Matrix
 ---
 
 ::: justified
-![Photo by [CHUTTERSNAP](https://unsplash.com/photos/green-and-white-mixer-truck-at-the-construction-site-PF1daJne7lA?utm_content=creditShareLink&utm_medium=referral&utm_source=unsplash).](cover.png){fig-align="center" width="800"}
+![Photo by [Colin Watts](Photo by <a href="https://unsplash.com/@colinwatts?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Colin Watts</a> on <a href="https://unsplash.com/photos/mountains-reflect-in-a-still-blue-lake-Wr0vLdN3roE?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>).](cover.png){fig-align="center" width="800"}
 
 ## Introduction
 
-Asbestos has been extensively utilized, especially in construction, due to its strength, flexibility, and resistance to chemical and thermal degradation. It is now understood that breathing in high concentrations of asbestos increases the risk of diseases such as asbestosis, lung cancer, and mesothelioma. As a result, asbestos is regarded as a health hazard, and its use is strongly discouraged. There are several proven methods for detecting asbestos, including transmission electron microscopy (TEM), scanning electron microscopy (SEM), and polarized light microscopy (PLM). Among these, PLM is the most commonly employed due to its cost-effectiveness and speed.
+When performing Principal Component Analysis (PCA), one must decide whether to apply it to the covariance matrix or the correlation matrix. This decision affects how variables with different scales contribute to the principal components. This post offers a technical explanation with a mathematical derivation to show why the covariance matrix of standardized data equals the correlation matrix of the original data. We’ll back this up with an example in R.
+
+## Definitions
+
+Let $\mathbf{X} \in \mathbb{R}^{n \times p}$ be a data matrix with $n$ observations and $p$ variables.
+
+-   $\mu_j = \frac{1}{n} \sum_{i=1}^n X_{ij}$ is the sample mean of variable $j$
+-   $\sigma_j = \sqrt{\frac{1}{n-1} \sum_{i=1}^n (X_{ij} - \mu_j)^2}$ is its sample standard deviation
+
+The centered data matrix is $\tilde{\mathbf{X}} = \mathbf{X} - \mathbf{1}_n \mu^T$ where $\mu \in \mathbb{R}^p$ is the vector of column means.
+
+The **covariance matrix** of $\mathbf{X}$ is defined as:
+
+$$
+\Sigma = \frac{1}{n-1} \tilde{\mathbf{X}}^T \tilde{\mathbf{X}}
+$$
+
+The **standardized data** (i.e., mean = 0, variance = 1) is given by $Z_{ij} = \frac{X_{ij} - \mu_j}{\sigma_j} \quad \text{or} \quad \mathbf{Z} = \tilde{\mathbf{X}} \mathbf{D}^{-1}$ where $\mathbf{D} = \text{diag}(\sigma_1, \dots, \sigma_p)$.
+
+Then,
+
+$$
+\text{Cov}(\mathbf{Z}) = \frac{1}{n-1} \mathbf{Z}^T \mathbf{Z} = \mathbf{D}^{-1} \Sigma \mathbf{D}^{-1}
+$$
+
+This is precisely the **correlation matrix** of $\mathbf{X}$:
+
+$$
+\text{Cor}(\mathbf{X}) = \left[ \rho_{ij} \right] = \mathbf{D}^{-1} \Sigma \mathbf{D}^{-1}
+$$
+
+Thus: $\boxed{\text{Cov}(\text{Standardized data}) = \text{Correlation matrix of raw data}}$
+
+PCA seeks directions ($\mathbf{v}$) that maximize the variance of the projected data:
+
+$$
+\max\_{\mathbf{v} \in \mathbb{R}^p} \quad \mathbf{v}^T \Sigma \mathbf{v} \quad \text{subject to } \|\mathbf{v}\| = 1
+$$
+
+If $\Sigma$ is the covariance matrix of $\mathbf{X}$, this favors variables with large variance (and large units). If $\Sigma$ is the correlation matrix (or covariance of standardized data), all variables contribute equally in unitless form. Consequently, correlation-based PCA (or standardize data first) is used when variable scales differ.
+
+------------------------------------------------------------------------
+
+## Example
+
+```{r}
+# Simulate correlated variables with different scales
+set.seed(123)
+x1 <- rnorm(100, mean = 50, sd = 10)
+x2 <- 2 * x1 + rnorm(100, mean = 0, sd = 5)
+x3 <- 1/2 * x1 + rnorm(100, mean = 3, sd = 15)
+x4 <- 3/2 * x2 + rnorm(100, mean = 0, sd = 3)
+data <- data.frame(x1, x2, x3, x4)
+
+# Covariance and correlation of raw data
+cov_raw <- cov(data)
+cor_raw <- cor(data)
+
+# Standardize the data
+Z <- scale(data)
+
+# Covariance of standardized data
+cov_std <- cov(Z)
+
+# Compare
+cat("Covariance of standardized data =\n")
+print(cov_std)
+
+cat("\nCorrelation of raw data =\n")
+print(cor_raw)
+
+# Are they equal?
+all.equal(cov_std, cor_raw)  # Should return TRUE
+```
+
+------------------------------------------------------------------------
+
+## Conclusion
+
+The covariance matrix of standardized data is mathematically equal to the correlation matrix of raw data. So when we apply PCA to standardized data, we're doing correlation-based PCA. Correlation PCA is used when dealing with variables on different scales.
 :::

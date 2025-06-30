@@ -8,9 +8,9 @@
 
 <meta name="author" content="Christian L. Goueguel">
 <meta name="dcterms.date" content="2021-03-15">
-<meta name="description" content="In this post, we developed a classification model using laser-induced breakdown spectroscopy (LIBS) combined with neural networks for identifying asbestos in cement samples.">
+<meta name="description" content="Principal Component Analysis can use either correlation or covariance matrices, but when should you use which? This post walks through the fundamental differences between these two approaches.">
 
-<title>Classification Models Based on LIBS Spectra Using Neural Network – Christian L. Goueguel</title>
+<title>Covariance vs Correlation in PCA: What’s the Difference? – Christian L. Goueguel</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,6 +22,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -69,12 +103,40 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<meta name="quarto:status" content="draft">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../../styles.scss">
-<meta property="og:title" content="Classification Models Based on LIBS Spectra Using Neural Network – Christian L. Goueguel">
-<meta property="og:description" content="In this post, we developed a classification model using laser-induced breakdown spectroscopy (LIBS) combined with neural networks for identifying asbestos in cement samples.">
+<meta property="og:title" content="Covariance vs Correlation in PCA: What’s the Difference? – Christian L. Goueguel">
+<meta property="og:description" content="Principal Component Analysis can use either correlation or covariance matrices, but when should you use which? This post walks through the fundamental differences between these two approaches.">
 <meta property="og:image" content="cover.png">
 <meta property="og:site_name" content="Christian L. Goueguel">
 </head>
@@ -82,7 +144,7 @@ ul.task-list li input[type="checkbox"] {
 <body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><div id="quarto-draft-alert" class="alert alert-warning"><i class="bi bi-pencil-square"></i>Draft</div>
+  <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
@@ -147,18 +209,17 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Classification Models Based on LIBS Spectra Using Neural Network</h1>
+<h1 class="title">Covariance vs Correlation in PCA: What’s the Difference?</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">Chemometrics</div>
-    <div class="quarto-category">Deep Learning</div>
-    <div class="quarto-category">Classification</div>
-    <div class="quarto-category">Neural Network</div>
+    <div class="quarto-category">Principal Component Analysis</div>
+    <div class="quarto-category">Correlation Matrix</div>
+    <div class="quarto-category">Covariance Matrix</div>
   </div>
   </div>
 
 <div>
   <div class="description">
-    In this post, we developed a classification model using laser-induced breakdown spectroscopy (LIBS) combined with neural networks for identifying asbestos in cement samples.
+    Principal Component Analysis can use either correlation or covariance matrices, but when should you use which? This post walks through the fundamental differences between these two approaches.
   </div>
 </div>
 
@@ -191,12 +252,100 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="cover.png" class="img-fluid figure-img" width="800"></p>
-<figcaption>Photo by <a href="https://unsplash.com/photos/green-and-white-mixer-truck-at-the-construction-site-PF1daJne7lA?utm_content=creditShareLink&amp;utm_medium=referral&amp;utm_source=unsplash">CHUTTERSNAP</a>.</figcaption>
+<figcaption>Photo by <a href="Photo by <a href=&quot;https://unsplash.com/@colinwatts?utm_content=creditCopyText&amp;utm_medium=referral&amp;utm_source=unsplash&quot;>Colin Watts</a> on <a href=&quot;https://unsplash.com/photos/mountains-reflect-in-a-still-blue-lake-Wr0vLdN3roE?utm_content=creditCopyText&amp;utm_medium=referral&amp;utm_source=unsplash&quot;>Unsplash</a>">Colin Watts</a>.</figcaption>
 </figure>
 </div>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>Asbestos has been extensively utilized, especially in construction, due to its strength, flexibility, and resistance to chemical and thermal degradation. It is now understood that breathing in high concentrations of asbestos increases the risk of diseases such as asbestosis, lung cancer, and mesothelioma. As a result, asbestos is regarded as a health hazard, and its use is strongly discouraged. There are several proven methods for detecting asbestos, including transmission electron microscopy (TEM), scanning electron microscopy (SEM), and polarized light microscopy (PLM). Among these, PLM is the most commonly employed due to its cost-effectiveness and speed.</p>
+<p>When performing Principal Component Analysis (PCA), one must decide whether to apply it to the covariance matrix or the correlation matrix. This decision affects how variables with different scales contribute to the principal components. This post offers a technical explanation with a mathematical derivation to show why the covariance matrix of standardized data equals the correlation matrix of the original data. We’ll back this up with an example in R.</p>
+</section>
+<section id="definitions" class="level2">
+<h2 class="anchored" data-anchor-id="definitions">Definitions</h2>
+<p>Let <span class="math inline">\(\mathbf{X} \in \mathbb{R}^{n \times p}\)</span> be a data matrix with <span class="math inline">\(n\)</span> observations and <span class="math inline">\(p\)</span> variables.</p>
+<ul>
+<li><span class="math inline">\(\mu_j = \frac{1}{n} \sum_{i=1}^n X_{ij}\)</span> is the sample mean of variable <span class="math inline">\(j\)</span></li>
+<li><span class="math inline">\(\sigma_j = \sqrt{\frac{1}{n-1} \sum_{i=1}^n (X_{ij} - \mu_j)^2}\)</span> is its sample standard deviation</li>
+</ul>
+<p>The centered data matrix is <span class="math inline">\(\tilde{\mathbf{X}} = \mathbf{X} - \mathbf{1}_n \mu^T\)</span> where <span class="math inline">\(\mu \in \mathbb{R}^p\)</span> is the vector of column means.</p>
+<p>The <strong>covariance matrix</strong> of <span class="math inline">\(\mathbf{X}\)</span> is defined as:</p>
+<p><span class="math display">\[
+\Sigma = \frac{1}{n-1} \tilde{\mathbf{X}}^T \tilde{\mathbf{X}}
+\]</span></p>
+<p>The <strong>standardized data</strong> (i.e., mean = 0, variance = 1) is given by <span class="math inline">\(Z_{ij} = \frac{X_{ij} - \mu_j}{\sigma_j} \quad \text{or} \quad \mathbf{Z} = \tilde{\mathbf{X}} \mathbf{D}^{-1}\)</span> where <span class="math inline">\(\mathbf{D} = \text{diag}(\sigma_1, \dots, \sigma_p)\)</span>.</p>
+<p>Then,</p>
+<p><span class="math display">\[
+\text{Cov}(\mathbf{Z}) = \frac{1}{n-1} \mathbf{Z}^T \mathbf{Z} = \mathbf{D}^{-1} \Sigma \mathbf{D}^{-1}
+\]</span></p>
+<p>This is precisely the <strong>correlation matrix</strong> of <span class="math inline">\(\mathbf{X}\)</span>:</p>
+<p><span class="math display">\[
+\text{Cor}(\mathbf{X}) = \left[ \rho_{ij} \right] = \mathbf{D}^{-1} \Sigma \mathbf{D}^{-1}
+\]</span></p>
+<p>Thus: <span class="math inline">\(\boxed{\text{Cov}(\text{Standardized data}) = \text{Correlation matrix of raw data}}\)</span></p>
+<p>PCA seeks directions (<span class="math inline">\(\mathbf{v}\)</span>) that maximize the variance of the projected data:</p>
+<p><span class="math display">\[
+\max\_{\mathbf{v} \in \mathbb{R}^p} \quad \mathbf{v}^T \Sigma \mathbf{v} \quad \text{subject to } \|\mathbf{v}\| = 1
+\]</span></p>
+<p>If <span class="math inline">\(\Sigma\)</span> is the covariance matrix of <span class="math inline">\(\mathbf{X}\)</span>, this favors variables with large variance (and large units). If <span class="math inline">\(\Sigma\)</span> is the correlation matrix (or covariance of standardized data), all variables contribute equally in unitless form. Consequently, correlation-based PCA (or standardize data first) is used when variable scales differ.</p>
+<hr>
+</section>
+<section id="example" class="level2">
+<h2 class="anchored" data-anchor-id="example">Example</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate correlated variables with different scales</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> x1 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">5</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>x3 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">2</span> <span class="sc">*</span> x1 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span> <span class="dv">3</span>, <span class="at">sd =</span> <span class="dv">15</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>x4 <span class="ot">&lt;-</span> <span class="dv">3</span><span class="sc">/</span><span class="dv">2</span> <span class="sc">*</span> x2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">3</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x1, x2, x3, x4)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Covariance and correlation of raw data</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>cov_raw <span class="ot">&lt;-</span> <span class="fu">cov</span>(data)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>cor_raw <span class="ot">&lt;-</span> <span class="fu">cor</span>(data)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Standardize the data</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>Z <span class="ot">&lt;-</span> <span class="fu">scale</span>(data)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Covariance of standardized data</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>cov_std <span class="ot">&lt;-</span> <span class="fu">cov</span>(Z)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Covariance of standardized data =</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Covariance of standardized data =</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cov_std)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          x1        x2        x3        x4
+x1 1.0000000 0.9659070 0.1892815 0.9584484
+x2 0.9659070 1.0000000 0.1890348 0.9938171
+x3 0.1892815 0.1890348 1.0000000 0.1820451
+x4 0.9584484 0.9938171 0.1820451 1.0000000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Correlation of raw data =</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Correlation of raw data =</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cor_raw)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          x1        x2        x3        x4
+x1 1.0000000 0.9659070 0.1892815 0.9584484
+x2 0.9659070 1.0000000 0.1890348 0.9938171
+x3 0.1892815 0.1890348 1.0000000 0.1820451
+x4 0.9584484 0.9938171 0.1820451 1.0000000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Are they equal?</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(cov_std, cor_raw)  <span class="co"># Should return TRUE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<hr>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>The covariance matrix of standardized data is mathematically equal to the correlation matrix of raw data. So when we apply PCA to standardized data, we’re doing correlation-based PCA. Correlation PCA is used when dealing with variables on different scales.</p>
 </section>
 </div>
 
