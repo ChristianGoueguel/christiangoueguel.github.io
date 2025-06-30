@@ -296,7 +296,7 @@ Z_{ij} = \frac{X_{ij} - \mu_j}{\sigma_j} = \frac{\tilde{\mathbf{X}}}{\sigma_j} \
 <p><span class="math display">\[
 \max_{\mathbf{v} \in \mathbb{R}^p} \quad \mathbf{v}^T \Sigma \mathbf{v} \quad \text{subject to } \|\mathbf{v}\| = 1
 \]</span></p>
-<p>If <span class="math inline">\(\Sigma\)</span> is the covariance matrix of <span class="math inline">\(\mathbf{X}\)</span>, this favors variables with large variance. If <span class="math inline">\(\Sigma\)</span> is the correlation matrix (i.e., the covariance of standardized <span class="math inline">\(\mathbf{X}\)</span>), all variables contribute equally in unitless form. Consequently, correlation-based PCA (or standardize data first) is used when variable scales differ.</p>
+<p>If <span class="math inline">\(\Sigma\)</span> is the covariance matrix of <span class="math inline">\(\mathbf{X}\)</span>, this favors variables with large variance. If <span class="math inline">\(\Sigma\)</span> is the correlation matrix (i.e., the covariance of standardized <span class="math inline">\(\mathbf{X}\)</span>), all variables contribute equally. Indeed, the fact that the covariance matrix is unbounded (and scale-dependent), while the correlation matrix is bounded, <span class="math inline">\([-1, 1]\)</span>, and scale-free, is a fundamental reason why correlation-based PCA is preferred when variables are measured on different scales or units.</p>
 </section>
 <section id="example" class="level2">
 <h2 class="anchored" data-anchor-id="example">Example</h2>
@@ -348,7 +348,7 @@ x4 0.9584484 0.9938171 0.1820451 1.0000000</code></pre>
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>The covariance matrix of standardized data is mathematically equal to the correlation matrix of raw data. So when we apply PCA to standardized data, we’re doing correlation-based PCA. Correlation PCA is used when dealing with variables on different scales.</p>
+<p>The covariance matrix of standardized data is mathematically equal to the correlation matrix of raw data. This equivalence means that applying PCA to standardized data is functionally identical to applying PCA directly to the correlation matrix of the raw data. This distinction is critical because the covariance matrix is scale-dependent and unbounded, which can cause variables with larger numerical ranges to dominate the principal components. In contrast, the correlation matrix is bounded between -1 and 1, ensuring that all variables contribute equally regardless of their original scale. Therefore, you must use correlation-based PCA, when your data consists of variables at different scales.</p>
 </section>
 </div>
 
