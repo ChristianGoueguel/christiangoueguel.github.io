@@ -77,32 +77,45 @@ If $\Sigma$ is the covariance matrix of $\mathbf{X}$, this favors variables with
 Simulate correlated variables with different scales:
 
 ```{r}
-set.seed(123)
-x1 <- rnorm(100, mean = 50, sd = 10)
-x2 <- 2 * x1 + rnorm(100, mean = 0, sd = 5)
-x3 <- 1/2 * x1 + rnorm(100, mean = 3, sd = 15)
-x4 <- 3/2 * x2 + rnorm(100, mean = 0, sd = 3)
-data <- data.frame(x1, x2, x3, x4)
+ssh = suppressPackageStartupMessages
+ssh(library(DT))
+ssh(library(tidyverse))
+ssh(library(FactoMineR))
+```
+
+```{r}
+#| message: false
+#| warning: false
+data(diamonds, "ggplot2")
 ```
 
 Standardize the data:
 
 ```{r}
-Z <- scale(data)
+Z <- diamonds |> 
+  select(where(is.numeric)) |> 
+  scale()
 ```
 
 Covariance matrix of the standardized data:
 
 ```{r}
-cov_std <- cov(Z)
-print(cov_std)
+cov_std <- Z |> 
+  cov() |>
+  round(3)
+
+cov_std |> datatable()
 ```
 
 Correlation matrix of the raw data:
 
 ```{r}
-cor_raw <- cor(data)
-print(cor_raw)
+cor_raw <- diamonds |> 
+  select(where(is.numeric)) |> 
+  cor() |>
+  round(3)
+
+cor_raw |> datatable()
 ```
 
 Are they equal?
@@ -111,7 +124,14 @@ Are they equal?
 all.equal(cov_std, cor_raw)  # Should return TRUE
 ```
 
-------------------------------------------------------------------------
+Since the `diamonds` dataset contains variables with heterogeneous scales, we perform PCA on the correlation matrix by using standardized data $Z$. In the `FactoMineR::PCA()` function, we set the `scale.unit` argument to `FALSE` because our input data has already been standardized.
+
+```{r}
+#| message: false
+#| warning: false
+set.seed(123)
+pca_mod <- PCA(Z, scale.unit = FALSE)
+```
 
 ## Conclusion
 
