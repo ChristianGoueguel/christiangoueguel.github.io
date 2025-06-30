@@ -17,9 +17,9 @@ categories:
 
 ## Introduction
 
-Principal Component Analysis (PCA) is a linear dimensionality reduction technique that identifies orthogonal directions (principal components) in the data along which variance is maximized. It projects high-dimensional data into a lower-dimensional space while preserving as much variability (information) as possible. Mathematically, PCA solves an eigenvalue problem on the covariance (or correlation) matrix of the data. When performing PCA, one must decide whether to apply it to the covariance matrix or the correlation matrix. This decision affects how variables with different scales contribute to the principal components. This post offers a technical explanation with a mathematical derivation to show why the covariance matrix of standardized data equals the correlation matrix of the original data. We’ll back this up with an example in R.
+Principal Component Analysis (PCA) is a linear dimensionality reduction technique that identifies orthogonal directions (principal components) in the data along which variance is maximized. It projects high-dimensional data into a lower-dimensional space while preserving as much variability (information) as possible. Mathematically, PCA solves an eigenvalue problem on the covariance (or correlation) matrix of the data. When performing PCA, one must decide whether to apply it to the covariance matrix or the correlation matrix. This decision affects how variables with different scales contribute to the principal components. This post offers a technical explanation with a mathematical derivation to show why the **covariance matrix of standardized data equals the correlation matrix of the original data**. We’ll back this up with an example in R.
 
-## Definitions
+## Proof
 
 Let $\mathbf{X} \in \mathbb{R}^{n \times p}$ be a data matrix with $n$ observations and $p$ variables.
 
@@ -60,7 +60,7 @@ $$
 \end{align*}
 $$
 
-Thus: $\boxed{\textbf{Cov}(\mathbf{Z}) = \textbf{Cor}(\mathbf{X})}$
+Thus: $\boxed{\textbf{Cov}(\mathbf{Z}) = \textbf{Cor}(\mathbf{X})} \quad \blacksquare$
 
 This demonstrates that standardizing the data transforms the covariance matrix into the correlation matrix of the original variables.
 

@@ -257,10 +257,10 @@ window.Quarto = {
 </div>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>Principal Component Analysis (PCA) is a linear dimensionality reduction technique that identifies orthogonal directions (principal components) in the data along which variance is maximized. It projects high-dimensional data into a lower-dimensional space while preserving as much variability (information) as possible. Mathematically, PCA solves an eigenvalue problem on the covariance (or correlation) matrix of the data. When performing PCA, one must decide whether to apply it to the covariance matrix or the correlation matrix. This decision affects how variables with different scales contribute to the principal components. This post offers a technical explanation with a mathematical derivation to show why the covariance matrix of standardized data equals the correlation matrix of the original data. We’ll back this up with an example in R.</p>
+<p>Principal Component Analysis (PCA) is a linear dimensionality reduction technique that identifies orthogonal directions (principal components) in the data along which variance is maximized. It projects high-dimensional data into a lower-dimensional space while preserving as much variability (information) as possible. Mathematically, PCA solves an eigenvalue problem on the covariance (or correlation) matrix of the data. When performing PCA, one must decide whether to apply it to the covariance matrix or the correlation matrix. This decision affects how variables with different scales contribute to the principal components. This post offers a technical explanation with a mathematical derivation to show why the <strong>covariance matrix of standardized data equals the correlation matrix of the original data</strong>. We’ll back this up with an example in R.</p>
 </section>
-<section id="definitions" class="level2">
-<h2 class="anchored" data-anchor-id="definitions">Definitions</h2>
+<section id="proof" class="level2">
+<h2 class="anchored" data-anchor-id="proof">Proof</h2>
 <p>Let <span class="math inline">\(\mathbf{X} \in \mathbb{R}^{n \times p}\)</span> be a data matrix with <span class="math inline">\(n\)</span> observations and <span class="math inline">\(p\)</span> variables.</p>
 <ul>
 <li><span class="math inline">\(\mu_j = \frac{1}{n} \sum_{i=1}^n X_{ij}\)</span> is the sample mean of variable <span class="math inline">\(j\)</span></li>
@@ -290,7 +290,7 @@ Z_{ij} = \frac{X_{ij} - \mu_j}{\sigma_j} = \frac{\tilde{\mathbf{X}}}{\sigma_j} \
 \textbf{Cor}(\mathbf{X})_{ij} &amp;= \frac{\textbf{Cov}(\tilde{\mathbf{X}})_{ij}}{\sigma_i\sigma_j} \\ &amp;= \mathbf{D}^{-1} \textbf{Cov}(\tilde{\mathbf{X}}) \mathbf{D}^{-1}
 \end{align*}
 \]</span></p>
-<p>Thus: <span class="math inline">\(\boxed{\textbf{Cov}(\mathbf{Z}) = \textbf{Cor}(\mathbf{X})}\)</span></p>
+<p>Thus: <span class="math inline">\(\boxed{\textbf{Cov}(\mathbf{Z}) = \textbf{Cor}(\mathbf{X})} \quad \blacksquare\)</span></p>
 <p>This demonstrates that standardizing the data transforms the covariance matrix into the correlation matrix of the original variables.</p>
 <p>PCA seeks directions (<span class="math inline">\(\mathbf{v}\)</span>) that maximize the variance of the projected data:</p>
 <p><span class="math display">\[
