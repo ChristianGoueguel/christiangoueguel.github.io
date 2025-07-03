@@ -4,6 +4,7 @@ project:
 
 website:
   title: "Christian L. Goueguel"
+  site-url: https://christiangoueguel.com
   open-graph: true # Enables open graph metadata for better social sharing
   page-footer: |
     <div style="text-align: center;">
