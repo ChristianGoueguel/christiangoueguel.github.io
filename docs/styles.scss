@@ -12,6 +12,14 @@ $link-color: rgb(39, 128, 227);
 $font-family-sans-serif: "Source Sans Pro", -apple-system, "system-ui", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 $font-size-root: 17px;
 
+/* Logo size */
+.navbar-brand img {
+  height: 400px;
+  width: 200;
+  margin-right: 15px;  /* Space between logo and title */
+  border-radius: 10px;  /* Rounded corners */
+}
+
 /* Navbar customization */
 .navbar .nav-link {
   font-weight: bold; /* Makes the text bold */
