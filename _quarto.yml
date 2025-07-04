@@ -5,6 +5,7 @@ project:
 website:
   title: "Christian L. Goueguel"
   site-url: https://christiangoueguel.com
+  favicon: "images/CG_logo.png"
   open-graph: true # Enables open graph metadata for better social sharing
   page-footer: |
     <div style="text-align: center;">
@@ -12,6 +13,9 @@ website:
     </div>
   navbar:
     title: Christian L. Goueguel
+    # logo: "images/CG_logo.png"
+    # logo-alt: "christiangoueguel.com logo"
+    # logo-href: "https://christiangoueguel.com"
     background: "#2c2c2c" # Charcoal background for the navbar
     color: "white"        # White text for contrast
     left:
