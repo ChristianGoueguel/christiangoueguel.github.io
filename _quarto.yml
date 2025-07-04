@@ -13,9 +13,9 @@ website:
     </div>
   navbar:
     title: Christian L. Goueguel
-    logo: "images/CG_logo1.png"
-    logo-alt: "christiangoueguel.com logo"
-    logo-href: "https://christiangoueguel.com"
+    # logo: "images/CG_logo1.png"
+    # logo-alt: "christiangoueguel.com logo"
+    # logo-href: "https://christiangoueguel.com"
     background: "#2c2c2c" # Charcoal background for the navbar
     color: "white"        # White text for contrast
     left:
