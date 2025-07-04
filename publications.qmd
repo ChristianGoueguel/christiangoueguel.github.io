@@ -1,145 +1,66 @@
 ---
-title: ""
+title: "Publications"
 comments: false
-editor: 
-  markdown: 
-    wrap: 72
 ---
 
-![Photo by [Sylvia
-Yang](https://unsplash.com/photos/book-lot-on-shelf-_ar2ENzmqb0?utm_content=creditShareLink&utm_medium=referral&utm_source=unsplash).](images/sylviaYang_unsplash.png){fig-align="center"}
+![Photo by [Sylvia Yang](https://unsplash.com/photos/book-lot-on-shelf-_ar2ENzmqb0?utm_content=creditShareLink&utm_medium=referral&utm_source=unsplash).](images/sylviaYang_unsplash.png){fig-align="center"}
 
 ::: justified
 ## Book Chapters
 
-1.  C.R. Bhatt, C.L. Goueguel, J.C. Jain, D.L. McIntyre, J.P. Singh,
-    LIBS application to liquid samples In: Laser-Induced Breakdown
-    Spectroscopy (2nd Edition), *Elsevier Science*, 2020
+1.  C.R. Bhatt, C.L. Goueguel, J.C. Jain, D.L. McIntyre, J.P. Singh, LIBS application to liquid samples In: Laser-Induced Breakdown Spectroscopy (2nd Edition), *Elsevier Science*, 2020
 
-2.  D.L. McIntyre, J.C. Jain, C.L. Goueguel, J.P. Singh, Application of
-    Laser-Induced Breakdown Spectroscopy (LIBS) to Carbon Sequestration
-    Research and Development In: Spectroscopic Techniques for Security,
-    Forensic and Environmental Applications, *Nova Science Publishers*,
-    2014
+2.  D.L. McIntyre, J.C. Jain, C.L. Goueguel, J.P. Singh, Application of Laser-Induced Breakdown Spectroscopy (LIBS) to Carbon Sequestration Research and Development In: Spectroscopic Techniques for Security, Forensic and Environmental Applications, *Nova Science Publishers*, 2014
 
 ## Articles
 
-1.  C.L. Goueguel, A. Soumare, C. Nault, J. Nault, Direct determination
-    of soil texture using laser-induced breakdown spectroscopy and
-    multivariate linear regressions, *Journal of Analytical Atomic
-    Spectrometry* 34, 2019
+1.  C.L. Goueguel, A. Soumare, C. Nault, J. Nault, Direct determination of soil texture using laser-induced breakdown spectroscopy and multivariate linear regressions, *Journal of Analytical Atomic Spectrometry* 34, 2019
 
-2.  C.L. Goueguel, C.R. Bhatt, J.C. Jain, C.L. Lopano, D.L. McIntyre,
-    Quantification of dissolved metals in high-pressure CO~2~-water
-    solutions by underwater laser-induced breakdown spectroscopy,
-    *Optics & Laser Technology* 108, 2018
+2.  C.L. Goueguel, C.R. Bhatt, J.C. Jain, C.L. Lopano, D.L. McIntyre, Quantification of dissolved metals in high-pressure CO~2~-water solutions by underwater laser-induced breakdown spectroscopy, *Optics & Laser Technology* 108, 2018
 
-3.  C.R. Bhatt, J.C. Jain, C.L. Goueguel, D.L. McIntyre, J.P. Singh,
-    Determination of rare earth elements in geological samples using
-    laser-induced breakdown spectroscopy (LIBS), *Applied spectroscopy*
-    72, 2018
+3.  C.R. Bhatt, J.C. Jain, C.L. Goueguel, D.L. McIntyre, J.P. Singh, Determination of rare earth elements in geological samples using laser-induced breakdown spectroscopy (LIBS), *Applied spectroscopy* 72, 2018
 
-4.  C.R. Bhatt, J.C. Jain, C.L. Goueguel, D.L. McIntyre, J.P. Singh,
-    Measurement of Eu and Yb in aqueous solutions by underwater
-    laser-induced breakdown spectroscopy, *Spectrochemical Acta Part B:
-    Atomic Spectroscopy* 137, 2017
+4.  C.R. Bhatt, J.C. Jain, C.L. Goueguel, D.L. McIntyre, J.P. Singh, Measurement of Eu and Yb in aqueous solutions by underwater laser-induced breakdown spectroscopy, *Spectrochemical Acta Part B: Atomic Spectroscopy* 137, 2017
 
-5.  C.R. Bhatt, C.L. Goueguel, J.C. Jain, H.M. Edenborn, D.L. McIntyre,
-    Analysis of charcoal blast furnace slags by laser-induced breakdown
-    spectroscopy, *Applied Optics* 56, 2017
+5.  C.R. Bhatt, C.L. Goueguel, J.C. Jain, H.M. Edenborn, D.L. McIntyre, Analysis of charcoal blast furnace slags by laser-induced breakdown spectroscopy, *Applied Optics* 56, 2017
 
-6.  J.C. Jain, C.L. Goueguel, C.R. Bhatt, D.L. McIntyre, LIBS Sensor for
-    Sub-surface CO~2~ Leak Detection in Carbon Sequestration, *Sensors &
-    Transducers Journal* 214, 2017
+6.  J.C. Jain, C.L. Goueguel, C.R. Bhatt, D.L. McIntyre, LIBS Sensor for Sub-surface CO~2~ Leak Detection in Carbon Sequestration, *Sensors & Transducers Journal* 214, 2017
 
-7.  J.C. Jain, D.L. McIntyre, C.L. Goueguel, Harsh environment low- cost
-    LIBS sensor for sub-surface CO2 leak detection in carbon
-    sequestration, Materials for Energy, Efficiency, and Sustainability:
-    *TechConnect Briefs* 2017
+7.  J.C. Jain, D.L. McIntyre, C.L. Goueguel, Harsh environment low- cost LIBS sensor for sub-surface CO2 leak detection in carbon sequestration, Materials for Energy, Efficiency, and Sustainability: *TechConnect Briefs* 2017
 
-8.  C.L. Goueguel, J.C. Jain, D.L. McIntyre, C.G. Carson, H.M. Edenborn,
-    In situ measurements of calcium carbonate dissolution under rising
-    CO~2~ pressure using underwater laser-induced breakdown
-    spectroscopy, *Journal of Analytical Atomic Spectrometry* 31, 2016
+8.  C.L. Goueguel, J.C. Jain, D.L. McIntyre, C.G. Carson, H.M. Edenborn, In situ measurements of calcium carbonate dissolution under rising CO~2~ pressure using underwater laser-induced breakdown spectroscopy, *Journal of Analytical Atomic Spectrometry* 31, 2016
 
-9.  C.L. Goueguel, D.L. McIntyre, J.C. Jain, Matrix effect of sodium
-    compounds on the determination of metal ions in aqueous solutions by
-    underwater laser-induced breakdown spectroscopy, *Optics letters*
-    41, 2016
+9.  C.L. Goueguel, D.L. McIntyre, J.C. Jain, Matrix effect of sodium compounds on the determination of metal ions in aqueous solutions by underwater laser-induced breakdown spectroscopy, *Optics letters* 41, 2016
 
-10. C.G. Carson, C.L. Goueguel, H. Sanghapi, J.C. Jain, D.L. McIntyre,
-    Evaluation of a commercially available passively Q-switched Nd: YAG
-    laser with LiF: F^2-^ saturable absorber for laser-induced breakdown
-    spectroscopy, *Optics & Laser Technology* 79, 2016
+10. C.G. Carson, C.L. Goueguel, H. Sanghapi, J.C. Jain, D.L. McIntyre, Evaluation of a commercially available passively Q-switched Nd: YAG laser with LiF: F^2-^ saturable absorber for laser-induced breakdown spectroscopy, *Optics & Laser Technology* 79, 2016
 
-11. C.L. Goueguel, D.L. McIntyre, J.C. Jain, A.K. Karamalidis, C.G.
-    Carson, Matrix effect of sodium compounds on the determination of
-    metal ions in aqueous solutions by underwater laser-induced
-    breakdown spectroscopy, *Applied optics* 54, 2015
+11. C.L. Goueguel, D.L. McIntyre, J.C. Jain, A.K. Karamalidis, C.G. Carson, Matrix effect of sodium compounds on the determination of metal ions in aqueous solutions by underwater laser-induced breakdown spectroscopy, *Applied optics* 54, 2015
 
-12. C.L. Goueguel, D.L. McIntyre, J.C. Jain, A.K. Karamalidis,
-    Laser-Induced Breakdown Spectroscopy (LIBS) of a High-Pressure
-    CO~2~–Water Mixture: Application to Carbon Sequestration, *Applied
-    spectroscopy* 68, 2014
+12. C.L. Goueguel, D.L. McIntyre, J.C. Jain, A.K. Karamalidis, Laser-Induced Breakdown Spectroscopy (LIBS) of a High-Pressure CO~2~–Water Mixture: Application to Carbon Sequestration, *Applied spectroscopy* 68, 2014
 
-13. J.C. Jain, D.L. McIntyre, K. Ayyalasomayajula, V. Dikshit, C.L.
-    Goueguel, F. Yu-Yueh, J.P. Singh, Application of laser-induced
-    breakdown spectroscopy in carbon sequestration research and
-    development, *Pramana* 83, 2014
+13. J.C. Jain, D.L. McIntyre, K. Ayyalasomayajula, V. Dikshit, C.L. Goueguel, F. Yu-Yueh, J.P. Singh, Application of laser-induced breakdown spectroscopy in carbon sequestration research and development, *Pramana* 83, 2014
 
-14. C.L. Goueguel, J.P. Singh, D.L. McIntyre, J.C. Jain, A.K.
-    Karamalidis, Effect of sodium chloride concentration on elemental
-    analysis of brines by laser-induced breakdown spectroscopy (LIBS),
-    *Applied spectroscopy* 68, 2014
+14. C.L. Goueguel, J.P. Singh, D.L. McIntyre, J.C. Jain, A.K. Karamalidis, Effect of sodium chloride concentration on elemental analysis of brines by laser-induced breakdown spectroscopy (LIBS), *Applied spectroscopy* 68, 2014
 
-15. C.L. Goueguel, S. Laville, F. Vidal, M. Chaker, M. Sabsabi, Resonant
-    laser-induced breakdown spectroscopy for analysis of lead traces in
-    copper alloys, *Journal of Analytical Atomic Spectrometry* 26, 2011
+15. C.L. Goueguel, S. Laville, F. Vidal, M. Chaker, M. Sabsabi, Resonant laser-induced breakdown spectroscopy for analysis of lead traces in copper alloys, *Journal of Analytical Atomic Spectrometry* 26, 2011
 
-16. F. Vidal, S. Laville, C.L. Goueguel, H. Loudyi, K. Rifai, M.
-    Chaker, M. Sabsabi, A simple model of laser-induced fluorescence
-    under arbitrary optical thickness conditions at the excitation
-    wavelength, *Journal of Quantitative Spectroscopy and Radiative
-    Transfer* 111, 2010
+16. F. Vidal, S. Laville, C.L. Goueguel, H. Loudyi, K. Rifai, M. Chaker, M. Sabsabi, A simple model of laser-induced fluorescence under arbitrary optical thickness conditions at the excitation wavelength, *Journal of Quantitative Spectroscopy and Radiative Transfer* 111, 2010
 
-17. C.L. Goueguel, S. Laville, F. Vidal, M. Sabsabi, M. Chaker,
-    Investigation of resonance-enhanced laser-induced breakdown
-    spectroscopy for analysis of aluminum alloys, *Journal of Analytical
-    Atomic Spectrometry* 25, 2010
+17. C.L. Goueguel, S. Laville, F. Vidal, M. Sabsabi, M. Chaker, Investigation of resonance-enhanced laser-induced breakdown spectroscopy for analysis of aluminum alloys, *Journal of Analytical Atomic Spectrometry* 25, 2010
 
-18. S. Laville, C.L. Goueguel, H. Loudyi, F. Vidal, M. Chaker, M.
-    Sabsabi, Laser-induced fluorescence detection of lead atoms in a
-    laser-induced plasma: An experimental analytical optimization study,
-    *Spectrochimica Acta Part B: Atomic Spectroscopy* 64, 2009
+18. S. Laville, C.L. Goueguel, H. Loudyi, F. Vidal, M. Chaker, M. Sabsabi, Laser-induced fluorescence detection of lead atoms in a laser-induced plasma: An experimental analytical optimization study, *Spectrochimica Acta Part B: Atomic Spectroscopy* 64, 2009
 
 ## Conference Proceedings
 
-1.  J.C. Jain, H.M. Edenborn, C.L. Goueguel, C.R. Bhatt, D. Hartzler,
-    D.L. McIntyre, A Novel Approach for Tracking CO~2~ Leakage Into
-    Groundwater Using Carbonate Mineral Dissolution, *Geological Society
-    of America*, 50, 2018
+1.  J.C. Jain, H.M. Edenborn, C.L. Goueguel, C.R. Bhatt, D. Hartzler, D.L. McIntyre, A Novel Approach for Tracking CO~2~ Leakage Into Groundwater Using Carbonate Mineral Dissolution, *Geological Society of America*, 50, 2018
 
-2.  J.C. Jain, C.L. Goueguel, D.L. McIntyre, Development of LIBS Sensor
-    for Sub-Surface CO~2~ Leak Detection in Carbon Sequestration, *2017
-    AIChE Annual Meeting*
+2.  J.C. Jain, C.L. Goueguel, D.L. McIntyre, Development of LIBS Sensor for Sub-Surface CO~2~ Leak Detection in Carbon Sequestration, *2017 AIChE Annual Meeting*
 
-3.  J.C. Jain, H.M. Edenborn, C.L. Goueguel, C.R. Bhatt, D.L. McIntyre,
-    A Rapid Method for the Chemical Analysis of Charcoal Iron Furnace
-    Slags, *Geological Society of America*, 49, 2017
+3.  J.C. Jain, H.M. Edenborn, C.L. Goueguel, C.R. Bhatt, D.L. McIntyre, A Rapid Method for the Chemical Analysis of Charcoal Iron Furnace Slags, *Geological Society of America*, 49, 2017
 
-4.  C.G. Carson, C.L. Goueguel, J.C. Jain, D.L. McIntyre, Development of
-    laser-induced breakdown spectroscopy sensor to assess groundwater
-    quality impacts resulting from geologic carbon sequestration,
-    *Micro-and Nanotechnology Sensors, Systems, and Applications* VII
-    9467, 2015
+4.  C.G. Carson, C.L. Goueguel, J.C. Jain, D.L. McIntyre, Development of laser-induced breakdown spectroscopy sensor to assess groundwater quality impacts resulting from geologic carbon sequestration, *Micro-and Nanotechnology Sensors, Systems, and Applications* VII 9467, 2015
 
-5.  F. Vidal, M. Chaker, C.L. Goueguel, S. Laville, H. Loudyi, K.
-    Rifai, M. Sabsabi, Enhanced Laser‐Induced Breakdown Spectroscopy by
-    Second‐Pulse Selective Wavelength Excitation, *AIP Conference
-    Proceedings* 1047, 2008
+5.  F. Vidal, M. Chaker, C.L. Goueguel, S. Laville, H. Loudyi, K. Rifai, M. Sabsabi, Enhanced Laser‐Induced Breakdown Spectroscopy by Second‐Pulse Selective Wavelength Excitation, *AIP Conference Proceedings* 1047, 2008
 
-6.  C.L. Goueguel, S. Laville, H. Loudyi, M. Chaker, M. Sabsabi, F.
-    Vidal, Detection of lead in brass by laser-induced breakdown
-    spectroscopy combined with laser-induced fluorescence, *Photonics
-    North 2008*, 709927, 2008
+6.  C.L. Goueguel, S. Laville, H. Loudyi, M. Chaker, M. Sabsabi, F. Vidal, Detection of lead in brass by laser-induced breakdown spectroscopy combined with laser-induced fluorescence, *Photonics North 2008*, 709927, 2008
 :::

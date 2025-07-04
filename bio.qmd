@@ -1,12 +1,10 @@
 ---
-title: ""
+title: "About"
 comments: false
 ---
 
 ::: justified
 ![](images/IMG_1985.png){fig-align="center" width="900"}
-
-## About
 
 Christian earned his PhD in 2012 from the Institut National de la Recherche Scientifique (INRS)-University of Quebec, in Varennes, Canada, under the supervision of Mohamed Chaker and François Vidal. Before pursuing his PhD in Canada, he completed both his Bachelor's and Master's degrees in Physics at the Grenoble Institute of Technology, France. His doctoral research, conducted at the National Research Council (NRC) in Boucherville, Canada, focused on improving the analytical performance of Laser-Induced Breakdown Spectroscopy (LIBS) for trace element analysis in metallic alloys.
 

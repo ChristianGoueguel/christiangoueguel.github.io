@@ -8,7 +8,7 @@ website:
   open-graph: true # Enables open graph metadata for better social sharing
   page-footer: |
     <div style="text-align: center;">
-      © 2024 Christian L. Goueguel. All rights reserved, unless otherwise specified.
+      © 2025 Christian L. Goueguel. All rights reserved, unless otherwise specified.
     </div>
   navbar:
     title: Christian L. Goueguel

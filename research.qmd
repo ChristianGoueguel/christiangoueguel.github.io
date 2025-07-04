@@ -1,9 +1,6 @@
 ---
-title: " "
+title: "Research"
 comments: false
-ditor: 
-  markdown: 
-    wrap: 72
 ---
 
 ::: justified
