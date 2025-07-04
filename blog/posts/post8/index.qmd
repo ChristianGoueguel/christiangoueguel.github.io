@@ -86,6 +86,50 @@ with $0<p<\frac{1}{2}$ and $\frac{1}{2}<q<1$, which define the degree of robustn
 
 They have a breakdown value of 0.125, meaning that they are resistant to the influence of up to 12.5% of outliers or contaminated data. The concept of quantile weights is derived from quartile skewness, introduced by D.V. Hinkley in 1975. Quartile skewness measures the skewness or asymmetry of a distribution by comparing the differences between the quartiles, which are robust measures of location and scale. Specifically, the quantile weights are calculated when applying quartile skewness to either the left half or the right half of the probability mass, divided at the median of the univariate distribution. The left quantile weight (LQW) is the proportion of the data below the median, divided by the expected proportion (0.5) if the data were normally distributed. The right quantile weight (RQW) is the proportion of the data above the median, divided by 0.5. Values closer to 0 indicate lighter tails compared to the normal distribution, values closer to 1 signify heavier tails compared to the normal distribution, whereas values significantly greater than 1 suggest the presence of outliers or extreme values in the respective tail.
 
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+quantile_weight <- function(x, p = 0.25, q = 0.75, drop.na = FALSE) {
+  if (missing(x)) {
+    stop("Missing 'x' argument.")
+  }
+  if (!is.numeric(x)) {
+    stop("The input 'x' must be a numeric vector.")
+  }
+  if (!is.logical(drop.na)) {
+    stop("The input 'drop.na' must be a logical value (TRUE or FALSE).")
+  }
+
+  value <- NULL
+  below_med <- NULL
+  above_med <- NULL
+  med <- stats::median(x, na.rm = drop.na)
+
+  left <- tibble::enframe(x) %>%
+    dplyr::mutate(below_med = value <= med) %>%
+    dplyr::filter(below_med) %>%
+    dplyr::pull(value)
+
+  right <- tibble::enframe(x) %>%
+    dplyr::mutate(above_med = value >= med) %>%
+    dplyr::filter(above_med) %>%
+    dplyr::pull(value)
+
+  ql1 <- stats::quantile(left, (1 - p)/2)
+  ql2 <- stats::quantile(left, p/2)
+
+  qr1 <- stats::quantile(right, (1 + q)/2)
+  qr2 <- stats::quantile(right, 1 - (q/2))
+
+  w_tbl <- tibble::tibble(
+    LQW = (-1) * (ql1 + ql2 - 2 * stats::quantile(left, 0.25)) / (ql1 - ql2),
+    RQW = (qr1 + qr2 - 2 * stats::quantile(right, 0.75)) / (qr1 - qr2)
+  )
+
+  return(w_tbl)
+}
+```
+
 ### **Medcouple tail weight measure**
 
 MW measure uses the medcouple statistic (MC), which is a robust measure of skewness. It focuses on tail asymmetry and provides information about the heaviness of each tail. The medcouple is defined as a scaled median of all pairwise slopes between data points. It is robust to extreme observations and does not require a predefined model. The resulting MW measure evaluates the extent of tail heaviness in a distribution, particularly useful when the data is skewed.
@@ -103,6 +147,48 @@ $$
 
 with $m$ the median of $X$. LMC and MC close to 0 indicate a symmetric distribution or light tails. Positive values indicate right-skewness or a heavier right tail, whereas negative values indicate left-skewness or a heavier left tail.
 
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+medcouple_weight <- function(x, drop.na = FALSE) {
+  if (missing(x)) {
+    stop("Missing 'x' argument.")
+  }
+  if (!is.numeric(x)) {
+    stop("The input 'x' must be a numeric vector.")
+  }
+  if (!is.logical(drop.na)) {
+    stop("The input 'drop.na' must be a logical value (TRUE or FALSE).")
+  }
+
+  value <- NULL
+  below_med <- NULL
+  above_med <- NULL
+  med <- stats::median(x, na.rm = drop.na)
+
+  left <- tibble::enframe(x) %>%
+    dplyr::mutate(below_med = value <= med) %>%
+    dplyr::filter(below_med) %>%
+    dplyr::pull(value)
+
+  right <- tibble::enframe(x) %>%
+    dplyr::mutate(above_med = value >= med) %>%
+    dplyr::filter(above_med) %>%
+    dplyr::pull(value)
+
+  w_tbl <- tibble::tibble(
+    LMC = (-1) * robustbase::mc(left, na.rm = drop.na),
+    RMC = robustbase::mc(right, na.rm = drop.na)
+  )
+
+  return(w_tbl)
+}
+```
+
+### **Example** 
+
+The plots below highlight the results, demonstrating the effectiveness of the QW and MW methods in handling heavy-tailed distributions.
+
 ```{r message=FALSE, warning=FALSE, fig.align='center'}
 #| code-fold: true
 #| code-summary: "Show the code"
@@ -112,11 +198,11 @@ light_tail_data <- rnorm(1000)
 kurt_heavy <- kurtosis(heavy_tail_data)
 kurt_light <- kurtosis(light_tail_data)
 
-qtw_heavy <- specProc::quantile_weight(heavy_tail_data)
-qtw_light <- specProc::quantile_weight(light_tail_data)
+qtw_heavy <- quantile_weight(heavy_tail_data)
+qtw_light <- quantile_weight(light_tail_data)
 
-mtw_heavy <- specProc::medcouple_weight(heavy_tail_data)
-mtw_light <- specProc::medcouple_weight(light_tail_data)
+mtw_heavy <- medcouple_weight(heavy_tail_data)
+mtw_light <- medcouple_weight(light_tail_data)
 
 data_frame(
   value = c(heavy_tail_data, light_tail_data),
@@ -138,7 +224,68 @@ data_frame(
   )
 ```
 
-The plot above highlights the results, demonstrating the effectiveness of the QW and MW methods in handling heavy-tailed distributions. In particular, these methods prove to be robust and efficient when analyzing data characterized by extreme values or pronounced tail behavior.
+In particular, these methods prove to be robust and efficient when analyzing data characterized by extreme values or pronounced tail behavior.
+
+```{r message=FALSE, warning=FALSE, fig.align='center'}
+#| code-fold: true
+#| code-summary: "Show the code"
+data <- tibble(
+    method = c("γ2", "LQW", "RQW", "LMC", "RMC"),
+    light_tails = c(0.01, 0.10, 0.21, 0.22, 0.22),
+    heavy_tails = c(7.03, 0.34, 0.17, 0.30, 0.34)
+    ) %>%
+    pivot_longer(
+      cols = c(light_tails, heavy_tails), 
+      names_to = "tail_type", 
+      values_to = "value"
+      ) %>%
+    mutate(
+      tail_type = case_when(
+        tail_type == "light_tails" ~ "Light tails",
+        tail_type == "heavy_tails" ~ "Heavy tails"
+        ),
+      method = factor(method, levels = c("γ2", "LQW", "RQW", "LMC", "RMC")),
+      method_group = case_when(
+        method == "γ2" ~ "Classical",
+        method %in% c("LQW", "RQW") ~ "QW method",
+        method %in% c("LMC", "RMC") ~ "MC method"
+        ),
+      method_group = factor(
+        method_group, 
+        levels = c("Classical", "QW method", "MC method")
+        )
+      )
+
+ggplot(data, aes(x = value, y = method, color = tail_type)) +
+    geom_point(size = 3, alpha = 0.8) +
+    geom_line(aes(group = method), color = "gray60", linewidth = 0.8) +
+    facet_grid(method_group ~ ., scales = "free_y", space = "free_y") +
+    scale_x_log10(
+      breaks = c(0.01, 0.1, 1, 10),
+      labels = c("0.01", "0.1", "1", "10")
+      ) +
+    scale_color_manual(
+      values = c("Light tails" = "#2E86AB", "Heavy tails" = "#A23B72"),
+      name = "Tail Type"
+      ) +
+    labs(
+      title = "Comparison of Methods for Light vs Heavy-Tailed Distributions",
+      subtitle = "Log scale highlights performance differences across methods",
+      x = "",
+      y = "Statistics"
+      ) +
+    theme_bw(base_size = 12) +
+    theme(
+      panel.grid = element_blank(),
+      legend.position = "bottom",
+      plot.title = element_text(size = 14, face = "bold"),
+      plot.subtitle = element_text(size = 12, color = "gray60"),
+      axis.title = element_text(size = 12),
+      axis.text = element_text(size = 10),
+      strip.text = element_text(size = 11, face = "bold")
+      ) +
+    annotation_logticks(sides = "b", size = 0.3)
+```
 
 | Methods    | Light tails | Heavy tails |
 |------------|-------------|-------------|
