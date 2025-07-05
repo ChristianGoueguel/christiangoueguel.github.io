@@ -185,7 +185,7 @@ medcouple_weight <- function(x, drop.na = FALSE) {
 }
 ```
 
-### **Example** 
+### **Example**
 
 The plots below highlight the results, demonstrating the effectiveness of the QW and MW methods in handling heavy-tailed distributions.
 
@@ -272,7 +272,7 @@ ggplot(data, aes(x = value, y = method, color = tail_type)) +
       title = "Comparison of Methods for Light vs Heavy-Tailed Distributions",
       subtitle = "Log scale highlights performance differences across methods",
       x = "",
-      y = "Statistics"
+      y = "Statistic"
       ) +
     theme_bw(base_size = 12) +
     theme(
