@@ -38,7 +38,7 @@ about: # https://quarto.org/docs/websites/website-about.html
 <hr>
 
 ::: justified
-Dr. Christian L. Goueguel is a research scientist specializing in laser spectroscopy and chemometrics. His work spans industries such as environmental monitoring, agriculture, medical devices, and dairy production. He has authored 20+ peer-reviewed articles and presented his research at numerous international conferences.
+Christian L. Goueguel is a research scientist specializing in laser spectroscopy and chemometrics. His work spans industries such as environmental monitoring, agriculture, medical devices, and dairy production. He has authored 20+ peer-reviewed articles and presented his research at numerous international conferences.
 
 Throughout his career, Christian has consistently pushed the boundaries of analytical chemistry, delivering innovative, high-impact solutions that bridge research and practical applications.
 
