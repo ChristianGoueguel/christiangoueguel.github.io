@@ -3,7 +3,7 @@ title: "Should We Use Standard Error or Standard Deviation?"
 description: "One of the most common questions in statistics is whether to report standard error (SE) or standard deviation (SD) when presenting data. While these two measures are related, they serve fundamentally different purposes and choosing the wrong one can mislead your audience. Let's break down when to use each."
 author: "Christian L. Goueguel"
 date: "11/28/2019"
-image: "cover.jpg"
+image: "cover.png"
 draft: false
 categories:
   - Statistics
@@ -12,7 +12,7 @@ categories:
 ---
 
 ::: justified
-![Photo by [Cody Board](Photo by <a href="https://unsplash.com/@codypboard?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Cody Board</a> on <a href="https://unsplash.com/photos/structure-beside-palm-trees-quuG8oNM61A?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>).](cover.jpg){fig-align="center"}
+![Photo by [Cody Board](https://unsplash.com/photos/structure-beside-palm-trees-quuG8oNM61A).](cover.png){fig-align="center"}
 
 ## Standard Deviation: How spread out is your data? 
 
