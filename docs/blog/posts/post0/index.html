@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Christian L. Goueguel">
-<meta name="dcterms.date" content="2021-03-15">
-<meta name="description" content="Principal Component Analysis can use either correlation or covariance matrices, but when should you use which? This post walks through the fundamental differences between these two approaches.">
+<meta name="dcterms.date" content="2019-11-28">
+<meta name="description" content="One of the most common questions in statistics is whether to report standard error (SE) or standard deviation (SD) when presenting data. While these two measures are related, they serve fundamentally different purposes and choosing the wrong one can mislead your audience. Let’s break down when to use each.">
 
-<title>Covariance vs Correlation in PCA: What’s the Difference? – Christian L. Goueguel</title>
+<title>Should We Use Standard Error or Standard Deviation? – Christian L. Goueguel</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -106,16 +106,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<link href="../../../site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
-<script src="../../../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
-<link href="../../../site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
-<script src="../../../site_libs/datatables-binding-0.33/datatables.js"></script>
-<script src="../../../site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-<link href="../../../site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
-<link href="../../../site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
-<script src="../../../site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
-<link href="../../../site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
-<script src="../../../site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -148,12 +138,10 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../../../styles.scss">
-<meta property="og:title" content="Covariance vs Correlation in PCA: What’s the Difference? – Christian L. Goueguel">
-<meta property="og:description" content="Principal Component Analysis can use either correlation or covariance matrices, but when should you use which? This post walks through the fundamental differences between these two approaches.">
-<meta property="og:image" content="https://christiangoueguel.com/blog/posts/post9/cover.png">
+<meta property="og:title" content="Should We Use Standard Error or Standard Deviation? – Christian L. Goueguel">
+<meta property="og:description" content="One of the most common questions in statistics is whether to report standard error (SE) or standard deviation (SD) when presenting data. While these two measures are related, they serve fundamentally different purposes and choosing the wrong one can mislead your audience. Let’s break down when to use each.">
+<meta property="og:image" content="https://christiangoueguel.com/blog/posts/post0/cover.png">
 <meta property="og:site_name" content="Christian L. Goueguel">
-<meta property="og:image:height" content="1282">
-<meta property="og:image:width" content="1920">
 </head>
 
 <body class="nav-fixed fullcontent quarto-light">
@@ -224,17 +212,15 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Covariance vs Correlation in PCA: What’s the Difference?</h1>
+<h1 class="title">Should We Use Standard Error or Standard Deviation?</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">Principal Component Analysis</div>
-    <div class="quarto-category">Correlation Matrix</div>
-    <div class="quarto-category">Covariance Matrix</div>
+    <div class="quarto-category">Statistics</div>
   </div>
   </div>
 
 <div>
   <div class="description">
-    Principal Component Analysis can use either correlation or covariance matrices, but when should you use which? This post walks through the fundamental differences between these two approaches.
+    One of the most common questions in statistics is whether to report standard error (SE) or standard deviation (SD) when presenting data. While these two measures are related, they serve fundamentally different purposes and choosing the wrong one can mislead your audience. Let’s break down when to use each.
   </div>
 </div>
 
@@ -251,7 +237,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">March 15, 2021</p>
+      <p class="date">November 28, 2019</p>
     </div>
   </div>
   
@@ -266,126 +252,137 @@ window.Quarto = {
 <div class="justified">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="cover.png" class="img-fluid figure-img" width="800"></p>
-<figcaption>Photo by <a href="Photo by <a href=&quot;https://unsplash.com/@colinwatts?utm_content=creditCopyText&amp;utm_medium=referral&amp;utm_source=unsplash&quot;>Colin Watts</a> on <a href=&quot;https://unsplash.com/photos/mountains-reflect-in-a-still-blue-lake-Wr0vLdN3roE?utm_content=creditCopyText&amp;utm_medium=referral&amp;utm_source=unsplash&quot;>Unsplash</a>">Colin Watts</a>.</figcaption>
+<p><img src="cover.jpg" class="img-fluid figure-img"></p>
+<figcaption>Photo by <a href="Photo by <a href=&quot;https://unsplash.com/@codypboard?utm_content=creditCopyText&amp;utm_medium=referral&amp;utm_source=unsplash&quot;>Cody Board</a> on <a href=&quot;https://unsplash.com/photos/structure-beside-palm-trees-quuG8oNM61A?utm_content=creditCopyText&amp;utm_medium=referral&amp;utm_source=unsplash&quot;>Unsplash</a>">Cody Board</a>.</figcaption>
 </figure>
 </div>
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>Principal Component Analysis (PCA) is a linear dimensionality reduction technique that identifies orthogonal directions (principal components) in the data along which variance is maximized. It projects high-dimensional data into a lower-dimensional space while preserving as much variability (information) as possible. Mathematically, PCA solves an eigenvalue problem on the covariance (or correlation) matrix of the data. When performing PCA, one must decide whether to apply it to the covariance matrix or the correlation matrix. This decision affects how variables with different scales contribute to the principal components. This post offers a technical explanation with a mathematical derivation to show why the <strong>covariance matrix of standardized data equals the correlation matrix of the original data</strong>. We’ll back this up with an example in R.</p>
+<section id="standard-deviation-how-spread-out-is-your-data" class="level2">
+<h2 class="anchored" data-anchor-id="standard-deviation-how-spread-out-is-your-data">Standard Deviation: How spread out is your data?</h2>
+<p>Standard deviation (SD) tells us about the variability within our sample. It describes how spread out the individual data points are around the sample mean. Think of it as answering: “How much do individual observations typically differ from the average?”. SD is given by:</p>
+<p><span class="math display">\[
+\text{SD} = \frac{\sum^n_{i=1}(x_i-\bar{x})^2}{n-1}
+\]</span></p>
+<p>Where, <span class="math inline">\(x_i\)</span> ​is the individual data points, <span class="math inline">\(\bar{x}\)</span> the sample mean, and <span class="math inline">\(n\)</span> the sample size.</p>
+<p>Notice the <span class="math inline">\(n−1\)</span>&nbsp;in the denominator. This is called&nbsp;Bessel’s correction, and it adjusts for the fact that we’re estimating the population variance from a&nbsp;sample. Using <span class="math inline">\(n−1\)</span>&nbsp;instead of <span class="math inline">\(n\)</span> prevents underestimating variability. In essence:</p>
+<blockquote class="blockquote">
+<p>Bessel’s correction compensates for the fact that a sample is typically less variable than the entire population. By using the sample mean, we’ve already “used up” one degree of freedom. It’s as if our effective sample size is reduced from <span class="math inline">\(n\)</span> to <span class="math inline">\(n−1\)</span>. That’s why we often say that Bessel’s correction “adjusts the sample size.”</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">42</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>population <span class="op">=</span> np.random.normal(loc<span class="op">=</span><span class="dv">0</span>, scale<span class="op">=</span><span class="dv">1</span>, size<span class="op">=</span><span class="dv">1_000_000</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>true_sd <span class="op">=</span> np.std(population, ddof<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>sample_sizes <span class="op">=</span> np.logspace(<span class="dv">1</span>, <span class="dv">4</span>, num<span class="op">=</span><span class="dv">50</span>, dtype<span class="op">=</span><span class="bu">int</span>)  <span class="co"># from 10 to 10,000</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>sd_n <span class="op">=</span> []</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>sd_n1 <span class="op">=</span> []</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> sample_sizes:</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    sample <span class="op">=</span> np.random.choice(population, size<span class="op">=</span>n, replace<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    sd_biased <span class="op">=</span> np.sqrt(np.<span class="bu">sum</span>((sample <span class="op">-</span> sample.mean())<span class="op">**</span><span class="dv">2</span>) <span class="op">/</span> n)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    sd_unbiased <span class="op">=</span> np.std(sample, ddof<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    sd_n.append(sd_biased)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    sd_n1.append(sd_unbiased)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">5</span>))</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span>true_sd, color<span class="op">=</span><span class="st">"black"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>, label<span class="op">=</span><span class="st">"True population SD"</span>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>plt.plot(sample_sizes, sd_n, <span class="st">"r-"</span>, label<span class="op">=</span><span class="st">"SD (divide by n)"</span>, markersize<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>plt.plot(sample_sizes, sd_n1, <span class="st">"b-"</span>, label<span class="op">=</span><span class="st">"SD (divide by n-1, Bessel)"</span>, markersize<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>plt.xscale(<span class="st">"log"</span>)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Sample size (n)"</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Estimated SD"</span>)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Effect of Bessel's Correction on SD Estimates"</span>)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>, which<span class="op">=</span><span class="st">"both"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>, alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The figure above compares two ways of calculating the sample standard deviation across different sample sizes (<span class="math inline">\(n\)</span> =10&nbsp;to <span class="math inline">\(n\)</span> =10,000). For small samples, the difference between dividing by <span class="math inline">\(n\)</span> or <span class="math inline">\(n−1\)</span> is large. Without Bessel’s correction, the population variability is underestimated. As the sample size increases, the bias shrinks and the two estimates converge.</p>
+<p>In practice, we rarely have very large sample size. Using <span class="math inline">\(n−1\)</span>&nbsp;ensures our standard deviation is an&nbsp;unbiased estimator of the population variability.</p>
 </section>
-<section id="proof" class="level2">
-<h2 class="anchored" data-anchor-id="proof">Proof</h2>
-<p>Let <span class="math inline">\(\mathbf{X} \in \mathbb{R}^{n \times p}\)</span> be a data matrix with <span class="math inline">\(n\)</span> observations and <span class="math inline">\(p\)</span> variables.</p>
+<section id="standard-error-how-precise-is-your-mean" class="level2">
+<h2 class="anchored" data-anchor-id="standard-error-how-precise-is-your-mean">Standard Error: How precise is your mean?</h2>
+<p>Standard error tells us about the precision of our sample mean as an estimate of the population mean. It describes how much our sample mean would vary if we repeated the study many times. It answers:</p>
+<blockquote class="blockquote">
+<p>“If we repeated this study many times, how much would the sample mean vary?”</p>
+</blockquote>
+<p>Standard error is directly related to standard deviation:</p>
+<p><span class="math display">\[
+\text{SE} = \frac{\text{SD}}{\sqrt{n}}
+\]</span></p>
+<p>Where <span class="math inline">\(n\)</span> is the sample size. This relationship reveals something important: as your sample size increases, the standard error decreases (your estimate becomes more precise), but the standard deviation might stay roughly the same (the underlying variability in the population doesn’t change).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">123</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>population <span class="op">=</span> np.random.normal(loc<span class="op">=</span><span class="dv">50</span>, scale<span class="op">=</span><span class="dv">10</span>, size<span class="op">=</span><span class="dv">1_000_000</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>sample_sizes <span class="op">=</span> [<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>, <span class="dv">50</span>, <span class="dv">60</span>, <span class="dv">70</span>, <span class="dv">80</span>, <span class="dv">90</span>, <span class="dv">100</span>]</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>all_sample_means <span class="op">=</span> []</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>all_sample_sizes <span class="op">=</span> []</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> sample_sizes:</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    sample_means <span class="op">=</span> [np.mean(np.random.choice(population, size<span class="op">=</span>n, replace<span class="op">=</span><span class="va">False</span>)) </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">100</span>)]</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    all_sample_means.extend(sample_means)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    all_sample_sizes.extend([n] <span class="op">*</span> <span class="dv">100</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>all_sample_means <span class="op">=</span> np.array(all_sample_means)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>all_sample_sizes <span class="op">=</span> np.array(all_sample_sizes)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>jitter <span class="op">=</span> np.random.normal(<span class="dv">0</span>, <span class="fl">0.3</span>, <span class="bu">len</span>(all_sample_sizes))</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>x_positions <span class="op">=</span> all_sample_sizes <span class="op">+</span> jitter</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>plt.scatter(x_positions, all_sample_means, alpha<span class="op">=</span><span class="fl">0.6</span>, s<span class="op">=</span><span class="dv">20</span>, color<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>y_min, y_max <span class="op">=</span> plt.ylim()</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> y <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">int</span>(y_min), <span class="bu">int</span>(y_max) <span class="op">+</span> <span class="dv">1</span>, <span class="dv">5</span>):</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    plt.axhline(y<span class="op">=</span>y, color<span class="op">=</span><span class="st">'gray'</span>, linestyle<span class="op">=</span><span class="st">'-'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>, linewidth<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>population_mean <span class="op">=</span> np.mean(population)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span>population_mean, color<span class="op">=</span><span class="st">'red'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Sample Size (n)'</span>, fontsize<span class="op">=</span><span class="dv">15</span>)</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Sample Mean'</span>, fontsize<span class="op">=</span><span class="dv">15</span>)</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Distribution of Sample Means for Different Sample Sizes'</span>, fontsize<span class="op">=</span><span class="dv">18</span>)</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>plt.xlim(<span class="dv">5</span>, <span class="dv">105</span>)<span class="op">;</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-6-3.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>From the figure above, we observe several fundamental statistical principles in action. First, all distributions are precisely centered around the true population mean (indicated by the red dashed line), regardless of sample size. This demonstrates that sample means serve as&nbsp;unbiased estimators&nbsp;of the population parameter, a critical property ensuring our estimates are systematically accurate rather than consistently over- or under-estimating the true value.</p>
+<p>More striking is the dramatic reduction in variability as we move from left to right across increasing sample sizes. The vertical spread of sample means becomes progressively tighter, providing compelling visual evidence that&nbsp;standard error decreases as sample size increases. This relationship follows the mathematical principle SE = σ/√n, meaning that precision improves predictably but at a diminishing rate, doubling the sample size reduces uncertainty by only √2, not by half. Perhaps most remarkably, each vertical column of points approximates a&nbsp;normal distribution, regardless of the original population’s shape. This illustrates the Central Limit Theorem in action: the sampling distribution of means becomes increasingly normal as sample size grows, even when sampling from non-normal populations. This powerful theorem provides the theoretical foundation for much of inferential statistics.</p>
+<p>We use standard error when we want to communicate uncertainty about population parameters:</p>
 <ul>
-<li><span class="math inline">\(\mu_j = \frac{1}{n} \sum_{i=1}^n X_{ij}\)</span> is the sample mean of variable <span class="math inline">\(j\)</span></li>
-<li><span class="math inline">\(\sigma_j = \sqrt{\frac{1}{n-1} \sum_{i=1}^n (X_{ij} - \mu_j)^2}\)</span> is its sample standard deviation</li>
+<li>Confidence intervals: SE helps calculate how precisely we’ve estimated the population mean</li>
+<li>Hypothesis testing: SE is crucial for determining statistical significance</li>
+<li>Comparing groups: When we want to know if observed differences likely reflect real population differences</li>
+<li>Meta-analyses: Combining results from multiple studies</li>
 </ul>
-<p>The centered data matrix is <span class="math inline">\(\tilde{\mathbf{X}} = \mathbf{X} - \mathbf{1}_n \mu^T\)</span> where <span class="math inline">\(\mu \in \mathbb{R}^p\)</span> is the vector of column means.</p>
-<p>The <strong>covariance matrix</strong> of <span class="math inline">\(\mathbf{X}\)</span> is defined as:</p>
-<p><span class="math display">\[
-\textbf{Cov}(\mathbf{X}) = \frac{1}{n-1} \tilde{\mathbf{X}}^T \tilde{\mathbf{X}}
-\]</span></p>
-<p>The <strong>standardized data</strong> (i.e., <span class="math inline">\(\mu = 0\)</span>, <span class="math inline">\(\sigma = 1\)</span>) is given by:</p>
-<p><span class="math display">\[
-Z_{ij} = \frac{X_{ij} - \mu_j}{\sigma_j} = \frac{\tilde{\mathbf{X}}}{\sigma_j} \quad \text{or} \quad \mathbf{Z} = \tilde{\mathbf{X}} \mathbf{D}^{-1}
-\]</span></p>
-<p>where <span class="math inline">\(\mathbf{D} = \text{diag}(\sigma_1, \dots, \sigma_p)\)</span></p>
-<p>Then,</p>
-<p><span class="math display">\[
-\begin{align*} \textbf{Cov}(\mathbf{Z}) &amp;= \frac{1}{n-1} \mathbf{Z}^T \mathbf{Z} \\
-&amp;= \frac{1}{n-1} \left[\tilde{\mathbf{X}} \mathbf{D}^{-1}\right]^T \tilde{\mathbf{X}} \mathbf{D}^{-1}\\
-&amp;= \mathbf{D}^{-1}\frac{1}{n-1}\tilde{\mathbf{X}}^T \tilde{\mathbf{X}} \mathbf{D}^{-1}\\
-&amp;= \mathbf{D}^{-1} \textbf{Cov}(\tilde{\mathbf{X}}) \mathbf{D}^{-1}\\
-\end{align*}
-\]</span></p>
-<p>Now, to compute the <strong>correlation matrix</strong> of <span class="math inline">\(\mathbf{X}\)</span>, we normalize each covariance term by the product of the standard deviations of variables <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>:</p>
-<p><span class="math display">\[
-\begin{align*}
-\textbf{Cor}(\mathbf{X})_{ij} &amp;= \frac{\textbf{Cov}(\tilde{\mathbf{X}})_{ij}}{\sigma_i\sigma_j} \\ &amp;= \mathbf{D}^{-1} \textbf{Cov}(\tilde{\mathbf{X}}) \mathbf{D}^{-1}
-\end{align*}
-\]</span></p>
-<p>Thus: <span class="math inline">\(\boxed{\textbf{Cov}(\mathbf{Z}) = \textbf{Cor}(\mathbf{X})} \quad \blacksquare\)</span></p>
-<p>This demonstrates that standardizing the data transforms the covariance matrix into the correlation matrix of the original variables.</p>
-<p>PCA seeks directions (<span class="math inline">\(\mathbf{v}\)</span>) that maximize the variance of the projected data:</p>
-<p><span class="math display">\[
-\max_{\mathbf{v} \in \mathbb{R}^p} \quad \mathbf{v}^T \Sigma \mathbf{v} \quad \text{subject to } \|\mathbf{v}\| = 1
-\]</span></p>
-<p>If <span class="math inline">\(\Sigma\)</span> is the covariance matrix of <span class="math inline">\(\mathbf{X}\)</span>, this favors variables with large variance. If <span class="math inline">\(\Sigma\)</span> is the correlation matrix (i.e., the covariance of standardized <span class="math inline">\(\mathbf{X}\)</span>), all variables contribute equally. Indeed, the fact that the covariance matrix is unbounded (and scale-dependent), while the correlation matrix is bounded, <span class="math inline">\([-1, 1]\)</span>, and scale-free, is a fundamental reason why correlation-based PCA is preferred when variables are measured on different scales or units.</p>
+<p>Standard error is essential when making inferences beyond our sample to the broader population.</p>
 </section>
-<section id="example" class="level2">
-<h2 class="anchored" data-anchor-id="example">Example</h2>
-<p>Simulate correlated variables with different scales:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ssh <span class="ot">=</span> suppressPackageStartupMessages</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span>(<span class="fu">library</span>(DT))</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span>(<span class="fu">library</span>(tidyverse))</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span>(<span class="fu">library</span>(FactoMineR))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(diamonds, <span class="st">"ggplot2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Standardize the data:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Z <span class="ot">&lt;-</span> diamonds <span class="sc">|&gt;</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(is.numeric)) <span class="sc">|&gt;</span> </span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Covariance matrix of the standardized data:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cov_std <span class="ot">&lt;-</span> Z <span class="sc">|&gt;</span> </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cov</span>() <span class="sc">|&gt;</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">3</span>)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>cov_std <span class="sc">|&gt;</span> <span class="fu">datatable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div class="datatables html-widget html-fill-item" id="htmlwidget-dd12e491d75d22a601ad" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-dd12e491d75d22a601ad">{"x":{"filter":"none","vertical":false,"data":[["carat","depth","table","price","x","y","z"],[1,0.028,0.182,0.922,0.975,0.952,0.953],[0.028,1,-0.296,-0.011,-0.025,-0.029,0.095],[0.182,-0.296,1,0.127,0.195,0.184,0.151],[0.922,-0.011,0.127,1,0.884,0.865,0.861],[0.975,-0.025,0.195,0.884,1,0.975,0.971],[0.952,-0.029,0.184,0.865,0.975,1,0.952],[0.953,0.095,0.151,0.861,0.971,0.952,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>carat<\/th>\n      <th>depth<\/th>\n      <th>table<\/th>\n      <th>price<\/th>\n      <th>x<\/th>\n      <th>y<\/th>\n      <th>z<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"carat","targets":1},{"name":"depth","targets":2},{"name":"table","targets":3},{"name":"price","targets":4},{"name":"x","targets":5},{"name":"y","targets":6},{"name":"z","targets":7}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
-</div>
-</div>
-<p>Correlation matrix of the raw data:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cor_raw <span class="ot">&lt;-</span> diamonds <span class="sc">|&gt;</span> </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(is.numeric)) <span class="sc">|&gt;</span> </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>() <span class="sc">|&gt;</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">3</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>cor_raw <span class="sc">|&gt;</span> <span class="fu">datatable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div class="datatables html-widget html-fill-item" id="htmlwidget-d6a13d747da9f4d9a011" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-d6a13d747da9f4d9a011">{"x":{"filter":"none","vertical":false,"data":[["carat","depth","table","price","x","y","z"],[1,0.028,0.182,0.922,0.975,0.952,0.953],[0.028,1,-0.296,-0.011,-0.025,-0.029,0.095],[0.182,-0.296,1,0.127,0.195,0.184,0.151],[0.922,-0.011,0.127,1,0.884,0.865,0.861],[0.975,-0.025,0.195,0.884,1,0.975,0.971],[0.952,-0.029,0.184,0.865,0.975,1,0.952],[0.953,0.095,0.151,0.861,0.971,0.952,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>carat<\/th>\n      <th>depth<\/th>\n      <th>table<\/th>\n      <th>price<\/th>\n      <th>x<\/th>\n      <th>y<\/th>\n      <th>z<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"carat","targets":1},{"name":"depth","targets":2},{"name":"table","targets":3},{"name":"price","targets":4},{"name":"x","targets":5},{"name":"y","targets":6},{"name":"z","targets":7}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
-</div>
-</div>
-<p>Are they equal?</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(cov_std, cor_raw)  <span class="co"># Should return TRUE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] TRUE</code></pre>
-</div>
-</div>
-<p>Since the <code>diamonds</code> dataset contains variables with heterogeneous scales, we perform PCA on the correlation matrix by using standardized data <span class="math inline">\(Z\)</span>. In the <code>FactoMineR::PCA()</code> function, we set the <code>scale.unit</code> argument to <code>FALSE</code> because our input data has already been standardized.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>pca_mod <span class="ot">&lt;-</span> <span class="fu">PCA</span>(Z, <span class="at">scale.unit =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="conclusion" class="level2">
-<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>The covariance matrix of standardized data is mathematically equal to the correlation matrix of raw data. This equivalence means that applying PCA to standardized data is functionally identical to applying PCA directly to the correlation matrix of the raw data. This distinction is critical because the covariance matrix is scale-dependent and unbounded, which can cause variables with larger numerical ranges to dominate the principal components. In contrast, the correlation matrix is bounded between -1 and 1, ensuring that all variables contribute equally regardless of their original scale. Therefore, you must use correlation-based PCA, when your data consists of variables at different scales.</p>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<ul>
+<li>Don’t use SE to make data look less variable: Some researchers inappropriately use standard error instead of standard deviation because SE is always smaller, making their data appear more consistent. This is misleading.</li>
+<li>Don’t use SD for inferential statistics: If you’re testing hypotheses or building confidence intervals, you need standard error, not standard deviation.</li>
+<li>Don’t confuse error bars: When creating graphs, be explicit about whether your error bars represent SD or SE. They tell completely different stories.</li>
+</ul>
 </section>
 </div>
 
