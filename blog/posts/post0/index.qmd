@@ -14,7 +14,7 @@ categories:
 ::: justified
 ![Photo by [Cody Board](https://unsplash.com/photos/structure-beside-palm-trees-quuG8oNM61A).](cover.png){fig-align="center"}
 
-## Standard Deviation: How spread out is your data? 
+## Standard Deviation: How spread out is your data?
 
 Standard deviation (SD) tells us about the variability within our sample. It describes how spread out the individual data points are around the sample mean. Think of it as answering: "How much do individual observations typically differ from the average?". SD is given by:
 
@@ -22,9 +22,7 @@ $$
 \text{SD} = \frac{\sum^n_{i=1}(x_i-\bar{x})^2}{n-1}
 $$
 
-Where, $x_i$
-​is the individual data points, $\bar{x}$
-the sample mean, and $n$ the sample size.
+Where, $x_i$ ​is the individual data points, $\bar{x}$ the sample mean, and $n$ the sample size.
 
 Notice the $n−1$ in the denominator. This is called Bessel’s correction, and it adjusts for the fact that we're estimating the population variance from a sample. Using $n−1$ instead of $n$ prevents underestimating variability. In essence:
 

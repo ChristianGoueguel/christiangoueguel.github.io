@@ -56,7 +56,7 @@ $T$ can be seen as three collections of vectors. Each collection is a table wit
 
 ### PARAFAC
 
-PARAFAC (Parallel Factor Analysis) is the simplest and most widely used three-way decomposition. Introduced independently by [Harshman](https://pdfs.semanticscholar.org/c5b2/8cae82b14417f1250e58bb241367248e827d.pdf) and, by [Carrol and Chang](https://link.springer.com/article/10.1007/BF02310791) (who called it CANDECOMP), PARAFAC represents the most intuitive extension of familiar techniques like Principal Component Analysis (PCA) into the three-dimensional world. PARAFAC is express by:
+PARAFAC (Parallel Factor Analysis) also called Canonical Polyadic (CP) is the simplest and most widely used three-way decomposition. Introduced independently by [Harshman](https://pdfs.semanticscholar.org/c5b2/8cae82b14417f1250e58bb241367248e827d.pdf) and, by [Carrol and Chang](https://link.springer.com/article/10.1007/BF02310791) (who called it Canonical Decomposition or CANDECOMP), PARAFAC represents the most intuitive extension of familiar techniques like Principal Component Analysis (PCA) into the three-dimensional world. PARAFAC is express by:
 
 $$
 \mathbf{X} \approx \sum_{r=1}^{R} \lambda_r \cdot (\mathbf{a}_r \otimes \mathbf{b}_r \otimes \mathbf{c}_r)
