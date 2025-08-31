@@ -78,7 +78,9 @@ Here, $\textbf{G}$ is the core tensor that acts as a "weighting grid," determini
 
 Unlike PARAFAC's simple sum, Tucker3 creates a weighted combination where the core tensor $\textbf{G}$ contains elements $g_{i,j,k}$ that specify how factors from mode 1 (position $i$), mode 2 (position $j$), and mode 3 (position $k$) combine together. This flexibility allows Tucker3 to capture more complex interaction patterns that PARAFAC might miss.
 
-## Modeling
+## Implementation
+
+In the examples below, we demonstrate a practical implementation of tensor decomposition methods using the Python library [TensorLy](https://tensorly.org/dev/index.html). In the first example, we built and used a synthetic dataset composed of three Gaussian distribution patterns, illustrating how PARAFAC decomposition can effectively capture and uncovored underlying structures in a noisy multidimensional data. In the second example, we use a published dataset that captures how our tongues move when we speak. Using this dataset, we will compare PARAFAC and Tucker decomposition, highlighting the differences in how each method captures the underlying structures of a complex multidimensional data.
 
 ```{r}
 #| include: false
@@ -106,6 +108,9 @@ py_config()
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import pearsonr
+from mpl_toolkits.mplot3d import Axes3D
+from itertools import starmap
+import math
 import warnings
 warnings.filterwarnings('ignore')
 ```
@@ -115,18 +120,216 @@ For our tensor decomposition analysis, we rely on [TensorLy](https://tensorly.or
 ```{python}
 import tensorly as tl
 from tensorly.decomposition import parafac, tucker
+from tensorly.cp_tensor import cp_to_tensor
+from tensorly.tucker_tensor import tucker_to_tensor
 ```
 
 We also specify the computational backend with `tl.set_backend('numpy')`, which determines how TensorLy performs its underlying mathematical operations. TensorLy supports multiple backends including `NumPy`, `PyTorch`, `TensorFlow`, and `JAX`, each offering different advantages depending on the application. For more details see [here](https://tensorly.org/dev/user_guide/quickstart.html#tensorly-backend).
 
 ```{python}
-np.random.seed(42)
+np.random.seed(123)
 tl.set_backend('numpy')
 ```
 
-### Dataset
+### Example 1
 
-For this post, we use a fascinating dataset from pioneering linguistic research by Ladefoged et al. (1971), that captures how our tongues move when we speak. The study used X-ray imaging to study tongue shapes as five different speakers pronounced various English vowels. By mapping tongue positions onto a defined grid, they created a unique 3D dataset that reveals the biomechanics of human speech.
+The bivariate Gaussian distribution with means $\mu_x,\mu_y$, standards deviations $\sigma_x, \sigma_y$, and correlation coefficient $\rho$, is given by:
+
+$$
+f(x, y) = \frac{1}{2\pi \sigma_x \sigma_y \sqrt{1 - \rho^2}} \exp\left( -\frac{1}{2(1 - \rho^2)} \left[ \left( \frac{x - \mu_x}{\sigma_x} \right)^2 - 2\rho \left( \frac{x - \mu_x}{\sigma_x} \right) \left( \frac{y - \mu_y}{\sigma_y} \right) + \left( \frac{y - \mu_y}{\sigma_y} \right)^2 \right] \right)
+$$
+
+We consider the simplified 2D Gaussian distribution when $\rho = 0$ (i.e., no correlation between $x$ and $y$):
+
+$$
+f(x, y) = \frac{1}{2\pi \sigma_x \sigma_y} \exp\left( - \frac{1}{2} \left[ \left( \frac{x - \mu_x}{\sigma_x} \right)^2 + \left( \frac{y - \mu_y}{\sigma_y} \right)^2 \right] \right)
+$$
+
+```{python}
+def gaussian_distribution(x, y, mu=(0,0), sigma=(1,1), amplitude=1):
+  alpha = 1 / (2 * math.pi * mu[0] * mu[1])
+  beta_x = ((x - mu[0]) / sigma[0])**2
+  beta_y = ((y - mu[1]) / sigma[1])**2
+  beta = beta_x + beta_y
+  return amplitude * alpha * np.exp(-(1 / 2) * beta)
+```
+
+Now, let's built three different Gaussian distributions with specific characteristics.
+
+```{python}
+x = np.linspace(-5, 5, 100)
+y = np.linspace(-5, 5, 100)
+X, Y = np.meshgrid(x, y)
+
+# Broad distribution
+broad = gaussian_distribution(X, Y, (-2, -2), (2, 2), 1)
+
+# Two peaks
+peak1 = gaussian_distribution(X, -Y, (1.5, 1.5), (0.8, 0.8), 1)
+peak2 = gaussian_distribution(-X, Y, (2, 2), (0.8, 0.8), 2)
+twopeaks = peak1 + peak2 
+
+# Sharp distribution
+sharp = gaussian_distribution(X, Y, (1, 1), (0.2, 0.2), 1.2)
+```
+
+Next, we stack the three distributions into a tensor of dimension $100 \times 100 \times 3$.
+
+```{python}
+T = np.stack([broad, twopeaks, sharp], axis=-1)
+```
+
+We can now visualize the three distributions to verify their shapes and characteristics.
+
+```{python}
+fig = plt.figure(figsize=(15, 5))
+
+for i in range(3):
+    ax = fig.add_subplot(1, 3, i+1, projection='3d')
+    surf = ax.plot_surface(X, Y, T[:, :, i], cmap='viridis', linewidth=0, antialiased=True)
+    ax.set_xlabel('X-Position')
+    ax.set_ylabel('Y-Position')
+
+plt.tight_layout()
+plt.show()
+plt.close()
+```
+
+For the purpose of this post, we add some noise into the data at three distinct levels: **0.001**, **0.01**, and **0.05**.
+
+```{python}
+noisy1_T = T + 0.001 * np.random.randn(*T.shape)
+noisy2_T = T + 0.01 * np.random.randn(*T.shape)
+noisy3_T = T + 0.05 * np.random.randn(*T.shape)
+```
+
+Then, we create a list of tensors to decompose, e.g., `[noisy1_T, noisy2_T, noisy3_T]`.
+
+```{python}
+datasets = [noisy1_T, noisy2_T, noisy3_T]
+noise_levels = [0.001, 0.01, 0.05]
+titles = ['Broad', 'Two-peak', 'Sharp']
+```
+
+```{python}
+def plot_tensor(data, noise):
+    fig = plt.figure(figsize=(15, 5))
+    fig.suptitle(f"Noise level = {noise}", fontsize=16)
+    
+    for i in range(3):
+        ax = fig.add_subplot(1, 3, i+1, projection='3d')
+        surf = ax.plot_surface(X, Y, data[:, :, i], cmap='viridis', linewidth=0, antialiased=True)
+        ax.set_xlabel('X-Position')
+        ax.set_ylabel('Y-Position')
+
+    plt.tight_layout()
+    plt.show()
+    plt.close()
+```
+
+```{python}
+for _ in map(plot_tensor, datasets, noise_levels):
+    pass
+```
+
+PARAFAC decomposition is applied iteratively to the list of tensors. For each tensor in `datasets`, the method extracts three components, producing a set of `weights` and `factor` matrices that capture the underlying patterns along each mode:
+
+-   Mode 0 factors: describe the pattern along the rows (X-axis) of the tensor.
+-   Mode 1 factors: describe the pattern along the columns (Y-axis) of the tensor.
+-   Mode 2 factors: correspond to the the different Gaussian distributions.
+
+All of these results are collected and stored in a list called `results`, for further analysis and visualization.
+
+```{python}
+results = list(map(lambda data: parafac(data, 3, init='random', random_state=42), datasets))
+```
+
+We then reconstruct the tensor from the factorization results and evaluate the quality of the decomposition by calculating the relative reconstruction error. The reconstructed tensor is obtained using the factor matrices and weights returned by the PARAFAC model. The error is computed as the ratio between the Frobenius norm, $\lVert{\cdot}\rVert_F$, of the difference (original tensor minus reconstructed tensor) and the Frobenius norm of the original tensor. This provides a normalized measure of how well the decomposition approximates the data, with lower values indicating a more accurate reconstruction.
+
+$$
+\text{Relative Reconstruction Error} = \frac{\lVert\mathcal{T} - \hat{\mathcal{T}}\rVert_F}{\lVert \mathcal{T}\rVert_F}
+$$
+
+Where $\mathcal{T}$ is the original tensor and $\lVert \mathcal{\hat{T}} \rVert_F$ is the reconstructed tensor.
+
+```{python}
+def compute_error(result, data):
+  weights, factors = result
+  reconstructed_T = cp_to_tensor((weights, factors))
+  return np.linalg.norm(data - reconstructed_T) / np.linalg.norm(data)
+```
+
+```{python}
+errors = list(map(compute_error, results, datasets))
+```
+
+```{python}
+for noise, err in zip(noise_levels, errors):
+    print(f"Noise level = {noise}, Relative reconstruction error = {err:.4f}")
+```
+
+Next, we visualize the decomposed modes obtained from the tensor factorization. Each of the three component represents a distinct pattern captured along a specific mode of the data, and plotting them allows us to interpret the underlying structures identified by the decomposition.
+
+```{python}
+titles = ['Component 1', 'Component 2', 'Component 3']
+```
+
+```{python}
+def plot_components(result, noise):
+    weights, factors = result
+    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+    fig.suptitle(f"Noise level = {noise}", fontsize=16)
+
+    for i, ax in enumerate(axes):
+        component = np.outer(factors[0][:, i], factors[1][:, i])
+        component /= np.max(np.abs(component))
+        line_y = component.sum(axis=0)
+        line_x = component.sum(axis=1)
+        ax.plot(line_y, label='Mode 1 (Y-position)')
+        ax.plot(line_x, label='Mode 0 (X-position)')
+        ax.set_title(titles[i])
+        ax.set_xlabel('Index')
+        ax.set_ylabel('Amplitude (normalized)')
+        ax.legend()
+
+    plt.tight_layout()
+    plt.show()
+    plt.close()
+```
+
+```{python}
+for _ in map(plot_components, results, noise_levels):
+    pass
+```
+
+```{python}
+titles = ['Broad', 'Two-peak', 'Sharp']
+```
+
+```{python}
+def plot_reconstruction_error(noisy, reconstructed, noise_level):
+    error_tensor = noisy - reconstructed
+    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+    fig.suptitle(f'Reconstruction Error - Noise level = {noise_level}', fontsize=16)
+    for i, ax in enumerate(axes):
+        im = ax.imshow(error_tensor[:, :, i], cmap='RdBu', aspect='auto')
+        ax.set_title(titles[i])
+        fig.colorbar(im, ax=ax, label='Error')
+
+    plt.tight_layout()
+    plt.show()
+    plt.close()
+```
+
+```{python}
+reconstructed_tensors = [cp_to_tensor(res) for res in results]
+for _ in map(plot_reconstruction_error, datasets, reconstructed_tensors, noise_levels):
+    pass
+```
+
+### Example 2
+
+In this example, we use a fascinating dataset from pioneering linguistic research by Ladefoged et al. (1971), that captures how our tongues move when we speak. The study used X-ray imaging to study tongue shapes as five different speakers pronounced various English vowels. By mapping tongue positions onto a defined grid, they created a unique 3D dataset that reveals the biomechanics of human speech.
 
 The tensor has dimensions $5 \times 10 \times 13$, representing:
 
