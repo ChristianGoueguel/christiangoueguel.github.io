@@ -415,7 +415,7 @@ tensor_dims = [13, 10, 5]
 X_tensor = X.reshape(tensor_dims)
 ```
 
-### PARAFAC decomposition
+#### PARAFAC decomposition
 
 In the following, we first proceed with one important step. We systematically test different ranks (complexity levels) to find the best PARAFAC decomposition for our tongue shape data. We test multiple ranks from 2 to 50, asking: *"How many components do we need to best represent our data?"*
 
@@ -619,7 +619,7 @@ fig, axes = rank_analysis(model=parafac_mod)
 ranks, rel_errors = optimal_rank(model=parafac_mod)
 ```
 
-### Tucker decomposition
+#### Tucker decomposition
 
 For comparison, we also applied Tucker3 decomposition to the tongue shape data. Unlike PARAFAC, where a single rank is chosen for all modes, Tucker3 allows the number of components in each mode to be varied independently. We therefore tested different combinations of model sizes, systematically varying the dimensions of the grid positions, vowels, and speakers modes (e.g., \[5, 8, 4\] and other configurations).
 
@@ -997,7 +997,7 @@ plot_tucker_results(model = tucker_mod)
 tucker_results(model = tucker_mod)
 ```
 
-### Model Comparison
+#### Model Comparison
 
 After optimizing both decomposition methods, we can now directly compare their performance on our tongue shape data. The comparison reveals distinct characteristics and trade-offs between the two approaches.
 
