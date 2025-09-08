@@ -1,6 +1,6 @@
 ---
 title: "Christian L. Goueguel"
-image: profile2.png
+image: profile3.png
 comments: false
 about: # https://quarto.org/docs/websites/website-about.html
   template: jolla
