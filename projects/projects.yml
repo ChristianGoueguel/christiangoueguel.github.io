@@ -45,5 +45,14 @@
     packages simultaneously.
   categories: [R, Visualization, App]
   date: 2024-12-01
-  
+
+- title: pyEllipse
+  path: https://pypi.org/project/pyEllipse/
+  image: images/pythonlogo.png
+  description: >
+    A Python package for computing Hotelling's T² statistics and generating 
+    confidence ellipse/ellipsoid coordinates for multivariate data analysis and 
+    visualization.
+  categories: [Python, Statistics, Exploratory Data Analysis]
+  date: 2025-10-15
   

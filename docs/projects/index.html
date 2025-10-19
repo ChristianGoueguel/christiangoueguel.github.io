@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>R Packages – Christian L. Goueguel</title>
+<title>R and Python Packages – Christian L. Goueguel</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-title','listing-image','listing-description','listing-categories','listing-date',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-title','listing-image','listing-description','listing-categories','listing-date',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-title-sort'] },{ data: ['listing-date-sort'] }],
       
       searchColumns: ["listing-title","listing-image","listing-description","listing-categories","listing-date"],
     };
@@ -131,7 +131,7 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../styles.scss">
-<meta property="og:title" content="R Packages – Christian L. Goueguel">
+<meta property="og:title" content="R and Python Packages – Christian L. Goueguel">
 <meta property="og:image" content="https://christiangoueguel.com/projects/images/HotellingEllipse.png">
 <meta property="og:site_name" content="Christian L. Goueguel">
 <meta property="og:image:height" content="600">
@@ -206,7 +206,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">R Packages</h1>
+<h1 class="title">R and Python Packages</h1>
 </div>
 
 
@@ -227,137 +227,162 @@ window.Quarto = {
 
 
 
-<div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
-<div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="UiUyQ01hY2hpbmUlMjBMZWFybmluZyUyQ0NoZW1vbWV0cmljcyUyQ0V4cGxvcmF0b3J5JTIwRGF0YSUyMEFuYWx5c2lz" data-listing-date-sort="1621321200000">
-<a href="https://christiangoueguel.github.io/HotellingEllipse/" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="images/HotellingEllipse.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Hotelling’s T-Squared Statistic and Ellipse
-</h5>
-<div class="listing-categories">
+<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
+<div class="listing-actions-group">
+   <div class="input-group input-group-sm quarto-listing-sort">
+    <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
+    <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
+      <option value="" disabled="" selected="" hidden="">Order By</option>
+      <option value="index" data-direction="asc">Default</option>
+      <option value="listing-title-sort" data-direction="asc">
+        Title
+      </option>
+      <option value="listing-image" data-direction="asc">
+      </option>
+      <option value="listing-description" data-direction="asc">
+        Description
+      </option>
+      <option value="listing-categories" data-direction="asc">
+        Categories
+      </option>
+      <option value="listing-date-sort" data-direction="asc">
+        Date - Oldest
+      </option>
+      <option value="listing-date-sort" data-direction="desc">
+        Date - Newest
+      </option>
+    </select>
+  </div>
+    <div class="input-group input-group-sm quarto-listing-filter">
+      <span class="input-group-text"><i class="bi bi-search"></i></span>
+      <input type="text" class="search form-control" placeholder="Filter">
+    </div>
+</div>
+<table class="quarto-listing-table table">
+<thead>
+<tr>
 
-<div class="listing-category" onclick="window.quartoListingCategory('Ug=='); return false;">R</div>
+<th>
+<a class="sort" data-sort="listing-title-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Title</a>
+</th>
 
-<div class="listing-category" onclick="window.quartoListingCategory('TWFjaGluZSUyMExlYXJuaW5n'); return false;">Machine Learning</div>
+<th>
+<a class="sort" data-sort="listing-image" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;"> </a>
+</th>
 
-<div class="listing-category" onclick="window.quartoListingCategory('Q2hlbW9tZXRyaWNz'); return false;">Chemometrics</div>
+<th>
+<a class="sort" data-sort="listing-description" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Description</a>
+</th>
 
-<div class="listing-category" onclick="window.quartoListingCategory('RXhwbG9yYXRvcnklMjBEYXRhJTIwQW5hbHlzaXM='); return false;">Exploratory Data Analysis</div>
+<th>
+<a class="sort" data-sort="listing-categories" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Categories</a>
+</th>
 
-</div>
-<div class="card-text listing-description delink">
-<p>The HotellingEllipse package facilitates the comparison of multivariate datasets based on their PCA or PLS scores by computing the Hotelling’s T-squared statistic. The package also provides the semi-minor and semi-major axes for drawing…</p>
-</div>
-<div class="card-attribution card-text-small end">
-<div class="listing-date">
-May 18, 2021
-</div>
-</div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="1" data-categories="UiUyQ01hY2hpbmUlMjBMZWFybmluZyUyQ0NoZW1vbWV0cmljcyUyQ0NsdXN0ZXJpbmc=" data-listing-date-sort="1713769200000">
-<a href="https://christiangoueguel.github.io/ConfidenceEllipse/" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="images/ConfidenceEllipse.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Computation of 2D and 3D Elliptical Joint Confidence Regions
-</h5>
-<div class="listing-categories">
+<th>
+<a class="sort" data-sort="listing-date-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Date</a>
+</th>
 
-<div class="listing-category" onclick="window.quartoListingCategory('Ug=='); return false;">R</div>
+</tr>
+</thead>
+<tbody class="list">
 
-<div class="listing-category" onclick="window.quartoListingCategory('TWFjaGluZSUyMExlYXJuaW5n'); return false;">Machine Learning</div>
+<tr data-index="0" data-categories="UiUyQ01hY2hpbmUlMjBMZWFybmluZyUyQ0NoZW1vbWV0cmljcyUyQ0V4cGxvcmF0b3J5JTIwRGF0YSUyMEFuYWx5c2lz" data-listing-date-sort="1621321200000" data-listing-title-sort="Hotelling’s T-Squared Statistic and Ellipse">
+<td>
+<a href="https://christiangoueguel.github.io/HotellingEllipse/" class="title listing-title">Hotelling’s T-Squared Statistic and Ellipse</a>
+</td>
+<td>
+<span class="listing-image"><img loading="lazy" src="images/HotellingEllipse.png" style="height: 40px;"></span>
+</td>
+<td>
+<span class="listing-description">The HotellingEllipse package facilitates the comparison of multivariate datasets based on their PCA or PLS scores by computing the Hotelling’s T-squared statistic. The package also provides the semi-minor and semi-major axes for drawing…</span>
+</td>
+<td>
+<span class="listing-categories">R, Machine Learning, Chemometrics, Exploratory Data Analysis</span>
+</td>
+<td>
+<span class="listing-date">May 18, 2021</span>
+</td>
 
-<div class="listing-category" onclick="window.quartoListingCategory('Q2hlbW9tZXRyaWNz'); return false;">Chemometrics</div>
+</tr>
 
-<div class="listing-category" onclick="window.quartoListingCategory('Q2x1c3RlcmluZw=='); return false;">Clustering</div>
+<tr data-index="1" data-categories="UiUyQ01hY2hpbmUlMjBMZWFybmluZyUyQ0NoZW1vbWV0cmljcyUyQ0NsdXN0ZXJpbmc=" data-listing-date-sort="1713769200000" data-listing-title-sort="Computation of 2D and 3D Elliptical Joint Confidence Regions">
+<td>
+<a href="https://christiangoueguel.github.io/ConfidenceEllipse/" class="title listing-title">Computation of 2D and 3D Elliptical Joint Confidence Regions</a>
+</td>
+<td>
+<span class="listing-image"><img loading="lazy" src="images/ConfidenceEllipse.png" style="height: 40px;"></span>
+</td>
+<td>
+<span class="listing-description">The ConfidenceEllipse package calculates the coordinates of elliptical joint regions at a specified confidence level. It provides the flexibility to estimate classical or robust confidence regions, which can be visualized as 2D or 3D plots.…</span>
+</td>
+<td>
+<span class="listing-categories">R, Machine Learning, Chemometrics, Clustering</span>
+</td>
+<td>
+<span class="listing-date">Apr 22, 2024</span>
+</td>
 
-</div>
-<div class="card-text listing-description delink">
-<p>The ConfidenceEllipse package calculates the coordinates of elliptical joint regions at a specified confidence level. It provides the flexibility to estimate classical or robust confidence regions, which can be visualized as 2D or 3D plots.…</p>
-</div>
-<div class="card-attribution card-text-small end">
-<div class="listing-date">
-Apr 22, 2024
-</div>
-</div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="2" data-categories="UiUyQ1Zpc3VhbGl6YXRpb24lMkNDaGVtb21ldHJpY3MlMkNQcmVwcm9jZXNzaW5nJTJDRXhwbG9yYXRvcnklMjBEYXRhJTIwQW5hbHlzaXM=" data-listing-date-sort="1730444400000">
-<a href="https://christiangoueguel.github.io/specProc/" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="images/specProc.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Preprocessing Tools for Spectroscopy Data Analysis
-</h5>
-<div class="listing-categories">
+</tr>
 
-<div class="listing-category" onclick="window.quartoListingCategory('Ug=='); return false;">R</div>
+<tr data-index="2" data-categories="UiUyQ1Zpc3VhbGl6YXRpb24lMkNDaGVtb21ldHJpY3MlMkNQcmVwcm9jZXNzaW5nJTJDRXhwbG9yYXRvcnklMjBEYXRhJTIwQW5hbHlzaXM=" data-listing-date-sort="1730444400000" data-listing-title-sort="Preprocessing Tools for Spectroscopy Data Analysis">
+<td>
+<a href="https://christiangoueguel.github.io/specProc/" class="title listing-title">Preprocessing Tools for Spectroscopy Data Analysis</a>
+</td>
+<td>
+<span class="listing-image"><img loading="lazy" src="images/specProc.png" style="height: 40px;"></span>
+</td>
+<td>
+<span class="listing-description">The specProc package performs a wide range of preprocessing tasks essential for spectroscopic data analysis. Spectral preprocessing is essential in ensuring accurate and reliable results by minimizing the impact of various distortions and…</span>
+</td>
+<td>
+<span class="listing-categories">R, Visualization, Chemometrics, Preprocessing, Exploratory Data Analysis</span>
+</td>
+<td>
+<span class="listing-date">Nov 1, 2024</span>
+</td>
 
-<div class="listing-category" onclick="window.quartoListingCategory('VmlzdWFsaXphdGlvbg=='); return false;">Visualization</div>
+</tr>
 
-<div class="listing-category" onclick="window.quartoListingCategory('Q2hlbW9tZXRyaWNz'); return false;">Chemometrics</div>
+<tr data-index="3" data-categories="UiUyQ1Zpc3VhbGl6YXRpb24lMkNBcHA=" data-listing-date-sort="1733040000000" data-listing-title-sort="CRAN Package Usage App">
+<td>
+<a href="https://christian-goueguel.shinyapps.io/CRAN-Package-Usage/" class="title listing-title">CRAN Package Usage App</a>
+</td>
+<td>
+<span class="listing-image"><img loading="lazy" src="images/CRAN_packages_usage.png" style="height: 40px;"></span>
+</td>
+<td>
+<span class="listing-description">Shiny app that provides an interactive way to explore CRAN package usage. It enables users to display detailed download trends and compare up to 20 packages simultaneously. </span>
+</td>
+<td>
+<span class="listing-categories">R, Visualization, App</span>
+</td>
+<td>
+<span class="listing-date">Dec 1, 2024</span>
+</td>
 
-<div class="listing-category" onclick="window.quartoListingCategory('UHJlcHJvY2Vzc2luZw=='); return false;">Preprocessing</div>
+</tr>
 
-<div class="listing-category" onclick="window.quartoListingCategory('RXhwbG9yYXRvcnklMjBEYXRhJTIwQW5hbHlzaXM='); return false;">Exploratory Data Analysis</div>
+<tr data-index="4" data-categories="UHl0aG9uJTJDU3RhdGlzdGljcyUyQ0V4cGxvcmF0b3J5JTIwRGF0YSUyMEFuYWx5c2lz" data-listing-date-sort="1760511600000" data-listing-title-sort="pyEllipse">
+<td>
+<a href="https://pypi.org/project/pyEllipse/" class="title listing-title">pyEllipse</a>
+</td>
+<td>
+<span class="listing-image"><img loading="lazy" src="images/pythonlogo.png" style="height: 40px;"></span>
+</td>
+<td>
+<span class="listing-description">A Python package for computing Hotelling’s T² statistics and generating confidence ellipse/ellipsoid coordinates for multivariate data analysis and visualization. </span>
+</td>
+<td>
+<span class="listing-categories">Python, Statistics, Exploratory Data Analysis</span>
+</td>
+<td>
+<span class="listing-date">Oct 15, 2025</span>
+</td>
 
-</div>
-<div class="card-text listing-description delink">
-<p>The specProc package performs a wide range of preprocessing tasks essential for spectroscopic data analysis. Spectral preprocessing is essential in ensuring accurate and reliable results by minimizing the impact of various distortions and…</p>
-</div>
-<div class="card-attribution card-text-small end">
-<div class="listing-date">
-Nov 1, 2024
-</div>
-</div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="3" data-categories="UiUyQ1Zpc3VhbGl6YXRpb24lMkNBcHA=" data-listing-date-sort="1733040000000">
-<a href="https://christian-goueguel.shinyapps.io/CRAN-Package-Usage/" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="images/CRAN_packages_usage.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-CRAN Package Usage App
-</h5>
-<div class="listing-categories">
+</tr>
 
-<div class="listing-category" onclick="window.quartoListingCategory('Ug=='); return false;">R</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VmlzdWFsaXphdGlvbg=='); return false;">Visualization</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('QXBw'); return false;">App</div>
-
-</div>
-<div class="card-text listing-description delink">
-<p>Shiny app that provides an interactive way to explore CRAN package usage. It enables users to display detailed download trends and compare up to 20 packages simultaneously.</p>
-</div>
-<div class="card-attribution card-text-small end">
-<div class="listing-date">
-Dec 1, 2024
-</div>
-</div>
-</div>
-</div></a>
-</div>
-</div>
+</tbody>
+</table>
 <div class="listing-no-matching d-none">No matching items</div>
 </div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

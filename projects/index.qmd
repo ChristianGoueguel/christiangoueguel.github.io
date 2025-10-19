@@ -1,8 +1,8 @@
 ---
-title: R Packages
+title: R and Python Packages
 comments: false
 listing:
   contents: projects.yml
-  type: grid
+  type: table
   max-description-length: 250
 ---
